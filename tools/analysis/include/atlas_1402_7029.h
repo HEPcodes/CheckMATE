@@ -17,7 +17,7 @@ class Atlas_1402_7029 : public AnalysisBase {
     static std::string sr_index[20];
     double cutSingleTriggerElectronPT, cutSymTriggerElectronPT, cutAsymTriggerElectronPT1, cutAsymTriggerElectronPT2;
     double cutSingleTriggerMuonPT, cutSymTriggerMuonPT, cutAsymTriggerMuonPT1, cutAsymTriggerMuonPT2;
-    double cutMixedTriggerElectronPT1, cutMixedTriggerElectronPT2, cutMixedTriggerMuonPT1, cutMixedTriggerMuonPT2;
+    double cutMixedTrigger1ElectronPT, cutMixedTrigger2ElectronPT, cutMixedTrigger1MuonPT, cutMixedTrigger2MuonPT;
     
     double mtest, mmin, mSFOS;
     bool SFOS;

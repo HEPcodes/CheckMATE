@@ -28,11 +28,13 @@ src/atlas_conf_2013_037.cc include/atlas_conf_2013_037.h \
 src/atlas_conf_2013_047_CR.cc src/atlas_conf_2013_047.cc include/atlas_conf_2013_047.h \
 src/atlas_conf_2013_048.cc include/atlas_conf_2013_048.h \
 src/atlas_conf_2013_049_CR.cc src/atlas_conf_2013_049.cc include/atlas_conf_2013_049.h \
+src/atlas_conf_2014_056.cc include/atlas_conf_2014_056.h \
 src/atlas_conf_2013_061_CR.cc src/atlas_conf_2013_061.cc include/atlas_conf_2013_061.h \
+src/atlas_conf_2013_062.cc include/atlas_conf_2013_062.h \
 src/atlas_conf_2013_089_CR.cc src/atlas_conf_2013_089.cc include/atlas_conf_2013_089.h \
 src/atlas_conf_2014_014.cc include/atlas_conf_2014_014.h \
 src/atlas_conf_2014_033.cc include/atlas_conf_2014_033.h \
-src/cms_1301_4698.cc include/cms_1301_4698.h \
+src/cms_1301_4698_WW.cc include/cms_1301_4698_WW.h \
 src/cms_1303_2985_CR.cc src/cms_1303_2985.cc include/cms_1303_2985.h \
 src/cms_1306_1126_WW.cc include/cms_1306_1126_WW.h \
 src/cms_1405_7570.cc include/cms_1405_7570.h \

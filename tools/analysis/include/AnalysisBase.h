@@ -31,16 +31,33 @@
 // for the total missing energy vector.
 class ETMiss {
  public:
-    ETMiss(MissingET* x) {
-	double missingET_ET = x->MET;
-	double missingET_Phi = x->Phi;
+    ETMiss(MissingET* met) {
+	double missingET_ET = met->MET;
+	double missingET_Phi = met->Phi;
 	double missingET_Ex = missingET_ET*cos(missingET_Phi);
 	double missingET_Ey = missingET_ET*sin(missingET_Phi);
+	
+	// Smearing of ET due to pile up set at 20GeV
+	double deltaPT = 20.0;
+	
+	double x = rand() /(RAND_MAX+1.);
+	double y = rand() /(RAND_MAX+1.);
+	double uni_gauss = sqrt(-2.*log(x))*cos(2.*3.1415*y);
+	double uni_normal = rand() / (RAND_MAX+1.);
 
-	content.SetPxPyPzE(missingET_Ex, missingET_Ey, 0., missingET_ET);
+	double smear_x = deltaPT*uni_gauss*cos(2.*3.1415*uni_normal);
+	double smear_y = deltaPT*uni_gauss*sin(2.*3.1415*uni_normal);
+
+	double new_ET = sqrt(pow(missingET_Ex+smear_x, 2)+pow(missingET_Ey+smear_y, 2));
+	content.SetPxPyPzE(missingET_Ex+smear_x, missingET_Ey+smear_y, 0, new_ET);
 	PT = content.Pt();
 	Eta = content.Eta();
-	Phi = content.Phi();
+	Phi = content.Phi();	
+
+	//std::cout << "missingET_Ex: " << missingET_Ex << ", smear_x: " << smear_x << ", tot_x: " << content.Px() << std::endl;
+	//std::cout << "missingET_Ey: " << missingET_Ey << ", smear_y: " << smear_y << ", tot_y: " << content.Py() << std::endl;
+	//std::cout << "missingET_ET: " << missingET_ET << ", tot_ET: " << content.Et() << std::endl;
+	//std::cout << "missingET_Phi: " << missingET_Phi << ", tot_Phi: " << content.Phi() << std::endl;
     }
     
     // Muons have to be added manually to missingET. With this general function,
@@ -338,7 +355,12 @@ class AnalysisBase {
     // Evaluates mT2_bl (arXiv:1203.4813), Also known as asymmetric mT2 in atlas_conf_2013_037
     double mT2_bl(const TLorentzVector & pl_in, const TLorentzVector & pb1_in, const TLorentzVector & pb2_in, const TLorentzVector & invis = TLorentzVector(0., 0., 0., 0.));    
 
-
+    // Evaluates alpha_T (code supplied by CMS)
+    double alphaT(const std::vector<Jet*> & jets,  const double thresh_ET = 0.);
+    
+    // Evaluates razor (code supplied by CMS)
+    std::vector<double> razor(const std::vector<TLorentzVector> & obj, const TLorentzVector & invis = TLorentzVector(0., 0., 0., 0.));
+    
     // For using ExRootAnalysis
     ExRootResult *result;
 
@@ -451,6 +473,14 @@ class AnalysisBase {
       }
       return flags;
     }
+    
+    // Used by alphaT code
+    struct fabs_less { 
+      bool operator()(const double x, const double y) const { 
+        return fabs(x) < fabs(y); 
+      } 
+    };
+
 };
 
 // Numerical implementation of cross section and luminosity units

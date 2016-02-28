@@ -121,10 +121,14 @@ void AnalysisBase::loopOverEvents() {
     for(Int_t entry = 0; entry < nEvents; ++entry) {
 	treeReader->ReadEntry(entry);
 	weight = ((LHEFEvent*)branchEvent->At(0))->Weight;
+        // If the events do not have any weights / the wrong weight branch is used, Delphes will save NAN in the corresponding branch
+	if (weight != weight) {
+	    weight = ((HepMCEvent*)branchEvent->At(0))->Weight;
+   	    if (weight != weight) 
+	       weight=1.;
+	}
 
-        // If the events do not have any weights, Delphes will save NAN in the corresponding branch
-	if (weight != weight) 
-	    weight=1.;
+
 	sumOfWeights += weight;
 	sumOfWeights2 += weight*weight;
     
@@ -228,6 +232,7 @@ void AnalysisBase::loopOverEvents() {
     }
 }               
 
+
 int AnalysisBase::bookFile(std::string name) {
     // Assemble absolute filename
     std::string filename = outputFolder+"/"+outputPrefix+"_"+name;
@@ -251,11 +256,11 @@ int AnalysisBase::bookFile(std::string name) {
 
 bool AnalysisBase::checkTauTag(Jet* candidate, std::string efficiency) {
     if ((efficiency == "loose") && (candidate->TauFlags >= 1))
-	return true;
+        return true;
     else if ((efficiency == "medium") && (candidate->TauFlags >= 2))
-	return true;
+        return true;
     else if ((efficiency == "tight") && (candidate->TauFlags == 3))
-	return true;
+        return true;
     return false;
 }
 
@@ -264,63 +269,63 @@ bool AnalysisBase::checkBTag(Jet* candidate, int relative_flag, std::string opti
     // First, decode the member's isoflag into a vector of valid flags    
     int absolute_flag = 0;
     if(option == "secondJet") {
-	if (relative_flag >= jet2BTagFlags.size()) {
-	    std::cerr << "Error: There is no second jet b tag " << relative_flag << std::endl;
-	    std::cerr << "Exiting... "<< std::endl;
-	    exit(1);
-	}      
-	absolute_flag = jet2BTagFlags[relative_flag];
+        if (relative_flag >= jet2BTagFlags.size()) {
+            std::cerr << "Error: There is no second jet b tag " << relative_flag << std::endl;
+            std::cerr << "Exiting... "<< std::endl;
+            exit(1);
+        }      
+        absolute_flag = jet2BTagFlags[relative_flag];
     }
     else {
-	if (relative_flag >= jetBTagFlags.size()) {
-	    std::cerr << "Error: There is no b tag " << relative_flag << std::endl;
-	    std::cerr << "Exiting... "<< std::endl;
-	    exit(1);
-	}      
-	absolute_flag = jetBTagFlags[relative_flag];
-    }       
-  
+        if (relative_flag >= jetBTagFlags.size()) {
+            std::cerr << "Error: There is no b tag " << relative_flag << std::endl;
+            std::cerr << "Exiting... "<< std::endl;
+            exit(1);
+        }      
+        absolute_flag = jetBTagFlags[relative_flag];
+    }      
+ 
     int code = candidate->BFlags;
     std::vector<int> candidate_flags = code_to_flags(code);
     // Return bool whether the flag is in the candidate's flags
     bool result = (std::find(candidate_flags.begin(), candidate_flags.end(), absolute_flag) != candidate_flags.end());
     return result;
 }
-  
+ 
 void AnalysisBase::ignore(std::string ignore_what) {
     if(ignore_what == "electrons")
-	ignoreElectrons = true;
+        ignoreElectrons = true;
     else if(ignore_what == "electrons_looseIsolation")
-	ignoreElectrons_LooseIsolation = true;
+        ignoreElectrons_LooseIsolation = true;
     else if(ignore_what == "electronsMedium")
-	ignoreElectrons_MediumEfficiency = true;
+        ignoreElectrons_MediumEfficiency = true;
     else if(ignore_what == "electronsTight")
-	ignoreElectrons_TightEfficiency = true;
+        ignoreElectrons_TightEfficiency = true;
     else if(ignore_what == "muons")
-	ignoreMuons = true;
+        ignoreMuons = true;
     else if(ignore_what == "muons_looseIsolation")
-	ignoreMuons_LooseIsolation = true;
+        ignoreMuons_LooseIsolation = true;
     else if(ignore_what == "muonsCombinedPlus")
-	ignoreMuons_CombinedPlusEfficiency = true;
+        ignoreMuons_CombinedPlusEfficiency = true;
     else if(ignore_what == "muonsCombined")
-	ignoreMuons_CombinedEfficiency = true;
+        ignoreMuons_CombinedEfficiency = true;
     else if(ignore_what == "photons")
-	ignorePhotons = true;
+        ignorePhotons = true;
     else if(ignore_what == "photons_looseIsolation")
-	ignorePhotons_LooseIsolation = true;
+        ignorePhotons_LooseIsolation = true;
     else if(ignore_what == "tracks")
-	ignoreTracks = true;
+        ignoreTracks = true;
     else if(ignore_what == "towers")
-	ignoreTowers = true;
+        ignoreTowers = true;
     else {
-	std::cerr << "Cannot ignore " << ignore_what << std::endl;
-	std::cerr << "Exiting." << std::endl;
-	exit(1);
+        std::cerr << "Cannot ignore " << ignore_what << std::endl;
+        std::cerr << "Exiting." << std::endl;
+        exit(1);
     }
 }
 
 double AnalysisBase::mT(const TLorentzVector & vis, const TLorentzVector & invis) {
-    
+   
     return sqrt(2.*vis.Pt()*invis.Et()*(1.-cos(fabs(vis.DeltaPhi(invis)))));
 }
 
@@ -331,11 +336,11 @@ double AnalysisBase::mT2(const TLorentzVector & vis1, const TLorentzVector & vis
     // If no invis is given, use missingET. Note that pmiss[0] is irrelvant, which is why we set it to -1.
     double pmiss[] = {-1, missingET->P4().Px(), missingET->P4().Py()};
     if (invis != zeroVector) {
-	pmiss[0] = -1;
-	pmiss[1] = invis.Px();
-	pmiss[2] = invis.Py();
+        pmiss[0] = -1;
+        pmiss[1] = invis.Px();
+        pmiss[2] = invis.Py();
     }
-  
+ 
     // Construct arrays that mt2_bisect needs as input and start evaluation
     double p1[3] = {vis1.M(), vis1.Px(), vis1.Py()};
     double p2[3] = {vis2.M(), vis2.Px(), vis2.Py()};
@@ -376,21 +381,120 @@ double AnalysisBase::mT2_bl(const TLorentzVector & pl_in, const TLorentzVector &
     // Setup mt2_bl evaluation object.
     mt2bl_bisect::mt2bl mt2bl_event;
     TLorentzVector zeroVector = TLorentzVector(0. ,0. ,0. ,0.);
-    
+   
     double pl[4] = {pl_in.E(), pl_in.Px(), pl_in.Py(), pl_in.Pz()};      // El, plx, ply, plz,     (visible lepton)
     double pb1[4] = {pb1_in.E(), pb1_in.Px(), pb1_in.Py(), pb1_in.Pz()};  // Eb1, pb1x, pb1y, pb1z  (bottom on the same side as the visible lepton)
     double pb2[4] = {pb2_in.E(), pb2_in.Px(), pb2_in.Py(), pb2_in.Pz()};  // Eb2, pb2x, pb2y, pb2z  (other bottom, paired with the invisible W)
-  
+ 
     // If no invis is given, use missingET. Note that pmiss[0] is irrelvant, which is why we set it to -1.
     double pmiss[] = {-1, missingET->P4().Px(), missingET->P4().Py()};
     if (invis != zeroVector) {
-	pmiss[0] = -1;
-	pmiss[1] = invis.Px();
-	pmiss[2] = invis.Py();
+        pmiss[0] = -1;
+        pmiss[1] = invis.Px();
+        pmiss[2] = invis.Py();
     }
-  
+ 
     // Construct arrays that mt2_bisect needs as input and start evaluation
     mt2bl_event.set_momenta(pl,pb1,pb2,pmiss);
 
     return mt2bl_event.get_mt2bl();  
 }
+
+double AnalysisBase::alphaT(const std::vector<Jet*> & jets, const double thresh_ET) {
+    // alphaT code supplied by CMS
+    // Need to pass jets and energy threshold of jets to be considered for variable (allows different ET to that of baseline jets)
+
+    double HT = 0.;
+    double mHTNorm = 0.;
+    std::vector<Jet*> jetsThresh;
+    TLorentzVector vecHT;
+    for (int i = 0; i < jets.size(); i++) {
+      double ET = jets[i]->P4().Et();
+      if (ET > thresh_ET) {
+        jetsThresh.push_back(jets[i]);
+        HT += ET;
+        vecHT += jets[i]->P4();
+      }
+    }
+    double mHT = vecHT.Pt();
+   
+    std::vector<double> diff( 1<<(jetsThresh.size()-1) , 0. );
+    for (unsigned i=0; i < diff.size(); i++) {
+      for (unsigned j=0; j < jetsThresh.size(); j++) {
+        diff[i] += jetsThresh[j]->P4().Et() * ( 1 - 2 * (int(i>>j)&1) ) ;
+      }
+    }
+    double DHT = fabs( *min_element( diff.begin(), diff.end(), fabs_less() ) );
+    double alphaT = 0.5 * ( HT - DHT ) / sqrt( HT*HT - mHT*mHT );
+   
+    return alphaT;
+}
+
+std::vector<double> AnalysisBase::razor(const std::vector<TLorentzVector> & finalStateObj, const TLorentzVector & invis) {
+    // Razor code supplied by CMS (Maurizio Pierini)
+    // Need to pass objects (4 vectors that could be jets or leptons) and missingET
+    // Result is a 2 dimensional vector, [0] = MR, [1] = R
+
+    TLorentzVector j1, j2;
+    bool foundGood = false;
+    int N_comb = 1;
+    for(int i = 0; i < finalStateObj.size(); i++)
+      N_comb *= 2;
+ 
+    double M_min = 9999999999.0;
+    int j_count;
+    for(int i = 1; i < N_comb-1; i++) {
+      TLorentzVector j_temp1, j_temp2;
+      int itemp = i;
+      j_count = N_comb/2;
+      int count = 0;
+      while(j_count > 0){
+        if(itemp/j_count == 1)
+          j_temp1 += finalStateObj[count];
+        else
+          j_temp2 += finalStateObj[count];
+        itemp -= j_count*(itemp/j_count);
+        j_count /= 2;
+        count++;
+      }
+      double M_temp = j_temp1.M2()+j_temp2.M2();
+      // smallest mass
+      if (M_temp < M_min) {
+        M_min = M_temp;
+        j1 = j_temp1;
+        j2 = j_temp2;
+      }
+    }  
+    if (j2.Pt() > j1.Pt()) {
+      TLorentzVector temp = j1;
+      j1 = j2;
+      j2 = temp;
+    }  
+   
+    double A = j1.P();
+    double B = j2.P();
+    double az = j1.Pz();
+    double bz = j2.Pz();
+    TVector3 j1T, j2T;
+    j1T.SetXYZ(j1.Px(),j1.Py(),0.0);
+    j2T.SetXYZ(j2.Px(),j2.Py(),0.0);
+    double ATBT = (j1T+j2T).Mag2();
+    double MR = sqrt((A+B)*(A+B)-(az+bz)*(az+bz)-(j2T.Dot(j2T)-j1T.Dot(j1T))*(j2T.Dot(j2T)-j1T.Dot(j1T))/(j1T+j2T).Mag2());
+    double mybeta = (j2T.Dot(j2T)-j1T.Dot(j1T))/sqrt(ATBT*((A+B)*(A+B)-(az+bz)*(az+bz)));
+    double mygamma = 1./sqrt(1.-mybeta*mybeta);
+    //gamma times MRstar  
+    MR = MR*mygamma;
+ 
+    double MRT = missingET->P4().Et()*(j1.Pt()+j2.Pt()) - missingET->P4().Vect().Dot(j1.Vect()+j2.Vect());
+    MRT /= 2.;
+    MRT = sqrt(MRT);
+   
+    double R = MRT/MR;
+   
+    std::vector<double> razor;
+    razor.push_back(MR);
+    razor.push_back(R);
+   
+    return razor;
+}
+

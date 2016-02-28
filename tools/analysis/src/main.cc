@@ -29,9 +29,11 @@
 #include "atlas_conf_2013_048.h" 
 #include "atlas_conf_2013_049.h" 
 #include "atlas_conf_2013_061.h" 
+#include "atlas_conf_2013_062.h"
 #include "atlas_conf_2013_089.h"
 #include "atlas_conf_2014_014.h"
 #include "atlas_conf_2014_033.h" 
+#include "atlas_conf_2014_056.h" 
 #include "cms_1301_4698_WW.h" 
 #include "cms_1303_2985.h"
 #include "cms_1306_1126_WW.h" 
@@ -245,6 +247,10 @@ int main(int argc, char* argv[]) {
       Atlas_conf_2013_061_CR a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
       a.loopOverEvents();
     }
+    else if(analysis == "atlas_conf_2013_062") {
+      Atlas_conf_2013_062 a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
+      a.loopOverEvents();
+    }
     else if(analysis == "atlas_conf_2013_089") {
       Atlas_conf_2013_089 a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
       a.loopOverEvents();
@@ -259,6 +265,10 @@ int main(int argc, char* argv[]) {
     }
     else if(analysis == "atlas_conf_2014_033") {
       Atlas_conf_2014_033 a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
+      a.loopOverEvents();
+    }
+    else if(analysis == "atlas_conf_2014_056") {
+      Atlas_conf_2014_056 a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
       a.loopOverEvents();
     }
     else if(analysis == "cms_1303_2985") {
@@ -293,7 +303,6 @@ int main(int argc, char* argv[]) {
       Cms_sus_13_016 a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
       a.loopOverEvents();
     }
-
 //@@extracode@@
 //      
     else {

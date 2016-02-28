@@ -1,7 +1,7 @@
 {
   "CURRLEVEL": "1", 
   "analysis": "cms_sus_12_019", 
-  "author": "user", 
+  "author": "Jamie Tattersall", 
   "cr": "n", 
   "electron_iso_absorrel": "['r', 'r']", 
   "electron_iso_dR": "['0.2', '0.3']", 
@@ -30,7 +30,7 @@
   "photon_iso_ptratiomax": "['0.2']", 
   "photon_iso_source": "['c']", 
   "photon_niso": "1", 
-  "reference_data": "{'Cen_SF': {'bkg': '730', 'bkg_err_stat': '27', 'S95_exp_errm': '13.1', 'S95_exp': '76', 'S95_exp_errp': '25.3', 'bkg_err_sys': '29', 'S95_obs': '202', 'obs': '860'}, 'For_SF': {'bkg': '155', 'bkg_err_stat': '13', 'S95_exp_errm': '8.5', 'S95_exp': '31.8', 'S95_exp_errp': '12.2', 'bkg_err_sys': '10', 'S95_obs': '38.3', 'obs': '163'}}", 
+  "reference_data": "{'Cen_SF': {'bkg': '730', 'bkg_err_stat': '27', 'S95_exp_errm': '13.1', 'S95_exp': '76', 'S95_exp_errp': '25.3', 'bkg_err_sys': '29', 'S95_obs': '202', 'obs': '860'}, 'For_SF': {'bkg': '155', 'bkg_err_stat': '13', 'S95_exp_errm': '8.5', 'S95_exp': '31.8', 'S95_exp_errp': '12.2', 'bkg_err_sys': '10', 'S95_obs': '38.3', 'obs': '163'}, 'Cen_OF': {'bkg': '730', 'bkg_err_stat': '27', 'S95_exp_errm': '13.1', 'S95_exp': '76', 'S95_exp_errp': '25.3', 'bkg_err_sys': '29', 'S95_obs': '76', 'obs': '730'}, 'For_OF': {'bkg': '155', 'bkg_err_stat': '13', 'S95_exp_errm': '8.5', 'S95_exp': '31.8', 'S95_exp_errp': '12.2', 'bkg_err_sys': '10', 'S95_obs': '31.8', 'obs': '155'}}", 
   "short_info": "2-leptons, jets and met (SF-OF)", 
-  "signal_regions": "['Cen_SF', 'For_SF']"
+  "signal_regions": "['Cen_SF', 'For_SF', 'Cen_OF', 'For_OF']"
 }

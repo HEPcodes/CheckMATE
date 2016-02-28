@@ -254,9 +254,16 @@ void TauTagging::Process()
         matchedTau = true;
         pdgCode = 15;
       }
-      if(matchedTau) identifier *= -1;
     }
+    if(matchedTau)
+	identifier *= -1;
     // find an efficency formula
+    // If the identifier is larger than 2, set it to 2 (multiprong requires at least 2 tracks)
+    if (identifier > 2)
+	identifier = 2;
+    else if (identifier < -2)
+	identifier = -2;
+    
     itEfficiencyMap = fEfficiencyMap.find(identifier);
     if(itEfficiencyMap == fEfficiencyMap.end())
     {
@@ -265,14 +272,17 @@ void TauTagging::Process()
     formula = itEfficiencyMap->second;
 
     // apply an efficency formula
-    
+
+    // If random efficiency number has already been calculated by a different
+    //  tau tagging module, reuse it (ensures correlation)
     double x = gRandom->Uniform();
     if (jet->TauFlagProb != 0)
       x = jet->TauFlagProb;   
     else
       jet->TauFlagProb = x;
       
-    if(x     <= formula->Eval(pt, eta)) {
+    // Tag if rand < eff
+    if(x     <= formula->Eval(pt, eta) ){
       if(fAddFlag) {
         Int_t oldFlagValue = jet->TauFlags;
         jet->TauFlags = oldFlagValue + fFlagValue;

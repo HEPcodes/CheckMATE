@@ -293,6 +293,12 @@ void Atlas_conf_2013_089::analyze() {
   // --- Code courtesy of Maurizio Pierini ------
   double R = MRT/MR;
   
+  /*std::vector<double> razorVar;
+  razorVar = AnalysisBase::razor(finalStateObj, missingET->P4());
+  
+  std::cerr << "MR raz: " << razorVar[0] << " MR old: " << MR << std::endl;
+  std::cerr << "R raz: " << razorVar[1] << " R old: " << R << std::endl;
+  */
   //-----------------------------
   // R > 0.35 generally and also R > 0.5 signal region
   int flagR05 = 0;
