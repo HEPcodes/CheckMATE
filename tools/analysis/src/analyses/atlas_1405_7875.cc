@@ -15,38 +15,34 @@ void Atlas_1405_7875::initialize() {
   ignore("towers");
   ignore("tracks");
 
-  bookSignalRegions("SR05_a.6jl;SR05_b.6jm;SR05_c.6jt;SR05_d.6jt+;\
-SR04_5j;\
-SR03_a.4jl-;SR03_b.4jl;SR03_c.4jm;SR03_d.4jt;SR03_e.4jW;\
-SR02_3j;\
-SR01_a.2jl;SR01_b.2jm;SR01_c.2jt;SR01_d.2jW");
+  bookSignalRegions("SR05_a.6jl;SR05_b.6jm;SR05_c.6jt;SR05_d.6jt+;SR04_5j;SR03_a.4jl-;SR03_b.4jl;SR03_c.4jm;SR03_d.4jt;SR03_e.4jW;SR02_3j;SR01_a.2jl;SR01_b.2jm;SR01_c.2jt;SR01_d.2jW");
 
-  bookCutflowRegions(std::string("j.4jW")+"_"+"CR03_PT3J_for4jW");
-  bookCutflowRegions(std::string("j.4jW")+"_"+"CR04_PT4J_for4jW");
-  bookCutflowRegions(std::string("d.2jW")+"_"+"CR09_unRW");
-  bookCutflowRegions(std::string("j.4jW")+"_"+"CR09_unRW");
-  bookCutflowRegions(std::string("j.4jW")+"_"+"CR10_RW");
+  bookCutflowRegions("j.4jW_CR03_PT3J_for4jW");
+  bookCutflowRegions("j.4jW_CR04_PT4J_for4jW");
+  bookCutflowRegions("d.2jW_CR09_unRW");
+  bookCutflowRegions("j.4jW_CR09_unRW");
+  bookCutflowRegions("j.4jW_CR10_RW");
   for ( int i=0; i < 15; i++) {
-    bookCutflowRegions(nameSR[i]+"_"+"CR01_all");
-    bookCutflowRegions(nameSR[i]+"_"+"CR02_missETjetsPT");
-    bookCutflowRegions(nameSR[i]+"_"+"CR07_dphiMin2J3J");
-    bookCutflowRegions(nameSR[i]+"_"+"CR13_meffIncl");
-    if ( i > 3 && i != 9 ) bookCutflowRegions(nameSR[i]+"_"+"CR03_PT3J");
+    bookCutflowRegions(nameSR[i]+"_CR01_all");
+    bookCutflowRegions(nameSR[i]+"_CR02_missETjetsPT");
+    bookCutflowRegions(nameSR[i]+"_CR07_dphiMin2J3J");
+    bookCutflowRegions(nameSR[i]+"_CR13_meffIncl");
+    if ( i > 3 && i != 9 ) bookCutflowRegions(nameSR[i]+"_CR03_PT3J");
     if ( i > 4 ) {
-      bookCutflowRegions(nameSR[i]+"_"+"CR08_dphiMinMoreJ");
-      if ( i != 9 ) bookCutflowRegions(nameSR[i]+"_"+"CR04_PT4J");
+      bookCutflowRegions(nameSR[i]+"_CR08_dphiMinMoreJ");
+      if ( i != 9 ) bookCutflowRegions(nameSR[i]+"_CR04_PT4J");
     }
-    if ( i > 9 ) bookCutflowRegions(nameSR[i]+"_"+"CR05_PT5J");
-    if ( i > 10 ) bookCutflowRegions(nameSR[i]+"_"+"CR06_PT6J");
-    if ( i < 3 || ( i > 4 && i < 7 ) ) bookCutflowRegions(nameSR[i]+"_"+"CR11_RHT");
-    else bookCutflowRegions(nameSR[i]+"_"+"CR12_Rmeff");
+    if ( i > 9 ) bookCutflowRegions(nameSR[i]+"_CR05_PT5J");
+    if ( i > 10 ) bookCutflowRegions(nameSR[i]+"_CR06_PT6J");
+    if ( i < 3 || ( i > 4 && i < 7 ) ) bookCutflowRegions(nameSR[i]+"_CR11_RHT");
+    else bookCutflowRegions(nameSR[i]+"_CR12_Rmeff");
   }
 
 }
 
 void Atlas_1405_7875::analyze() {
   missingET->addMuons(muonsCombined);
-  for ( int i=0; i < 15; i++ ) countCutflowEvent(nameSR[i]+"_"+"CR01_all");
+  for ( int i=0; i < 15; i++ ) countCutflowEvent(nameSR[i]+"_CR01_all");
 
 //for reconstruction
   jets = filterPhaseSpace(jets, 20., -4.5, 4.5);
@@ -68,7 +64,7 @@ void Atlas_1405_7875::analyze() {
   if ( missingET->P4().Et() < 160. ) return;
   //for veto where pt(j1) < 130 or pt(j2) < 60
   if ( jets.size() < 2 || jets[0]->PT < 130. || jets[1]->PT < 60. ) return;
-  for ( int i=0; i < 15; i++ ) countCutflowEvent(nameSR[i]+"_"+"CR02_missETjetsPT");
+  for ( int i=0; i < 15; i++ ) countCutflowEvent(nameSR[i]+"_CR02_missETjetsPT");
 
 //*************************
 //***for event selection***
@@ -79,11 +75,11 @@ void Atlas_1405_7875::analyze() {
 
   //for that of SR-4JW
   if ( jets.size() > 2 && jets[2]->PT > 40. ) {
-    countCutflowEvent(std::string("j.4jW")+"_"+"CR03_PT3J_for4jW");
+    countCutflowEvent("j.4jW_CR03_PT3J_for4jW");
     if ( jets.size() > 3 && jets[3]->PT > 40. ) {
       flag4JW = true;
       meff4JW  = meff2J + jets[2]->PT + jets[3]->PT;
-      countCutflowEvent(std::string("j.4jW")+"_"+"CR04_PT4J_for4jW");
+      countCutflowEvent("j.4jW_CR04_PT4J_for4jW");
     }
   }
   //for that of SR-3J, SR-4J, SR-5J and SR-6J
@@ -91,28 +87,28 @@ void Atlas_1405_7875::analyze() {
     flag3J = true;
     meff3J = meff2J + jets[2]->PT;
     for ( int i=0; i < 15; i++ ) {
-      if ( i > 3 &&  i != 9 ) countCutflowEvent(nameSR[i]+"_"+"CR03_PT3J");
+      if ( i > 3 &&  i != 9 ) countCutflowEvent(nameSR[i]+"_CR03_PT3J");
     }
     //for that of SR-4J, SR-5J and SR-6J
     if ( jets.size() > 3  && jets[3]->PT > 60. ) {
       flag4J = true;
       meff4J = meff3J + jets[3]->PT;
       for ( int i=0; i < 15; i++ ) {
-        if ( i > 4 && i != 9 ) countCutflowEvent(nameSR[i]+"_"+"CR04_PT4J");
+        if ( i > 4 && i != 9 ) countCutflowEvent(nameSR[i]+"_CR04_PT4J");
       }
       //for that of SR-5J and SR-6J
       if ( jets.size() > 4 && jets[4]->PT > 60. ) {
         flag5J = true;
         meff5J = meff4J + jets[4]->PT;
         for ( int i=0; i < 15; i++ ) {
-          if ( i > 9 ) countCutflowEvent(nameSR[i]+"_"+"CR05_PT5J");
+          if ( i > 9 ) countCutflowEvent(nameSR[i]+"_CR05_PT5J");
         }
         //for that SR-6J only
         if ( jets.size() > 5 && jets[5]->PT > 60. ) {
           flag6J = true;
           meff6J = meff5J + jets[5]->PT;
           for ( int i=0; i < 15; i++ ) {
-            if ( i > 10 ) countCutflowEvent(nameSR[i]+"_"+"CR06_PT6J");
+            if ( i > 10 ) countCutflowEvent(nameSR[i]+"_CR06_PT6J");
           }
         }
       }
@@ -120,7 +116,8 @@ void Atlas_1405_7875::analyze() {
   }
 
 //for dphiMin > 0.4 in 2-jet and 3-jet signal regions
-  double dphiMin2J3J = 1.E6, dphi;
+  double dphiMin2J3J = 1.E6; 
+  double dphi;
   for ( int i=0; i < 2; i++ ) {
     dphi = fabs( jets[i]->P4().DeltaPhi( missingET->P4() ) );
     if ( dphi < dphiMin2J3J ) dphiMin2J3J = dphi;
@@ -151,41 +148,41 @@ void Atlas_1405_7875::analyze() {
 //veto where dphiMin2J3J < 0.4
   if ( dphiMin2J3J < 0.4 ) return;
   for ( int i=0; i < 15; i++ ) {
-    if ( i < 4 ) countCutflowEvent(nameSR[i]+"_"+"CR07_dphiMin2J3J");
+    if ( i < 4 ) countCutflowEvent(nameSR[i]+"_CR07_dphiMin2J3J");
   }
-  if ( flag3J )  countCutflowEvent(std::string("e.3j")+"_"+"CR07_dphiMin2J3J");
-  if ( flag4JW ) countCutflowEvent(std::string("j.4jW")+"_"+"CR07_dphiMin2J3J");
-  if ( flag5J )  countCutflowEvent(std::string("k.5j")+"_"+"CR07_dphiMin2J3J");
+  if ( flag3J )  countCutflowEvent("e.3j_CR07_dphiMin2J3J");
+  if ( flag4JW ) countCutflowEvent("j.4jW_CR07_dphiMin2J3J");
+  if ( flag5J )  countCutflowEvent("k.5j_CR07_dphiMin2J3J");
   if ( flag4J ) {
     for ( int i = 0; i < 15; i++ ) {
-      if ( i > 4 && i < 9 ) countCutflowEvent(nameSR[i]+"_"+"CR07_dphiMin2J3J");
+      if ( i > 4 && i < 9 ) countCutflowEvent(nameSR[i]+"_CR07_dphiMin2J3J");
     }
   }
   if ( flag6J ) {
     for ( int i = 0; i < 15; i++ ) {
-      if ( i > 10 ) countCutflowEvent(nameSR[i]+"_"+"CR07_dphiMin2J3J");
+      if ( i > 10 ) countCutflowEvent(nameSR[i]+"_CR07_dphiMin2J3J");
     }
   }
 
 //for signal region 2jl
   if ( missingET->P4().Et() / sqrt(HT) > 8. ) {
-    countCutflowEvent(std::string("a.2jl")+"_"+"CR11_RHT");
+    countCutflowEvent("a.2jl_CR11_RHT");
     if ( meffIncl > 800. ) {
-      countCutflowEvent(std::string("a.2jl")+"_"+"CR13_meffIncl");
+      countCutflowEvent("a.2jl_CR13_meffIncl");
       countSignalEvent("SR01_a.2jl");
     }
   }
 
 //for signal region 2jm and 2jt
   if ( missingET->P4().Et() / sqrt(HT) > 15. ) {
-    countCutflowEvent(std::string("b.2jm")+"_"+"CR11_RHT");
-    countCutflowEvent(std::string("c.2jt")+"_"+"CR11_RHT");
+    countCutflowEvent("b.2jm_CR11_RHT");
+    countCutflowEvent("c.2jt_CR11_RHT");
     if ( meffIncl > 1200. ) {
-      countCutflowEvent(std::string("b.2jm")+"_"+"CR13_meffIncl");
+      countCutflowEvent("b.2jm_CR13_meffIncl");
       countSignalEvent("SR01_b.2jm");
     }
     if ( meffIncl > 1600. ) {
-      countCutflowEvent(std::string("c.2jt")+"_"+"CR13_meffIncl");
+      countCutflowEvent("c.2jt_CR13_meffIncl");
       countSignalEvent("SR01_c.2jt");
     }
   }
@@ -223,11 +220,11 @@ void Atlas_1405_7875::analyze() {
 
   if ( unRW1 > 60. && unRW1 < 100. && unRW2 > 60. && unRW2 < 100. ) {
   //if ( unRWNum > 1 ) {
-    countCutflowEvent(std::string("d.2jW")+"_"+"CR09_unRW");
+    countCutflowEvent("d.2jW_CR09_unRW");
     if ( missingET->P4().Et() / meff2J > 0.25 ) {
-      countCutflowEvent(std::string("d.2jW")+"_"+"CR12_Rmeff");
+      countCutflowEvent("d.2jW_CR12_Rmeff");
       if ( meffIncl > 1800. ) {
-        countCutflowEvent(std::string("d.2jW")+"_"+"CR13_meffIncl");
+        countCutflowEvent("d.2jW_CR13_meffIncl");
         countSignalEvent("SR01_d.2jW");
       }
     }
@@ -235,56 +232,56 @@ void Atlas_1405_7875::analyze() {
 
 //for signal region 3j
   if ( flag3J && missingET->P4().Et() / meff3J > 0.3 ) {
-    countCutflowEvent(std::string("e.3j")+"_"+"CR12_Rmeff");
+    countCutflowEvent("e.3j_CR12_Rmeff");
     if ( meffIncl > 2200. ) {
-      countCutflowEvent(std::string("e.3j")+"_"+"CR13_meffIncl");
+      countCutflowEvent("e.3j_CR13_meffIncl");
       countSignalEvent("SR02_3j");
     }
   }
 
 //veto where dphiMinMoreJ < 0.2
   if ( dphiMinMoreJ < 0.2 ) return;
-  if ( flag4JW ) countCutflowEvent(std::string("j.4jW")+"_"+"CR08_dphiMinMoreJ");
-  if ( flag5J )  countCutflowEvent(std::string("k.5j")+"_"+"CR08_dphiMinMoreJ");
+  if ( flag4JW ) countCutflowEvent("j.4jW_CR08_dphiMinMoreJ");
+  if ( flag5J )  countCutflowEvent("k.5j_CR08_dphiMinMoreJ");
   if ( flag4J ) {
     for ( int i = 0; i < 15; i++ ) {
-      if ( i > 4 && i < 9 ) countCutflowEvent(nameSR[i]+"_"+"CR08_dphiMinMoreJ");
+      if ( i > 4 && i < 9 ) countCutflowEvent(nameSR[i]+"_CR08_dphiMinMoreJ");
     }
   }
   if ( flag6J ) {
     for ( int i = 0; i < 15; i++ ) {
-      if ( i > 10 ) countCutflowEvent(nameSR[i]+"_"+"CR08_dphiMinMoreJ");
+      if ( i > 10 ) countCutflowEvent(nameSR[i]+"_CR08_dphiMinMoreJ");
     }
   }
 
 //for signal region 4jl- and 4jl
   if ( flag4J && missingET->P4().Et() / sqrt(HT) > 10. ) {
-    countCutflowEvent(std::string("f.4jl-")+"_"+"CR11_RHT");
-    countCutflowEvent(std::string("g.4jl")+"_"+"CR11_RHT");
+    countCutflowEvent("f.4jl-_CR11_RHT");
+    countCutflowEvent("g.4jl_CR11_RHT");
     if ( meffIncl > 700. ) {
-      countCutflowEvent(std::string("f.4jl-")+"_"+"CR13_meffIncl");
+      countCutflowEvent("f.4jl-_CR13_meffIncl");
       countSignalEvent("SR03_a.4jl-");
     }
     if ( meffIncl > 1000. ) {
-      countCutflowEvent(std::string("g.4jl")+"_"+"CR13_meffIncl");
+      countCutflowEvent("g.4jl_CR13_meffIncl");
       countSignalEvent("SR03_b.4jl");
     }
   }
 
 //for signal region 4jm
   if ( flag4J && missingET->P4().Et() / meff4J > 0.4 ) {
-    countCutflowEvent(std::string("h.4jm")+"_"+"CR12_Rmeff");
+    countCutflowEvent("h.4jm_CR12_Rmeff");
     if ( meffIncl > 1300. ) {
-      countCutflowEvent(std::string("h.4jm")+"_"+"CR13_meffIncl");
+      countCutflowEvent("h.4jm_CR13_meffIncl");
       countSignalEvent("SR03_c.4jm");
     }
   }
 
 //for signal region 4jt
   if ( flag4J && missingET->P4().Et() / meff4J > 0.25 ) {
-    countCutflowEvent(std::string("i.4jt")+"_"+"CR12_Rmeff");
+    countCutflowEvent("i.4jt_CR12_Rmeff");
     if ( meffIncl > 2200. ) {
-      countCutflowEvent(std::string("i.4jt")+"_"+"CR13_meffIncl");
+      countCutflowEvent("i.4jt_CR13_meffIncl");
       countSignalEvent("SR03_d.4jt");
     }
   }
@@ -352,17 +349,17 @@ void Atlas_1405_7875::analyze() {
     }
 
     /*if ( unRWNum > 0 ) {
-      countCutflowEvent(std::string("j.4jW")+"_"+"CR09_unRW");
+      countCutflowEvent("j.4jW_CR09_unRW");
       if ( RWNum > 0 ) {
-        countCutflowEvent(std::string("j.4jW")+"_"+"CR10_RW");*/
+        countCutflowEvent("j.4jW_CR10_RW");*/
     if ( unRW1 > 60. && unRW1 < 100. ) {
-      countCutflowEvent(std::string("j.4jW")+"_"+"CR09_unRW");
+      countCutflowEvent("j.4jW_CR09_unRW");
       if ( RW > 60. && RW < 100. ) {
-        countCutflowEvent(std::string("j.4jW")+"_"+"CR10_RW");
+        countCutflowEvent("j.4jW_CR10_RW");
         if ( missingET->P4().Et() / meff4J > 0.35 ) {
-          countCutflowEvent(std::string("j.4jW")+"_"+"CR12_Rmeff");
+          countCutflowEvent("j.4jW_CR12_Rmeff");
           if ( meffIncl > 1100. ) {
-            countCutflowEvent(std::string("j.4jW")+"_"+"CR13_meffIncl");
+            countCutflowEvent("j.4jW_CR13_meffIncl");
             countSignalEvent("SR03_e.4jW");
           }
         } 
@@ -373,41 +370,41 @@ void Atlas_1405_7875::analyze() {
 
 //for signal region 5j
   if ( flag5J && missingET->P4().Et() / meff5J > 0.2 ) {
-    countCutflowEvent(std::string("k.5j")+"_"+"CR12_Rmeff");
+    countCutflowEvent("k.5j_CR12_Rmeff");
     if ( meffIncl > 1200. ) {
-      countCutflowEvent(std::string("k.5j")+"_"+"CR13_meffIncl");
+      countCutflowEvent("k.5j_CR13_meffIncl");
       countSignalEvent("SR04_5j");
     }
   }
 
 //for signal region 6jl, 6jm
   if ( flag6J && missingET->P4().Et() / meff6J > 0.2 ) {
-    countCutflowEvent(std::string("l.6jl")+"_"+"CR12_Rmeff");
-    countCutflowEvent(std::string("m.6jm")+"_"+"CR12_Rmeff");
+    countCutflowEvent("l.6jl_CR12_Rmeff");
+    countCutflowEvent("m.6jm_CR12_Rmeff");
     if ( meffIncl > 900. ) {
-      countCutflowEvent(std::string("l.6jl")+"_"+"CR13_meffIncl");
+      countCutflowEvent("l.6jl_CR13_meffIncl");
       countSignalEvent("SR05_a.6jl");
     }
     if ( meffIncl > 1200. ) {
-      countCutflowEvent(std::string("m.6jm")+"_"+"CR13_meffIncl");
+      countCutflowEvent("m.6jm_CR13_meffIncl");
       countSignalEvent("SR05_b.6jm");
     }
   }
 
 //for signal region 6jt
   if ( flag6J && missingET->P4().Et() / meff6J > 0.25 ) {
-    countCutflowEvent(std::string("n.6jt")+"_"+"CR12_Rmeff");
+    countCutflowEvent("n.6jt_CR12_Rmeff");
     if ( meffIncl > 1500. ) {
-      countCutflowEvent(std::string("n.6jt")+"_"+"CR13_meffIncl");
+      countCutflowEvent("n.6jt_CR13_meffIncl");
       countSignalEvent("SR05_c.6jt");
     }
   }
 
 //for signal region 6jt+
   if ( flag6J && missingET->P4().Et() / meff6J > 0.15 ) {
-    countCutflowEvent(std::string("o.6jt+")+"_"+"CR12_Rmeff");
+    countCutflowEvent("o.6jt+_CR12_Rmeff");
     if ( meffIncl > 1700. ) {
-      countCutflowEvent(std::string("o.6jt+")+"_"+"CR13_meffIncl");
+      countCutflowEvent("o.6jt+_CR13_meffIncl");
       countSignalEvent("SR05_d.6jt+");
     }
   }

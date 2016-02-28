@@ -408,8 +408,6 @@ void Atlas_1407_0583::analyze() {
     }
     
     // deltaPhi (jet, ETMiss) > 0.4
-    /// This cut is NOT mentioned in the paper but is included
-    /// Till said all jets but this seems to cut too many events, Try only 2
     if((bCb_med1_Flag ==true) || (bCb_high_Flag ==true) ){
       bool jetDelPhi = false;
       //for(int i = 0; i < jetsSoft.size(); i++){
@@ -486,6 +484,7 @@ void Atlas_1407_0583::analyze() {
   // Hardest jet pT cut (> 60, tN_diag), (> 80, tN_med, bCb_med2, bCc_diag, bCd_bulk, bCd_high1, bCd_high2, threeBody, tNbC_mix), (> 100, tN_high)   
   bool jet0_80 = false;
   bool jet0_100 = false;
+  bool threeBody = false;
   if(jetsNorm[0]->PT < 60)
     return;
   
@@ -496,18 +495,18 @@ void Atlas_1407_0583::analyze() {
     jet0_80 = true;
     countCutflowEvent("bCc_diag_"+lep[lepNormFlag]+"_00_jet1");
     if(fourJetFlag == true){
+      threeBody = true;
       countCutflowEvent("tN_med_"+lep[lepNormFlag]+"_00_jet1"); countCutflowEvent("bCb_med2_"+lep[lepNormFlag]+"_00_jet1"); countCutflowEvent("bCd_bulk_"+lep[lepNormFlag]+"_00_jet1"); countCutflowEvent("bCd_high1_"+lep[lepNormFlag]+"_00_jet1"); countCutflowEvent("bCd_high2_"+lep[lepNormFlag]+"_00_jet1"); countCutflowEvent("threeBody_"+lep[lepNormFlag]+"_00_jet1"); countCutflowEvent("tNbC_mix_"+lep[lepNormFlag]+"_00_jet1");
       if(jetsNorm[0]->PT > 100){
-	jet0_100 = true;
-	countCutflowEvent("tN_high_"+lep[lepNormFlag]+"_00_jet1");
+        jet0_100 = true;
+        countCutflowEvent("tN_high_"+lep[lepNormFlag]+"_00_jet1");
       }
     }
   }
   
   //-------------------------------------------------------------------
   // Second jet pT cut (>25 threeBody - already done), (>40 bCc_diag), (> 60 tN_diag, tN_med, bCb_med2, bCd_bulk, bCd_high1), (>70 tNbC_mix), (> 80, tN_high, bCd_high2)  
-  countCutflowEvent("threeBody_"+lep[lepNormFlag]+"_01_jet2");
-  bool threeBody = true;
+  if(threeBody == true) countCutflowEvent("threeBody_"+lep[lepNormFlag]+"_01_jet2");
   // bCc_diag > 40
   bool bCc_diag = false;
   if( (jet0_80 == true) && (jetsNorm[1]->PT > 40.) ){
@@ -545,13 +544,19 @@ void Atlas_1407_0583::analyze() {
   
   //-------------------------------------------------------------------
   // Third jet pT cut (>25 threeBody - already done), (> 30 bCc_diag), (> 40 tN_diag, tN_med, tN_high, bCb_med2, bCd_bulk, bCd_high1, bCd_high2), (> 50 tNbC_mix)  
-  countCutflowEvent("threeBody_"+lep[lepNormFlag]+"_02_jet3");  
+  if(threeBody == true) countCutflowEvent("threeBody_"+lep[lepNormFlag]+"_02_jet3");  
   
   if( (bCc_diag == true) && (jetsNorm[2]->PT > 30.)) countCutflowEvent("bCc_diag_"+lep[lepNormFlag]+"_02_jet3");
   else bCc_diag = false;
   
-  if( (jetsNorm[2]->PT > 40) && ( (tN_diag == true) || (tN_med == true) || (tN_high == true) || (bCb_med2 == true) || (bCd_bulk == true) || (bCd_high1 == true) || (bCd_high2 == true))){
-    countCutflowEvent("tN_diag_"+lep[lepNormFlag]+"_02_jet3"); countCutflowEvent("tN_med_"+lep[lepNormFlag]+"_02_jet3"); countCutflowEvent("tN_high_"+lep[lepNormFlag]+"_02_jet3"); countCutflowEvent("bCb_med2_"+lep[lepNormFlag]+"_02_jet3"); countCutflowEvent("bCd_bulk_"+lep[lepNormFlag]+"_02_jet3"); countCutflowEvent("bCd_high1_"+lep[lepNormFlag]+"_02_jet3"); countCutflowEvent("bCd_high2_"+lep[lepNormFlag]+"_02_jet3");
+  if(jetsNorm[2]->PT > 40){
+    if(tN_diag == true) countCutflowEvent("tN_diag_"+lep[lepNormFlag]+"_02_jet3");
+    if(tN_med == true) countCutflowEvent("tN_med_"+lep[lepNormFlag]+"_02_jet3");
+    if(tN_high == true) countCutflowEvent("tN_high_"+lep[lepNormFlag]+"_02_jet3");
+    if(bCb_med2 == true) countCutflowEvent("bCb_med2_"+lep[lepNormFlag]+"_02_jet3");
+    if(bCd_bulk == true) countCutflowEvent("bCd_bulk_"+lep[lepNormFlag]+"_02_jet3");
+    if(bCd_high1 == true) countCutflowEvent("bCd_high1_"+lep[lepNormFlag]+"_02_jet3");
+    if(bCd_high2 == true) countCutflowEvent("bCd_high2_"+lep[lepNormFlag]+"_02_jet3");
   }
   else{
     tN_diag = false; tN_med = false; tN_high = false; bCb_med2 = false; bCd_bulk = false; bCd_high1 = false; bCd_high2 = false; 
@@ -568,7 +573,7 @@ void Atlas_1407_0583::analyze() {
   //count 70% b-jets
   int nBTags70 =0;
   for(int i = 0; i < jetsNorm.size(); i++){
-    if(checkBTag(jetsNorm[i],1) == true) nBTags70 += 1;
+    if( (jetsNorm[i]->PT>25.) && (checkBTag(jetsNorm[i],1) == true)) nBTags70 += 1;
   }
   
   //Store lepton momentum
@@ -718,7 +723,7 @@ void Atlas_1407_0583::analyze() {
 		    countSignalEvent("tN_diag_d");
 		  }
 		  else if ((tN_diag_mT140==false) && (tN_diag_MET150==true)) countSignalEvent("tN_diag_c");
-		  else if ((tN_diag_mT140==true) && (tN_diag_MET150=false)) countSignalEvent("tN_diag_b");  
+		  else if ((tN_diag_mT140==true) && (tN_diag_MET150==false)) countSignalEvent("tN_diag_b");  
 		  else if ((tN_diag_mT140==false) && (tN_diag_MET150==false)) countSignalEvent("tN_diag_a");
 		}
 	      }
@@ -1194,36 +1199,36 @@ void Atlas_1407_0583::analyze() {
       std::vector<Jet*>  bTag_jets;
       std::vector<Jet*>  notbTag_jets;
       for(int i = 0; i < jetsNorm.size(); i++){
-	if(checkBTag(jetsNorm[i],3) == true) bTag_jets.push_back(jetsNorm[i]);
-	else notbTag_jets.push_back(jetsNorm[i]);
+	      if(checkBTag(jetsNorm[i],3) == true) bTag_jets.push_back(jetsNorm[i]);
+	        else notbTag_jets.push_back(jetsNorm[i]);
       }
       
       if( (bTag_jets.size()>0) && (bTag_jets[0]->PT > 60)){
-	countCutflowEvent("tNbC_mix_"+lep[lepNormFlag]+"_04_bJetPT");
+	      countCutflowEvent("tNbC_mix_"+lep[lepNormFlag]+"_04_bJetPT");
       
-	// dPhi(jet1, EtMiss) > 0.6
-	if( fabs(jetsNorm[0]->P4().DeltaPhi(missingET->P4())) > 0.6){
-	  countCutflowEvent("tNbC_mix_"+lep[lepNormFlag]+"_05_dPhiJet1");
+	      // dPhi(jet1, EtMiss) > 0.6
+	      if( fabs(jetsNorm[0]->P4().DeltaPhi(missingET->P4())) > 0.6){
+	        countCutflowEvent("tNbC_mix_"+lep[lepNormFlag]+"_05_dPhiJet1");
 
-	  // dPhi(jet2, EtMiss) > 0.6
-	  if( fabs(jetsNorm[1]->P4().DeltaPhi(missingET->P4())) > 0.6){
-	    countCutflowEvent("tNbC_mix_"+lep[lepNormFlag]+"_06_dPhiJet2");
+	        // dPhi(jet2, EtMiss) > 0.6
+	        if( fabs(jetsNorm[1]->P4().DeltaPhi(missingET->P4())) > 0.6){
+	          countCutflowEvent("tNbC_mix_"+lep[lepNormFlag]+"_06_dPhiJet2");
       
-	    // dPhi(lep, EtMiss) > 0.6
-	    if( fabs(lepNorm.DeltaPhi(missingET->P4())) > 0.6){
-	      countCutflowEvent("tNbC_mix_"+lep[lepNormFlag]+"_07_dPhiLepETMiss");
+	          // dPhi(lep, EtMiss) > 0.6
+	          if( fabs(lepNorm.DeltaPhi(missingET->P4())) > 0.6){
+	            countCutflowEvent("tNbC_mix_"+lep[lepNormFlag]+"_07_dPhiLepETMiss");
 	    
-	      // dR(lep, jet1) < 2.75
-	      if( fabs(lepNorm.DeltaR(jetsNorm[0]->P4())) < 2.75){
-		countCutflowEvent("tNbC_mix_"+lep[lepNormFlag]+"_08_dRLepJet1");
+	            // dR(lep, jet1) < 2.75
+	            if( fabs(lepNorm.DeltaR(jetsNorm[0]->P4())) < 2.75){
+		            countCutflowEvent("tNbC_mix_"+lep[lepNormFlag]+"_08_dRLepJet1");
 
-		// dR(lep, bjet1) < 3.
-		if( fabs(lepNorm.DeltaR(jetsNorm[1]->P4())) < 3.){
-		  countCutflowEvent("tNbC_mix_"+lep[lepNormFlag]+"_09_dRLepJet2");
+		            // dR(lep, bjet1) < 3.
+		            if( fabs(lepNorm.DeltaR(bTag_jets[0]->P4())) < 3.){
+		              countCutflowEvent("tNbC_mix_"+lep[lepNormFlag]+"_09_dRLepBJet");
 	  
-		  //EtMiss > 270
-		  if(missingET->P4().Et() >270.){
-		    countCutflowEvent("tNbC_mix_"+lep[lepNormFlag]+"_10_EtMiss");
+		            //EtMiss > 270
+		            if(missingET->P4().Et() >270.){
+		              countCutflowEvent("tNbC_mix_"+lep[lepNormFlag]+"_10_EtMiss");
 		  
 		    // EtMiss/sqrt(HT) > 9
 		    // HT is sum of four jets
@@ -1250,11 +1255,11 @@ void Atlas_1407_0583::analyze() {
 			  for(int j = 0; j < jetsNorm.size(); j++){
 			    if(i != j){
 			      TLorentzVector diJetTest = jetsNorm[i]->P4() + jetsNorm[j]->P4();
-			      if((diJet.M() > 60.) && ( jetsNorm[i]->P4().DeltaR(jetsNorm[j]->P4()) < deltaRTest)){
-				deltaRTest = jetsNorm[i]->P4().DeltaR(jetsNorm[j]->P4());
-				diJet = diJetTest;
-				diJet_i = i;
-				diJet_j =j;
+			      if((diJetTest.M() > 60.) && ( jetsNorm[i]->P4().DeltaR(jetsNorm[j]->P4()) < deltaRTest)){
+              deltaRTest = jetsNorm[i]->P4().DeltaR(jetsNorm[j]->P4());
+				      diJet = diJetTest;
+				      diJet_i = i;
+				      diJet_j =j;
 			      }
 			    }
 			  }
@@ -1348,7 +1353,6 @@ void Atlas_1407_0583::analyze() {
   //************************************************************************************
   // bCb_med2 cutflow
   //-------------------------------------------------------------------
-  
   //bJet1 > 140.
   if((bCb_med2 == true) && (bTag_jets[0]->PT > 140.)){
     countCutflowEvent("bCb_med2_"+lep[lepNormFlag]+"_04_bJet1PT"); 
@@ -1359,116 +1363,121 @@ void Atlas_1407_0583::analyze() {
       
       // dPhi(jet1, EtMiss) > 0.8
       if( fabs(jetsNorm[0]->P4().DeltaPhi(missingET->P4())) > 0.8){
-	countCutflowEvent("bCb_med2_"+lep[lepNormFlag]+"_06_dPhiJet1");
+    countCutflowEvent("bCb_med2_"+lep[lepNormFlag]+"_06_dPhiJet1");
 
-	// dPhi(jet2, EtMiss) > 0.8
-	if( fabs(jetsNorm[1]->P4().DeltaPhi(missingET->P4())) > 0.8){
-	  countCutflowEvent("bCb_med2_"+lep[lepNormFlag]+"_07_dPhiJet2");
-	  
-	  //EtMiss > 170
-	  if(missingET->P4().Et() >170.){
-	    countCutflowEvent("bCb_med2_"+lep[lepNormFlag]+"_08_EtMiss");
-		  
-	    // EtMiss/sqrt(HT) > 6
-	    // HT is sum of four jets
-	    double HT = 0.;
-	    for(int i = 0; i < jetsNorm.size(); i++){
-	      if( i < 4) HT += jetsNorm[i]->PT;
-	    } 
-	    if( (missingET->P4().Et()/ sqrt(HT)) > 6) {
-	      countCutflowEvent("bCb_med2_"+lep[lepNormFlag]+"_09_met/ht");
-		    
-	      // mT > 60
-	      /// Did they really mean 60???? Signal regions have 90 and 120!!!!!!!!!!
-	      double mT = AnalysisBase::mT(lepNorm, missingET->P4());
-	      if(mT > 60){
-		countCutflowEvent("bCb_med2_"+lep[lepNormFlag]+"_10_mT");
-		
-		// aMT2 > 175. (250 for cutflow) 
-		double amT2_1 = AnalysisBase::mT2_bl(lepNorm, bTag_jets[0]->P4(),bTag_jets[1]->P4(), missingET->P4());
-		double amT2_2 = AnalysisBase::mT2_bl(lepNorm, bTag_jets[1]->P4(), bTag_jets[0]->P4(), missingET->P4());
-		double amT2 = std::min(amT2_1,amT2_2);
-		      
-		if(amT2 > 175.){
-		  bool amT2_250=false;
-		  if(amT2 > 250.){
-		    countCutflowEvent("bCb_med2_"+lep[lepNormFlag]+"_11_aMT2");
-		    amT2_250 = true;
-		  }
-		  
-		  //Veto on isolated tracks
-		  std::vector<Track*> tracksHard = filterPhaseSpace(tracks, 10., -2.5, 2.5);  
-		  tracksHard = overlapRemoval(tracksHard, electronsBaseNorm, 0.4);
-		  tracksHard = overlapRemoval(tracksHard, muonsBaseNorm, 0.4);
-		  
-		  //Check no other hard track lies close
-		  std::vector<Track*> tracksIso_a;
-		  for(int i = 0; i < tracksHard.size(); i++){
-		    bool isoTest = true;
-		    for(int j = 0; j < tracksHard.size(); j++){
-		      if(i!=j) {
-			if(tracksHard[i]->P4().DeltaR(tracksHard[j]->P4()) <0.4) isoTest = false;
-		      }
-		    }
-		    if(isoTest==true) tracksIso_a.push_back(tracksHard[i]);
-		  }
-			
-		  //Check no soft track lies close
-		  std::vector<Track*> tracksIso_b;
-		  for(int i = 0; i < tracksIso_a.size(); i++){
-		    bool isoTest = true;
-		    for(int j = 0; j < tracks.size(); j++){
-		      if( (tracks[j]->PT >3.) && (tracks[j]->PT <10.) && (fabs(tracks[j]->Eta) <2.5)){
-			if(tracksIso_a[i]->P4().DeltaR(tracks[j]->P4()) <0.4) isoTest = false;
-		      }
-		    }
-		    if(isoTest==true) tracksIso_b.push_back(tracksIso_a[i]);
-		  }
-		  
-		  //if remaining track, check if charge is opposite
-		  int lepCharge=0;
-		  bool isoCheck =true;
-		  if (lepNormFlag == 0) lepCharge = electronsBaseNorm[0]->Charge;
-		  else lepCharge = muonsBaseNorm[0]->Charge;
-		  for(int i = 0; i < tracksIso_b.size(); i++){
-		    if(lepCharge*tracksIso_b[i]->Charge < 0.) isoCheck = false;
-		  }
-		  
-		  if(isoCheck == true){
-		    if(amT2_250 == true) countCutflowEvent("bCb_med2_"+lep[lepNormFlag]+"_12_trackIso");
-		    
-		    //Tau veto
-		    bool tauVeto = false;
-		    lepCharge=0;  //reset lepCharge
-		    if (lepNormFlag == 0) lepCharge = electronsBaseNorm[0]->Charge;
-		    else lepCharge = muonsBaseNorm[0]->Charge;
-			  
-		    for(int i = 0; i < jetsTau.size(); i++){
-		      if( (checkTauTag(jetsTau[i],"tight")==true) && (jetsTau[i]->Charge*lepCharge <0.)) tauVeto=true;
-		    }
-		    if(tauVeto == false){  
-		      if(amT2_250 == true) countCutflowEvent("bCb_med2_"+lep[lepNormFlag]+"_13_tauVeto");
+    // dPhi(jet2, EtMiss) > 0.8
+    if( fabs(jetsNorm[1]->P4().DeltaPhi(missingET->P4())) > 0.8){
+      countCutflowEvent("bCb_med2_"+lep[lepNormFlag]+"_07_dPhiJet2");
+      
+      //EtMiss > 170
+      if(missingET->P4().Et() >170.){
+        countCutflowEvent("bCb_med2_"+lep[lepNormFlag]+"_08_EtMiss");
+          
+        // EtMiss/sqrt(HT) > 6
+        // HT is sum of four jets
+        double HT = 0.;
+        for(int i = 0; i < jetsNorm.size(); i++){
+          if( i < 4) HT += jetsNorm[i]->PT;
+        } 
+        if( (missingET->P4().Et()/ sqrt(HT)) > 6) {
+          countCutflowEvent("bCb_med2_"+lep[lepNormFlag]+"_09_met/ht");
+            
+          // mT > 60
+          /// Did they really mean 60???? Signal regions have 90 and 120!!!!!!!!!!
+          double mT = AnalysisBase::mT(lepNorm, missingET->P4());
+          if(mT > 60){
+            countCutflowEvent("bCb_med2_"+lep[lepNormFlag]+"_10_mT");
+        
+        // aMT2 > 175. (250 for cutflow) 
+        double amT2_1 = AnalysisBase::mT2_bl(lepNorm, bTag_jets[0]->P4(),bTag_jets[1]->P4(), missingET->P4());
+        double amT2_2 = AnalysisBase::mT2_bl(lepNorm, bTag_jets[1]->P4(), bTag_jets[0]->P4(), missingET->P4());
+        double amT2 = std::min(amT2_1,amT2_2);
+              
+        if(amT2 > 175.){
+          bool amT2_250=false;
+          if(amT2 > 250.){
+            countCutflowEvent("bCb_med2_"+lep[lepNormFlag]+"_11_aMT2");
+            amT2_250 = true;
+          }
+          
+          //Veto on isolated tracks
+          std::vector<Track*> tracksHard = filterPhaseSpace(tracks, 10., -2.5, 2.5);  
+          tracksHard = overlapRemoval(tracksHard, electronsBaseNorm, 0.4);
+          tracksHard = overlapRemoval(tracksHard, muonsBaseNorm, 0.4);
+          
+          //Check no other hard track lies close
+          std::vector<Track*> tracksIso_a;
+          for(int i = 0; i < tracksHard.size(); i++){
+            bool isoTest = true;
+            for(int j = 0; j < tracksHard.size(); j++){
+              if(i!=j) {
+            if(tracksHard[i]->P4().DeltaR(tracksHard[j]->P4()) <0.4) isoTest = false;
+              }
+            }
+            if(isoTest==true) tracksIso_a.push_back(tracksHard[i]);
+          }
+            
+          //Check no soft track lies close
+          std::vector<Track*> tracksIso_b;
+          for(int i = 0; i < tracksIso_a.size(); i++){
+            bool isoTest = true;
+            for(int j = 0; j < tracks.size(); j++){
+              if( (tracks[j]->PT >3.) && (tracks[j]->PT <10.) && (fabs(tracks[j]->Eta) <2.5)){
+            if(tracksIso_a[i]->P4().DeltaR(tracks[j]->P4()) <0.4) isoTest = false;
+              }
+            }
+            if(isoTest==true) tracksIso_b.push_back(tracksIso_a[i]);
+          }
+          
+          //if remaining track, check if charge is opposite
+          int lepCharge=0;
+          bool isoCheck =true;
+          if (lepNormFlag == 0) lepCharge = electronsBaseNorm[0]->Charge;
+          else lepCharge = muonsBaseNorm[0]->Charge;
+          for(int i = 0; i < tracksIso_b.size(); i++){
+            if(lepCharge*tracksIso_b[i]->Charge < 0.) isoCheck = false;
+          }
+          
+          if(isoCheck == true){
+            if(amT2_250 == true) countCutflowEvent("bCb_med2_"+lep[lepNormFlag]+"_12_trackIso");
+            
+            //Tau veto
+            bool tauVeto = false;
+            lepCharge=0;  //reset lepCharge
+            if (lepNormFlag == 0) lepCharge = electronsBaseNorm[0]->Charge;
+            else lepCharge = muonsBaseNorm[0]->Charge;
+              
+            for(int i = 0; i < jetsTau.size(); i++){
+              if( (checkTauTag(jetsTau[i],"tight")==true) && (jetsTau[i]->Charge*lepCharge <0.)) tauVeto=true;
+            }
+            if(tauVeto == false){  
+              if(amT2_250 == true) countCutflowEvent("bCb_med2_"+lep[lepNormFlag]+"_13_tauVeto");
 
-		      /// Topness variable should come now > 7.5
-		      /// Note included yet so simply count signal events here - looking at cutflows, this should only be few% error
-			
-		      if(amT2_250 == true){  
-			if(mT > 120) countSignalEvent("bCb_med2_d");
-			else  countSignalEvent("bCb_med2_c");
-		      }
-		      else{
-			if(mT > 120) countSignalEvent("bCb_med2_b");
-			else  countSignalEvent("bCb_med2_a");
-		      }
-		    }
-		  }
-		}
-	      }
-	    }
-	  }
-	}
+              /// Topness variable should come now > 7.5
+              /// Note included yet so simply count signal events here - looking at cutflows, this should only be few% error
+              
+              /// Final signal regions also have m_T > 90 GeV and m_bb > 150 GeV.
+              double m_bb = (bTag_jets[0]->P4()+bTag_jets[1]->P4()).M(); 
+              if( (mT > 90.0) && (m_bb > 150.0) ){
+                //countCutflowEvent("bCb_med2_"+lep[lepNormFlag]+"_14_mbb");
+                if(amT2_250 == true){  
+                  if(mT > 120) countSignalEvent("bCb_med2_d");
+                  else  countSignalEvent("bCb_med2_c");
+                }
+                else{
+                  if(mT > 120) countSignalEvent("bCb_med2_b");
+                  else countSignalEvent("bCb_med2_a");
+                }
+              }
+            }
+          }
+        }
+          }
+        }
       }
-    }	
+    }
+      }
+    }    
   }
 
   
@@ -1486,7 +1495,7 @@ void Atlas_1407_0583::analyze() {
     //bJet2 > 75 (bCd_high1) > 80 (bCd_high2) ..
     if(bTag_jets[1]->PT > 75.){
       countCutflowEvent("bCd_high1_"+lep[lepNormFlag]+"_05_bJet2PT"); 
-      if((bCd_high2 == true) && (bTag_jets[0]->PT > 80.)) countCutflowEvent("bCd_high2_"+lep[lepNormFlag]+"_05_bJet2PT");
+      if((bCd_high2 == true) && (bTag_jets[1]->PT > 80.)) countCutflowEvent("bCd_high2_"+lep[lepNormFlag]+"_05_bJet2PT");
       else bCd_high2 = false;
       
       // dPhi(jet1, EtMiss) > 0.8
@@ -1523,7 +1532,7 @@ void Atlas_1407_0583::analyze() {
 	    if(mT < 120)
 	      return;
 	    countCutflowEvent("bCd_high1_"+lep[lepNormFlag]+"_10_mT");
-	    countCutflowEvent("bCd_high2_"+lep[lepNormFlag]+"_10_dummy");	
+	    countCutflowEvent("bCd_high2_"+lep[lepNormFlag]+"_10_mT");	
 	    
 	    // meff > 600
 	    double meff = lepNorm.Pt() + missingET->P4().Et();

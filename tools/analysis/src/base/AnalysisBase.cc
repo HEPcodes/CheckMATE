@@ -411,6 +411,30 @@ double AnalysisBase::mT2_bl(const TLorentzVector & pl_in, const TLorentzVector &
     return mt2bl_event.get_mt2bl();  
 }
 
+double AnalysisBase::mT2_w(const TLorentzVector & pl_in, const TLorentzVector & pb1_in, const TLorentzVector & pb2_in, const TLorentzVector & invis, const double & upper_bound, const double & error_value, const double & scan_step) {
+    // Setup mt2_bl evaluation object.
+    //mt2w_bisect::mt2w mt2w_event(700.0, 699.0, 0.5);
+    mt2w_bisect::mt2w mt2w_event(upper_bound, error_value, scan_step);   //set to default values, upper_bound = 2000.0, error_value = -1.0, scan_step = 0.5
+    TLorentzVector zeroVector = TLorentzVector(0. ,0. ,0. ,0.);
+   
+    double pl[4] = {pl_in.E(), pl_in.Px(), pl_in.Py(), pl_in.Pz()};      // El, plx, ply, plz,     (visible lepton)
+    double pb1[4] = {pb1_in.E(), pb1_in.Px(), pb1_in.Py(), pb1_in.Pz()};  // Eb1, pb1x, pb1y, pb1z  (bottom on the same side as the visible lepton)
+    double pb2[4] = {pb2_in.E(), pb2_in.Px(), pb2_in.Py(), pb2_in.Pz()};  // Eb2, pb2x, pb2y, pb2z  (other bottom, paired with the invisible W)
+ 
+    // If no invis is given, use missingET. Note that pmiss[0] is irrelvant, which is why we set it to -1.
+    double pmiss[] = {-1, missingET->P4().Px(), missingET->P4().Py()};
+    if (invis != zeroVector) {
+        pmiss[0] = -1;
+        pmiss[1] = invis.Px();
+        pmiss[2] = invis.Py();
+    }
+ 
+    // Construct arrays that mt2_bisect needs as input and start evaluation
+    mt2w_event.set_momenta(pl,pb1,pb2,pmiss);
+
+    return mt2w_event.get_mt2w();  
+}
+
 double AnalysisBase::alphaT(const std::vector<Jet*> & jets, const double thresh_ET) {
     // alphaT code supplied by CMS
     // Need to pass jets and energy threshold of jets to be considered for variable (allows different ET to that of baseline jets)

@@ -17,9 +17,6 @@ class Atlas_1405_7875 : public AnalysisBase {
     bool flag4JW, flag3J, flag4J, flag5J, flag6J;
     static std::string nameSR[15];
 
-    ofstream fout1, fout2;
-    TH1F *h01, *h02, *h03, *h04, *h05, *h06, *h07, *h08, *h09, *h10;
-    TCanvas *canvas;
 };
 
 

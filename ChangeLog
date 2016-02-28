@@ -1,5 +1,30 @@
 CheckMATE - Changelog
 
+Ver 1.2.2
+---------
+
+2015-12-29   Jamie Tattersall <tattersall@physik.rwth-aachen.de>
+
+    ~ Bugfix for 'bCb_med2' signal region of atlas_1407_0583, missing m_bb and mT cuts (thanks to Krzysztof Rolbiecki).
+
+2015-12-02   Jamie Tattersall <tattersall@physik.rwth-aachen.de>
+
+    ~ Added 'mT2_w' variable (code courtesy of Yang Bai, Hsin-Chia Cheng, Jason Gallicchio, Jiayin Gu)
+
+2015-11-18   Jamie Tattersall <tattersall@physik.rwth-aachen.de>
+
+    ~ Bugfix in AnalysisManager when total error is not provided by user  (thanks to Liangliang Shang)
+
+2015-11-02   Jamie Tattersall <tattersall@physik.rwth-aachen.de>
+
+    ~ Various bugfixes for atlas_1407_0583 (thanks to Liangliang Shang)
+
+2015-10-11   Jamie Tattersall <tattersall@physik.rwth-aachen.de>
+
+    ~ Added atlas_1506_08616 (thanks to Krzysztof Rolbiecki)
+    ~ Added atlas_1403_5222 (thanks to Krzysztof Rolbiecki)
+
+
 Ver 1.2.1
 ---------
 

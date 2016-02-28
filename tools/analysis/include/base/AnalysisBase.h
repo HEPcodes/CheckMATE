@@ -30,6 +30,7 @@
 #include "mt2_bisect.h"
 #include "mctlib.h"
 #include "mt2bl_bisect.h"
+#include "mt2w_bisect.h"
 
 /*! \mainpage Introduction
  * This documentation describes all classes and functions that are used within the CheckMATE
@@ -410,8 +411,17 @@ class AnalysisBase {
      * 
      * It is also known as asymmetric mT2 (e.g. in atlas_conf_2013_037).
      * For more information, see http://arxiv.org/abs/1203.4813
+     * (code courtesy of Yang Bai, Hsin-Chia Cheng, Jason Gallicchio, Jiayin Gu)
      */
     double mT2_bl(const TLorentzVector & pl_in, const TLorentzVector & pb1_in, const TLorentzVector & pb2_in, const TLorentzVector & invis = TLorentzVector(0., 0., 0., 0.));    
+
+    //! Evaluates \f$m_{T2}^{w}\f$.
+    /** The definition is
+     * 
+     * For more information, see http://arxiv.org/abs/1203.4813
+     * (code courtesy of Yang Bai, Hsin-Chia Cheng, Jason Gallicchio, Jiayin Gu)
+     */
+    double mT2_w(const TLorentzVector & pl_in, const TLorentzVector & pb1_in, const TLorentzVector & pb2_in, const TLorentzVector & invis = TLorentzVector(0., 0., 0., 0.), const double & upper_bound = 2000.0, const double & error_value = 1999.0, const double & scan_step = 0.5);    
 
     //! Evaluates \f$\alpha_T\f$.
     /** The definition is

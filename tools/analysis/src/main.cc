@@ -7,21 +7,25 @@
 
 #include "Units.h"
 
-
+#include "atlas_phys_2014_010_300.h" 
+#include "atlas_phys_2014_010_sq_HL.h" 
 //@@extraheader@@
 #include "atlas_1210_2979.h" 
 #include "atlas_1308_1841.h" 
 #include "atlas_1308_2631.h" 
 #include "atlas_1402_7029.h" 
 #include "atlas_1403_4853.h" 
+#include "atlas_1403_5222.h" 
 #include "atlas_1403_5294.h"
 #include "atlas_1404_2500.h"
 #include "atlas_1405_7875.h" 
 #include "atlas_1407_0583.h"
 #include "atlas_1407_0600.h" 
 #include "atlas_1407_0608.h" 
+#include "atlas_1411_1559.h" 
 #include "atlas_1502_01518.h" 
 #include "atlas_1503_03290.h" 
+#include "atlas_1506_08616.h" 
 #include "atlas_conf_2012_104.h" 
 #include "atlas_conf_2012_147.h" 
 #include "atlas_conf_2013_021.h" 
@@ -39,14 +43,27 @@
 #include "atlas_conf_2014_014.h"
 #include "atlas_conf_2014_033.h" 
 #include "atlas_conf_2014_056.h" 
+#include "atlas_conf_2015_004.h" 
+
+// CMS
 #include "cms_1301_4698_WW.h" 
 #include "cms_1303_2985.h"
 #include "cms_1306_1126_WW.h" 
 #include "cms_1405_7570.h"
+#include "cms_1408_3583.h" 
 #include "cms_1502_06031.h" 
+#include "cms_1504_03198.h"
 #include "cms_smp_12_006.h"
 #include "cms_sus_12_019.h" 
 #include "cms_sus_13_016.h"
+
+// 14 TeV high luminosity
+#include "atlas_phys_2014_010_300.h" 
+#include "atlas_phys_2014_010_sq_HL.h" 
+#include "atlas_phys_pub_2013_011.h" 
+
+
+
 
 int main(int argc, char* argv[]) {
     if(argc <= 6) {
@@ -161,6 +178,10 @@ int main(int argc, char* argv[]) {
       Atlas_1403_4853 a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
       a.loopOverEvents();
     }
+    else if(analysis == "atlas_1403_5222") {
+      Atlas_1403_5222 a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
+      a.loopOverEvents();
+    }
     else if(analysis == "atlas_1403_5294") {
       Atlas_1403_5294 a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
       a.loopOverEvents();
@@ -189,10 +210,22 @@ int main(int argc, char* argv[]) {
       Atlas_1407_0608 a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
       a.loopOverEvents();
     }
+    else if(analysis == "atlas_1411_1559") {
+      Atlas_1411_1559 a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
+      a.loopOverEvents();
+    }
+    else if(analysis == "atlas_1502_01518") {
+      Atlas_1502_01518 a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
+      a.loopOverEvents();
+    }
     else if(analysis == "atlas_1503_03290") {
       Atlas_1503_03290 a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
       a.loopOverEvents();
     }  
+    else if(analysis == "atlas_1506_08616") {
+      Atlas_1506_08616 a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
+      a.loopOverEvents();
+    }
     else if(analysis == "atlas_conf_2012_104") {
       Atlas_conf_2012_104 a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
       a.loopOverEvents();
@@ -289,6 +322,10 @@ int main(int argc, char* argv[]) {
       Atlas_conf_2014_056 a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
       a.loopOverEvents();
     }
+    else if(analysis == "atlas_conf_2015_004") {
+      Atlas_conf_2015_004 a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
+      a.loopOverEvents();
+    }
     else if(analysis == "cms_1303_2985") {
       Cms_1303_2985 a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
       a.loopOverEvents();
@@ -305,8 +342,20 @@ int main(int argc, char* argv[]) {
       Cms_1306_1126_ww a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
       a.loopOverEvents();
     }
+    else if(analysis == "cms_1405_7570") {
+      Cms_1405_7570 a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
+      a.loopOverEvents();
+    }
+    else if(analysis == "cms_1408_3583") {
+      Cms_1408_3583 a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
+      a.loopOverEvents();
+    }
     else if(analysis == "cms_1502_06031") {
       Cms_1502_06031 a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
+      a.loopOverEvents();
+    }
+    else if(analysis == "cms_1504_03198") {
+      Cms_1504_03198 a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
       a.loopOverEvents();
     }
     else if(analysis == "cms_smp_12_006") {
@@ -317,17 +366,31 @@ int main(int argc, char* argv[]) {
       Cms_sus_12_019 a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
       a.loopOverEvents();
     }
-    else if(analysis == "cms_1405_7570") {
-      Cms_1405_7570 a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
-      a.loopOverEvents();
-    }
     else if(analysis == "cms_sus_13_016") {
       Cms_sus_13_016 a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
       a.loopOverEvents();
     }
 
-        else if(analysis == "atlas_1502_01518") {
-            Atlas_1502_01518 a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
+    else if(analysis == "atlas_phys_2014_010_300") {
+      Atlas_phys_2014_010_300 a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
+      a.loopOverEvents();
+    }
+    else if(analysis == "atlas_phys_2014_010_sq_HL") {
+      Atlas_phys_2014_010_sq_hl a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
+      a.loopOverEvents();
+    }
+    else if(analysis == "atlas_phys_pub_2013_011") {
+      Atlas_phys_pub_2013_011 a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
+      a.loopOverEvents();
+    }
+
+
+        else if(analysis == "atlas_phys_2014_010_300") {
+            Atlas_phys_2014_010_300 a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
+            a.loopOverEvents();
+        }
+        else if(analysis == "atlas_phys_2014_010_sq_HL") {
+            Atlas_phys_2014_010_sq_hl a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
             a.loopOverEvents();
         }
 //@@extracode@@
