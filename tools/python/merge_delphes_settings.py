@@ -303,12 +303,9 @@ def merge_settings(files, paths, flags):
         if ["b", b_eff, parameters[a]["experiment"]] not in tags_per_jet_module[jet_module]:
           tags_per_jet_module[jet_module].append(["b", b_eff, parameters[a]["experiment"]])
           
-        # b-flag = index in tag_list (but minus 1 if there is a 't' in the list)
-        if ["t", parameters[a]["experiment"]] not in tags_per_jet_module[jet_module]:
-          all_jet_btagging_lists[a].append(tags_per_jet_module[jet_module].index(["b", b_eff, parameters[a]["experiment"]]))
-        else:
-          all_jet_btagging_lists[a].append(tags_per_jet_module[jet_module].index(["b", b_eff, parameters[a]["experiment"]])-1)
-          
+        # b-flag = index in tag_list 
+        all_jet_btagging_lists[a].append(tags_per_jet_module[jet_module].index(["b", b_eff, parameters[a]["experiment"]]))
+                  
         if jet_module_2 != "":
           if ["b", b_eff, parameters[a]["experiment"]] not in tags_per_jet_module[jet_module_2]:
             tags_per_jet_module[jet_module_2].append(["b", b_eff, parameters[a]["experiment"]])

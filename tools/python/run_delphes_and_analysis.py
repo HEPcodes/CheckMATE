@@ -117,9 +117,10 @@ def run_delphes_and_analyze(analyses, events, files, flags, output, paths):
                 p = subprocess.Popen(process.split(), bufsize=0, stdin = subprocess.PIPE, stderr = subprocess.STDOUT, stdout = subprocess.PIPE)
             else:
                 p = subprocess.Popen(process.split(), bufsize=0, stdin = subprocess.PIPE,  stdout = subprocess.PIPE, stderr = subprocess.STDOUT)
-            output.set_cout_file(files["output_log_analysis"])
+            output.set_cout_file(files["output_log_analysis"])            
             if not flags["verbosemode"]:
               output.mute()
+            output.cout("Run Analysis "+analysis+" with parameters "+str((files['analysis_bin'], analysis, event_delphes, paths['output_analysis'], eventcounter, xsect_num, xsect_unit, xsecterr_num, xsecterr_unit, branch_tuple, flag_tuple)))
             for line in iter(p.stdout.readline, ''):
               strLine = str(line.rstrip())
               output.cout(strLine)
