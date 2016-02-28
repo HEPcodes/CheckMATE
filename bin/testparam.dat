@@ -1,0 +1,13 @@
+## General Options
+[Mandatory Parameters]
+Name: My_New_Run
+Analyses: atlas_conf_2013_047
+
+[Optional Parameters]
+
+## Process Information (Each new process 'X' must start with [X])
+[gluinogluino]
+XSect: 3.53*FB
+XSectErr: 1e-5*PB
+Events: testfile.hep
+

@@ -1,0 +1,21 @@
+#include "@@analysis@@.h"
+
+void @@Analysis@@::initialize() {
+  setAnalysisName("@@analysis@@");          
+  setInformation(""
+    @@longInfo@@
+  "");
+  setLuminosity(@@lumi@@*units::INVFB);      
+  ignore("towers"); // These won't read tower or track information from the
+  ignore("tracks"); //  Delphes output branches to save computing time.
+  bookSignalRegions("@@signalregions@@");
+  // You should initialize any declared variables here
+}
+
+void @@Analysis@@::analyze() {
+  // Your eventwise analysis code goes here
+}
+
+void @@Analysis@@::finalize() {
+  // Whatever should be done after the run goes here
+}       

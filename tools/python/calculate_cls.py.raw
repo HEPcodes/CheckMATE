@@ -1,0 +1,89 @@
+import sys
+sys.path.append("/usr/bin/root/lib/root")
+from ctypes import *
+cdll.LoadLibrary("/usr/bin/lib/root/libCint.so")
+cdll.LoadLibrary("/usr/bin/root/lib/root/libCore.so")
+cdll.LoadLibrary("/usr/bin/root/lib/root/libThread.so")
+cdll.LoadLibrary("/usr/bin/root/lib/root/libRIO.so")
+cdll.LoadLibrary("/usr/bin/root/lib/root/libMathCore.so")
+cdll.LoadLibrary("/usr/bin/root/lib/root/libNet.so")
+cdll.LoadLibrary("/usr/bin/root/lib/root/libTree.so")
+
+import ROOT
+ROOT.PyConfig.IgnoreCommandLineOptions = True
+from ROOT import *
+
+def cls(b0, sigmab, nobs, s0, sigmas):
+  s0 = float(("%." + str(6) + "e") % s0)
+  sigmas = float(("%." + str(6) + "e") % sigmas)
+  RooMsgService.instance().setGlobalKillBelow(RooFit.WARNING)
+  
+  # Load Workspace
+  w = RooWorkspace("w")
+  # Assume Gaussian background with given width and uncertainty
+  w.factory("Gaussian:constraint_b(eps_b[1, "+str(max(0, 1.-5.*sigmab/b0))+", "+str(1.+5.*sigmab/b0)+"], 1., sigma_b["+str(sigmab/b0)+"])")
+  # Assuma Gaussian signal with given width and uncertainty
+  w.factory("Gaussian:constraint_s(eps_s[1, "+str(max(0, 1.-5.*sigmas/s0))+", "+str(1.+5.*sigmas/s0)+"], 1., sigma_s["+str(sigmas/s0)+"])")
+  # We expect signal + background
+  w.factory("sum:nexp(s[0,"+str(s0)+"]*eps_s,b["+str(b0)+"]*eps_b)")
+  # Assume Poissonian probability for compatibility of observed and expected numbers
+  w.factory("Poisson:pdf_sb(nobs["+str(nobs)+"],nexp)")
+  w.factory("PROD:model_sb(pdf_sb, constraint_b, constraint_s)")
+
+  # Set values
+  w.var("sigma_b").setVal(sigmab/b0)
+  w.var("sigma_b").setConstant(true)
+  w.var("sigma_s").setVal(sigmas/s0)
+  w.var("sigma_s").setConstant(true)
+  w.var("s").setVal(s0)
+
+  w.var("nobs").setVal(nobs)
+  w.var("nobs").setConstant(true)
+  w.var("b").setVal(b0)
+  w.var("b").setConstant(true)
+
+  # Define s+b model
+  mc_sb = RooStats.ModelConfig("sb", w)
+  mc_sb.SetPdf(w.pdf("model_sb"))
+  mc_sb.SetName("model_sb")
+  mc_sb.SetParametersOfInterest(RooArgSet(w.var("s")))
+  mc_sb.SetObservables(RooArgSet(w.var("nobs")))
+  mc_sb.SetNuisanceParameters(RooArgSet(w.var("eps_b"), w.var("eps_s")))
+  mc_sb.SetGlobalObservables(RooArgSet(w.var("b")))
+  mc_sb.SetSnapshot(RooArgSet(w.var("s")))
+  w.__getattribute__('import')(mc_sb)
+
+  # Define b model as s+b model with s = 0
+  poi = RooRealVar(mc_sb.GetParametersOfInterest().first())
+  mc_b = RooStats.ModelConfig(mc_sb.Clone())
+  mc_b.SetName("model_b")
+  oldval = poi.getVal()
+  poi.setVal(0)
+  mc_b.SetSnapshot( RooArgSet(poi)  )
+  poi.setVal(s0)
+
+  # Define dataset with nobs entries
+  data = RooDataSet("data","", RooArgSet(w.var("nobs")))
+  w.var("nobs").setVal(nobs)
+  data.add(RooArgSet(w.var("nobs") ))
+  w.__getattribute__('import')(data);
+
+  # Use hybrid calculator to parametrise nuisance effects
+  fc = RooStats.HybridCalculator(data, mc_b, mc_sb)
+
+  # Set number of toy monte carlos per run
+  fc.SetToys(10000,2000)
+
+  # Set toys by using one sided profile likelihood test statistics
+  toymcs = fc.GetTestStatSampler()
+  profll = RooStats.ProfileLikelihoodTestStat(mc_sb.GetPdf())
+  profll.SetOneSided(true)
+  toymcs.SetTestStatistic(profll)
+  if not mc_sb.GetPdf().canBeExtended():
+    toymcs.SetNEventsPerToy(1)
+
+  res = fc.GetHypoTest()
+  # for CLs test one has to invert b and s+b
+  res.SetBackgroundAsAlt()
+  
+  return (res.CLs(), res.CLsError())

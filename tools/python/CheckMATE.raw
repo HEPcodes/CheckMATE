@@ -1,0 +1,68 @@
+#!/usr/bin/python
+import sys,os
+sys.path.append(os.path.join(os.path.split(os.path.split(os.path.realpath(__file__))[0])[0], "tools", "python"))
+from global_functions import *
+from organize_paths_and_files import *
+from initialize import *
+from run_delphes_and_analysis import *
+from evaluate import *
+
+# Define overall objects and combining tuple
+paths = dict()
+files = dict()
+flags = dict()
+events = dict()
+analyses = dict()
+output = AdvPrint()
+    
+# Give tutorial output if no argument is given    
+if len(sys.argv) == 1:
+    print """
+   ____ _               _    __  __    _  _____ _____ 
+  / ___| |__   ___  ___| | _|  \/  |  / \|_   _| ____|
+ | |   | '_ \ / _ \/ __| |/ / |\/| | / _ \ | | |  _|  
+ | |___| | | |  __/ (__|   <| |  | |/ ___ \| | | |___ 
+  \____|_| |_|\___|\___|_|\_\_|  |_/_/   \_\_| |_____|
+                                                  ___   
+                                      |__| _       | _  
+                                      |  |(_)\)/   |(_) 
+  """
+    print "Method 1: Input Parameters"
+    print "\trun -n {name_for_this_run} -a {analysis} -p {processes} -xs {crosssection(s)} -xse {crosssection error(s)} {eventfile(s)}"
+    print "Method 2: Input File"
+    print "\trun {inputfile}"
+    print ""
+    print "Examples:"
+    print "\t./CheckMATE -n testrun -a atlas_conf_2013_047 -p \"gg;gs;ss\" -xs \"1*FB;2.2 PB;3E-5 B\" -xse \"0.1 FB;4.2 %;0.1*PB\" /scratch/all/gluinopair.hepmc ~/susy/gs.lhe ../file3.hep"
+    print "\t./CheckMATE testparam.dat"
+    print ""
+    print "Type './CheckMATE -h' for more information about available parameters or check"
+    print "the given 'testparam.dat' file for the desired structure of input files"
+    exit(1)
+# If only 1 parameter is given, interpret as input file
+elif len(sys.argv) == 2:
+    if sys.argv[1] == "-h":
+        (analyses, events, files, flags, output, paths) = get_information_from_parameters()
+    else:
+        (analyses, events, files, flags, output, paths) = get_information_from_file(sys.argv[1])
+# Otherwise, get parsed information from input parameters.
+else:
+    (analyses, events, files, flags, output, paths) = get_information_from_parameters()
+
+# Print parameters, check validity, create output directories
+prepare_run(analyses, events, files, flags, output, paths)
+output.cout("")
+
+if len(events['raw']) != 0:
+    output.cout("************************************")
+    output.cout("*******  DELPHES + ANALYSIS  *******")
+    output.cout("************************************")
+
+    run_delphes_and_analyze(analyses, events, files, flags, output, paths)
+
+if not flags['skipevaluation']:
+    output.cout("")
+    output.cout("************************************")
+    output.cout("*******      EVALUATION      *******")
+    output.cout("************************************")
+    evaluate(analyses, events, files, flags, output, paths)
