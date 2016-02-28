@@ -1,6 +1,16 @@
-import sys
+import os, sys
 sys.path.append("/usr/bin/root/lib/root")
 from ctypes import *
+# If any of the following files does not exists, error
+if (not os.path.isfile("/usr/bin/lib/root/libCint.so") or
+    not os.path.isfile("/usr/bin/lib/root/libCore.so") or
+    not os.path.isfile("/usr/bin/lib/root/libThread.so") or
+    not os.path.isfile("/usr/bin/lib/root/libRIO.so") or
+    not os.path.isfile("/usr/bin/lib/root/libMathCore.so") or
+    not os.path.isfile("/usr/bin/lib/root/libNet.so") or
+    not os.path.isfile("/usr/bin/lib/root/libTree.so")):
+      exit("INITIALISATION ERROR: Root libraries could not be found. Is the Root directory you declared during 'configure' still correct?")
+      
 cdll.LoadLibrary("/usr/bin/lib/root/libCint.so")
 cdll.LoadLibrary("/usr/bin/root/lib/root/libCore.so")
 cdll.LoadLibrary("/usr/bin/root/lib/root/libThread.so")

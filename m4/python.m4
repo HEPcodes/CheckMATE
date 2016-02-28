@@ -5,9 +5,9 @@ dnl Distribute under the same rules as Autoconf itself.
 
 dnl Check for location of python.
 
-AC_DEFUN(PY_PROG_PYTHON,
+AC_DEFUN([PY_PROG_PYTHON],
   [AC_ARG_WITH(python,
-  [  --with-python=CMD       name of python executable],,[with_python=no])
+  [  --with-python=EXE       EXE=full path to python executable],,[with_python=no])
   AC_MSG_CHECKING(for python)
   if test "x$with_python" != xno && test -x "$with_python"; then
     PYTHON="$with_python"
@@ -20,7 +20,7 @@ AC_DEFUN(PY_PROG_PYTHON,
 )
 
 dnl Check for python version
-AC_DEFUN(PY_PYTHON_VERSION,
+AC_DEFUN([PY_PYTHON_VERSION],
   [AC_REQUIRE([PY_PROG_PYTHON])
   AC_MSG_CHECKING(python version)
 
@@ -49,7 +49,7 @@ AC_DEFUN(PY_PYTHON_VERSION,
 ])
 
 dnl Check python installation prefix
-AC_DEFUN(PY_PYTHON_PREFIX,
+AC_DEFUN([PY_PYTHON_PREFIX],
 [AC_REQUIRE([PY_PROG_PYTHON])
 AC_ARG_WITH(python-prefix,
 [  --with-python-prefix=DIR
@@ -72,7 +72,7 @@ prefix=$PYTHON_PREFIX
 ])
 
 dnl Check python installation exec_prefix
-AC_DEFUN(PY_PYTHON_EXEC_PREFIX,
+AC_DEFUN([PY_PYTHON_EXEC_PREFIX],
 [AC_REQUIRE([PY_PROG_PYTHON])
 AC_ARG_WITH(python-prefix,
 [  --with-python-exec-prefix=DIR
@@ -94,7 +94,7 @@ AC_SUBST(PYTHON_EXEC_PREFIX)
 exec_prefix=$PYTHON_EXEC_PREFIX
 ])
 
-AC_DEFUN(PY_PYTHON_IMPORT_CHECK,
+AC_DEFUN([PY_PYTHON_IMPORT_CHECK],
   [
     module=$1
     scriptCode="$2"

@@ -31,3 +31,5 @@ AC_CONFIG_SUBDIRS([tools/delphes/Delphes-3.0.10X])
 AC_CONFIG_FILES([Makefile
                  tools/analysis/Makefile])
 AC_OUTPUT
+AC_MSG_RESULT([=== Subconfigurations Done ===])
+AC_MSG_RESULT([Configuration of CheckMATE finished. Run 'make' to compile. If you have more than one core, you can use -j2 or even -j4 to speed up the compilation process. Note that you don't have to run 'make install' afterwards.])

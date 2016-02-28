@@ -13,14 +13,21 @@ export DYLD_LIBRARY_PATH
 all:
 	@sed 's,\#!.*,\#!@PYTHON@,' tools/python/CheckMATE.raw > bin/CheckMATE;
 	@chmod +x bin/CheckMATE;
-	@sed 's,sys\.path\.append.*,sys\.path\.append("@ROOTLIBDIR@"),' tools/python/calculate_cls.py.raw | \
+	@sed 's,sys\.path\.append.*,sys\.path\.append("@ROOTLIBDIR@"),g' tools/python/calculate_cls.py.raw | \
 	sed 's,cdll\.LoadLibrary(.*/libCint.so\"),cdll\.LoadLibrary("@ROOTLIBDIR@/libCint.so\"),' | \
+	sed 's,os\.path\.isfile(.*/libCint.so\"),os\.path\.isfile("@ROOTLIBDIR@/libCint.so\"),' | \
 	sed 's,cdll\.LoadLibrary(.*/libCore.so\"),cdll\.LoadLibrary("@ROOTLIBDIR@/libCore.so\"),' | \
+	sed 's,os\.path\.isfile(.*/libCore.so\"),os\.path\.isfile("@ROOTLIBDIR@/libCore.so\"),' | \
 	sed 's,cdll\.LoadLibrary(.*/libThread.so\"),cdll\.LoadLibrary("@ROOTLIBDIR@/libThread.so\"),' | \
+	sed 's,os\.path\.isfile(.*/libThread.so\"),os\.path\.isfile("@ROOTLIBDIR@/libThread.so\"),' | \
 	sed 's,cdll\.LoadLibrary(.*/libRIO.so\"),cdll\.LoadLibrary("@ROOTLIBDIR@/libRIO.so\"),' | \
+	sed 's,os\.path\.isfile(.*/libRIO.so\"),os\.path\.isfile("@ROOTLIBDIR@/libRIO.so\"),' | \
 	sed 's,cdll\.LoadLibrary(.*/libMathCore.so\"),cdll\.LoadLibrary("@ROOTLIBDIR@/libMathCore.so\"),'  | \
+	sed 's,os\.path\.isfile(.*/libMathCore.so\"),os\.path\.isfile("@ROOTLIBDIR@/libMathCore.so\"),'  | \
 	sed 's,cdll\.LoadLibrary(.*/libNet.so\"),cdll\.LoadLibrary("@ROOTLIBDIR@/libNet.so\"),'  | \
-	sed 's,cdll\.LoadLibrary(.*/libTree.so\"),cdll\.LoadLibrary("@ROOTLIBDIR@/libTree.so\"),' > tools/python/calculate_cls.py;
+	sed 's,os\.path\.isfile(.*/libNet.so\"),os\.path\.isfile("@ROOTLIBDIR@/libNet.so\"),'  | \
+	sed 's,cdll\.LoadLibrary(.*/libTree.so\"),cdll\.LoadLibrary("@ROOTLIBDIR@/libTree.so\"),'  | \
+	sed 's,os\.path\.isfile(.*/libTree.so\"),os\.path\.isfile("@ROOTLIBDIR@/libTree.so\"),' > tools/python/calculate_cls.py;
 
 AnalysisManager:
 	@sed 's,\#!.*,\#!@PYTHON@,' tools/python/AnalysisManager.raw > bin/AnalysisManager;

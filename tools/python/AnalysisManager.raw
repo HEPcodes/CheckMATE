@@ -46,7 +46,6 @@ def create_analysis():
   myprint('Attention: Your input is NOT saved before you finish this questionnaire!')
   myprint('')
   
-  author = "user"
   #==========================================================================  
   CURRLEVEL = PRINTLEVEL
   while True:    
@@ -54,6 +53,8 @@ def create_analysis():
       PRINTLEVEL = CURRLEVEL
       myprint('1. General Information to build analysis')
       PRINTLEVEL += 1
+      author = ask("Your Name (to declare the analysis author): ")
+      authoremail = ask("Your Email: ")
       analysis = ask("Analysis Name: ")
       # Check whether parameter file already exists
       files = get_analysis_files([analysis])
@@ -264,7 +265,6 @@ def create_analysis():
         jets_btagging_eff = []
       
       while c == "y":
-        myprint("")
         jets_btagging_n += 1
         myprint("b-Tagging "+str(jets_btagging_n)+":")
         PRINTLEVEL += 1
@@ -272,7 +272,6 @@ def create_analysis():
         PRINTLEVEL -= 1
         c = ask("Do you need more b tags? [(y)es, (n)o]")
         
-      myprint("") 
       jets_tautagging = ask("Do you want to use tau-tagging? [(y)es, (n)o]")    
       break
     except KeyboardInterrupt:
@@ -311,6 +310,8 @@ def add_analysis(analysis):
   template_file.close()  
   contents = contents.replace("@@analysis@@", analysis).replace("@@Analysis@@", analysis.capitalize()).replace("@@ANALYSIS@@", analysis.upper())
   contents = contents.replace("@@lumi@@", parameters["lumi"])
+  contents = contents.replace("@@author@@", parameters["author"])
+  contents = contents.replace("@@authoremail@@", parameters["authoremail"])
   contents = contents.replace("@@longInfo@@", str(parameters["long_info"]).replace("['", '"@#').replace("']", '\\n"').replace("', '", '\\n"\n     "@#'))
   signal_region_string = ""
   for sr in eval(parameters["signal_regions"]):
@@ -327,6 +328,8 @@ def add_analysis(analysis):
     template_file.close()  
     contents = contents.replace("@@analysis@@", analysis).replace("@@Analysis@@", analysis.capitalize()).replace("@@ANALYSIS@@", analysis.upper())
     contents = contents.replace("@@lumi@@", parameters["lumi"])
+    contents = contents.replace("@@author@@", parameters["author"])
+    contents = contents.replace("@@authoremail@@", parameters["authoremail"])
     contents = contents.replace("@@longInfo@@", str(parameters["long_info"]).replace("['", '"@#').replace("']", '\\n"').replace("', '", '\\n"\n     "@#'))
     real_file = open(files['analysis_CR_source'][analysis], "w")
     real_file.write(contents)
@@ -336,6 +339,8 @@ def add_analysis(analysis):
   template_file = open(files['analysis_template_header'], "r")
   contents = template_file.read()
   template_file.close()
+  contents = contents.replace("@@author@@", parameters["author"])
+  contents = contents.replace("@@authoremail@@", parameters["authoremail"])
   contents = contents.replace("@@analysis@@", analysis).replace("@@Analysis@@", analysis.capitalize()).replace("@@ANALYSIS@@", analysis.upper())
   if parameters["cr"] == "y":
     contents = contents.replace("@@BEGINCR@@", "").replace("@@ENDCR@@", "")
@@ -391,14 +396,16 @@ def add_analysis(analysis):
   list_file = open(files['list_of_analyses'], "a")
   list_file.write(analysis+"  "+str(len(eval(parameters["signal_regions"])))+"  "+parameters["short_info"]+"  "+parameters["lumi"]+"  ")
   if parameters["cr"] == "y":
-    list_file.write("yes\n")
+    list_file.write("yes  ")
   else:
-    list_file.write("no\n")
+    list_file.write("no  ")
+  list_file.write("  "+parameters["author"]+"  "+parameters["authoremail"]+"\n")
   list_file.close()  
   format_columnated_file(files["list_of_analyses"])
   myprint(" - List of analyses updated")
   PRINTLEVEL -= 1
   myprint("Analysis "+analysis+" has been added successfully!")
+  myprint("Run 'make' from the main CheckMATE folder to compile it!")
   
   
 def list_analyses():
