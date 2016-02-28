@@ -1,7 +1,19 @@
 CheckMATE - Changelog
 
+Ver 1.1.9
+---------
+
+2014-09-09   Daniel Schmeier <daschm@th.physik.uni-bonn.de>
+
+        ~ Author + Email is now asked for in the analysis manager and printed into the analyses
+	~ Spaces in run name are replaced by underscores to prevent problems with filenames
+	~ Errors during the delphes analysis chain are properly caught and lead to a well defined error message
+	~ Giving units in lowercase does not produce problems anymore
+
+	
+
 Ver 1.1.8
------------
+---------
 
 2014-08-13   Jamie Tattersall <tattersall@thphys.uni-heidelberg.de>
 

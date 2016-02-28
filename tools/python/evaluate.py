@@ -48,6 +48,9 @@ def read_reference_file(reference_file):
 
   
 def collect_n_events_per_file(result, files, signal_regions, output):
+  # Check if file actually exists / was created. If it does/is not, something went wrong
+  if (result['prefix'] not in files['results_signal']) or (not os.path.isfile(files['results_signal'][result['prefix']])):
+    exit("ERROR: Required analysis result files do not exist. \n   It is very likely that something went wrong in the delphes and/or the analysis step. \n   Please check \n      "+files['output_log_delphes']+" \n      "+files['output_log_analysis']+" \n   for error messages and, should you not be able to fix them yourself, contact the authors under  \n      checkmate@projects.hepforge.org")
   f = open(files['results_signal'][result['prefix']], "r")
   n_events_per_file = dict()
   n_events_per_file["signal_sumofweights"] = dict() # Sum of weights of all events in a given signal region

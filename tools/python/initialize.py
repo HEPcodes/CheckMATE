@@ -108,8 +108,9 @@ def get_information_from_file(pfile):
       flags["skipevaluation"] = True
     # Update files and paths with given parameters
     files.update(get_analysis_files(analyses))
-    paths.update(get_output_paths(paths['results'], Config.get("Mandatory Parameters", "name")))
-    files.update(get_output_files(paths['results'], Config.get("Mandatory Parameters", "name"), analyses, flags))
+
+    paths.update(get_output_paths(paths['results'], Config.get("Mandatory Parameters", "name").replace(" ", "_"))) # spaces in "name" are replaced by underscores to prevent problems in the file handling
+    files.update(get_output_files(paths['results'], Config.get("Mandatory Parameters", "name").replace(" ", "_"), analyses, flags))
     
     # Set up event information. Remaining sections consist of individual processes
     for process in sections:
@@ -122,7 +123,7 @@ def get_information_from_file(pfile):
                 output.cerr_exit("Event file '"+event+"' does not exist.")
             events['raw'].append(os.path.abspath(event))
             events['processes'].append(process)
-            # Read cross section
+            # Read cross section in the form "Num Unit" or "Num*Unit"
             if "xsect" not in Config.options(process):
                 output.cerr_exit("No 'XSect' line for process '"+process+"' in parameter file!")
             xsect = Config.get(process, "xsect")
@@ -130,9 +131,13 @@ def get_information_from_file(pfile):
               xsect_split = xsect.split("*")
             else:
               xsect_split = xsect.split(" ")              
+            if len(xsect_split) == 1:   # If "0", add random unit
+              xsect_split.append("FB")
+            xsect_split[1] = xsect_split[1].upper() # Make sure unit is in uppercase
             events['xsects'].append(xsect_split)
             
-            xsecterr = Config.get(process, "xsecterr")
+            # Same as above, just for the error
+            xsecterr = Config.get(process, "xsecterr")  
             if "*" in xsecterr:
               xsecterr_split = xsecterr.split("*")
             else:
@@ -140,7 +145,10 @@ def get_information_from_file(pfile):
             # If relative error is given, transform into absolute error"
             if xsecterr_split[1] == "%":
               xsecterr_split[0] = str(float(xsect_split[0])*float(xsecterr_split[0].rstrip())/100.)
-              xsecterr_split[1] = xsect_split[1]
+              xsecterr_split[1] = xsect_split[1]             
+            if len(xsecterr_split) == 1:
+              xsecterr_split.append("FB")
+            xsecterr_split[1] = xsecterr_split[1].upper() # Make sure unit is in uppercase
             events['xsecterrs'].append(xsecterr_split)
                                     
     return (analyses, events, files, flags, output, paths)
@@ -228,8 +236,10 @@ def get_information_from_parameters():
           analyses.append(line.split()[0])
     else:
       analyses = [a.lstrip().rstrip() for a in args.analysis.split(",")]
-    files.update(get_output_files(args.odir, args.name, analyses, flags))
-    paths.update(get_output_paths(args.odir, args.name))
+      
+    files.update(get_output_files(args.odir, args.name.replace(" ", "_"), analyses, flags))
+    paths.update(get_output_paths(args.odir, args.name.replace(" ", "_")))
+    
     files.update(get_analysis_files(analyses))
     
     events['raw'] = []
@@ -263,7 +273,10 @@ def get_information_from_parameters():
         if "*" in xsect:
           xsect_split = xsect.split("*")
         else:
-          xsect_split = xsect.split(" ")              
+          xsect_split = xsect.split(" ")             
+        if len(xsect_split) == 1:   # If "0", add random unit
+          xsect_split.append("FB")                        
+        xsect_split[1] = xsect_split[1].upper() # Make sure unit is in uppercase
         events['xsects'].append(xsect_split)
         
         if "*" in xsecterr:
@@ -274,6 +287,7 @@ def get_information_from_parameters():
         if xsecterr_split[1] == "%":
           xsecterr_split[0] = str(float(xsect_split[0])*float(xsecterr_split[0].rstrip())/100.)
           xsecterr_split[1] = xsect_split[1]
+        xsecterr_split[1] = xsecterr_split[1].upper() # Make sure unit is in uppercase
         events['xsecterrs'].append(xsecterr_split)
         
         # If process identifiers are given, they are separated by semicolons and

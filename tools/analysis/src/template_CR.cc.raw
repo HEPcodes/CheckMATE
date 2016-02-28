@@ -1,5 +1,6 @@
 #include "@@analysis@@.h"
-
+// AUTHOR: @@author@@
+//  EMAIL: @@authoremail@@
 void @@Analysis@@_CR::initialize() {
   setInformation(""
     @@longInfo@@

@@ -1,5 +1,6 @@
 #include "@@analysis@@.h"
-
+// AUTHOR: @@author@@
+//  EMAIL: @@authoremail@@
 void @@Analysis@@::initialize() {
   setAnalysisName("@@analysis@@");          
   setInformation(""

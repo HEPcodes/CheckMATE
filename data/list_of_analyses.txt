@@ -27,6 +27,5 @@ cms_1301_4698_WW     1    CMS, WW standard model measurement                3.5 
 cms_1306_1126_WW     1    CMS, WW standard model measurement (7TeV          4.9   no 
 cms_smp_12_006       4    CMS, WZ standard model (3 leptons + etmiss)       19.6  no 
 cms_sus_12_019       2    CMS, 2 leptons, >= 2 jets + etmiss (dilep edge)   19.4  no         
-#Superseded analyses  
-#atlas_conf_2013_035  6    ATLAS, 3 leptons + etmiss                         20.7  no    
-#atlas_conf_2013_048  4    ATLAS, 2 leptons + etmiss (direct stop)           20.0  no         
+atlas_conf_2013_035  6    ATLAS, 3 leptons + etmiss                         20.7  no    
+atlas_conf_2013_048  4    ATLAS, 2 leptons + etmiss (direct stop)           20.0  no         

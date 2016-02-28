@@ -36,8 +36,8 @@ dnl
 AC_DEFUN([ROOT_PATH],
 [
   AC_ARG_WITH([rootsys],
-              [AC_HELP_STRING([--with-rootsys],
-			      [top of the ROOT installation directory])],
+              [AC_HELP_STRING([--with-rootsys=DIR],
+			      [DIR=top dir of the ROOT installation directory])],
     			      [user_rootsys=$withval],
 			      [user_rootsys="none"])
   if test ! x"$user_rootsys" = xnone; then

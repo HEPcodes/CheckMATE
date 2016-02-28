@@ -1,6 +1,7 @@
 #ifndef _@@ANALYSIS@@
 #define _@@ANALYSIS@@
-
+// AUTHOR: @@author@@
+//  EMAIL: @@authoremail@@
 #include "AnalysisBase.h"
 
 class @@Analysis@@ : public AnalysisBase {

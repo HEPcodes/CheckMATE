@@ -1353,8 +1353,8 @@ Optional Features:
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
   --without-PACKAGE       do not use PACKAGE (same as --with-PACKAGE=no)
-  --with-python=CMD       name of python executable
-  --with-rootsys          top of the ROOT installation directory
+  --with-python=EXE       EXE=full path to python executable
+  --with-rootsys=DIR      DIR=top dir of the ROOT installation directory
 
 Some influential environment variables:
   CXX         C++ compiler command
@@ -5064,3 +5064,7 @@ if test -n "$ac_unrecognized_opts" && test "$enable_option_checking" != no; then
 $as_echo "$as_me: WARNING: unrecognized options: $ac_unrecognized_opts" >&2;}
 fi
 
+{ $as_echo "$as_me:$LINENO: result: === Subconfigurations Done ===" >&5
+$as_echo "=== Subconfigurations Done ===" >&6; }
+{ $as_echo "$as_me:$LINENO: result: Configuration of CheckMATE finished. Run 'make' to compile. If you have more than one core, you can use -j2 or even -j4 to speed up the compilation process. Note that you don't have to run 'make install' afterwards." >&5
+$as_echo "Configuration of CheckMATE finished. Run 'make' to compile. If you have more than one core, you can use -j2 or even -j4 to speed up the compilation process. Note that you don't have to run 'make install' afterwards." >&6; }
