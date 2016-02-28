@@ -166,10 +166,11 @@ def collect_n_events_per_run(signal_regions, files, output):
   
   n_events_per_run = dict()  
   n_events_per_run["signal_normevents"] = dict() # Number of physical signal events after normalising to xsect and lumi  
+  n_events_per_run["total_normevents"] = dict() # Number of physical starting events after normalising to xsect and lumi
   n_events_per_run["signal_err_stat"] = dict() # Statistical Error on normalised number of events
   n_events_per_run["signal_err_sys"] = dict() # Systematical Error on normalised number of events
   
-  n_events_per_run["total_mcevents"] = 0 
+  n_events_per_run["total_mcevents"] = n_events_per_run["total_normevents"] = 0 
   for sr in signal_regions:
      n_events_per_run["signal_normevents"][sr] = n_events_per_run["signal_err_stat"][sr] = n_events_per_run["signal_err_sys"][sr] = 0 # Reset
   
@@ -185,6 +186,7 @@ def collect_n_events_per_run(signal_regions, files, output):
     n_events_per_process = collect_n_events_per_process(processes[process], signal_regions, files, output)
     # Add to total result information
     n_events_per_run["total_mcevents"] += n_events_per_process["total_mcevents"]
+    n_events_per_run["total_normevents"] += n_events_per_process["total_normevents"]
     
     for sr in signal_regions:
       n_events_per_run["signal_normevents"][sr] += n_events_per_process["signal_normevents"][sr]
@@ -212,7 +214,14 @@ def compare_to_cls_limit(reference_data, n_events, sr):
   results["signal_events_error_stat"] = n_events["signal_err_stat"][sr]
   results["signal_events_error_sys"] = n_events["signal_err_sys"][sr]
   results["signal_events_error_tot"] = sqrt(n_events["signal_err_stat"][sr]**2 + n_events["signal_err_sys"][sr]**2)
-    
+  
+  # Efficiency and errors
+  results["signal_eff"] = n_events["signal_normevents"][sr]/n_events["total_normevents"]
+  results["signal_eff_error_stat"] = n_events["signal_err_stat"][sr]/n_events["total_normevents"]
+  results["signal_eff_error_sys"] = n_events["signal_err_sys"][sr]/n_events["total_normevents"]
+  results["signal_eff_error_tot"] = sqrt(n_events["signal_err_stat"][sr]**2 + n_events["signal_err_sys"][sr]**2)/n_events["total_normevents"]  
+  
+  # CLs comparison
   results["observed_upper_limit"] = reference_data[sr]["S95_obs"]
   results["r_observed"] = results["signal_events"] / float(results["observed_upper_limit"])
   results["r_observed_cons"] = (results["signal_events"] - 1.95996*results["signal_events_error_tot"]) / float(results["observed_upper_limit"])
@@ -234,6 +243,18 @@ def compare_to_cls_limit(reference_data, n_events, sr):
     results["r_expected_cons"] = (results["signal_events"] - 1.95996*results["signal_events_error_tot"]) / float(results["expected_upper_limit"])
     if results["r_expected_cons"] < 0:
       results["r_expected_cons"] = 0
+  
+  return results
+
+def calc_sig_eff(reference_data, n_events, sr):
+  results = dict()
+  results["messages"] = []
+  
+  # Efficiency and errors
+  results["signal_eff"] = n_events["signal_normevents"][sr]/n_events["total_normevents"]
+  results["signal_eff_error_stat"] = n_events["signal_err_stat"][sr]/n_events["total_normevents"]
+  results["signal_eff_error_sys"] = n_events["signal_err_sys"][sr]/n_events["total_normevents"]
+  results["signal_eff_error_tot"] = sqrt(n_events["signal_err_stat"][sr]**2 + n_events["signal_err_sys"][sr]**2)/n_events["total_normevents"]  
   
   return results
 
@@ -336,7 +357,10 @@ def evaluate(analyses, events, files, flags, output, paths):
     for analysis in analyses:
       analysis_likelihood = dict()
       analysis_NSR = dict()
-  
+   
+  #Now need to store n_events for sig_eff_eval
+  n_events_all = dict()
+  analysis_strongest_result_all = dict()
   overall_strongest_result = dict() # keeps track of the most constraining signal region's results over all analyses
   for analysis in analyses:
     analysis_strongest_result = dict() # keeps track of the most constraining signal region's results for this analysis
@@ -358,6 +382,8 @@ def evaluate(analyses, events, files, flags, output, paths):
     for line in header_lines:
       output.cout("@"+line)
     n_events = collect_n_events_per_run(signal_regions, files, output)
+    n_events_all[analysis] = n_events
+    
     format_columnated_file(files['output_evaluation_event_numbers'][analysis])
       
     
@@ -380,13 +406,16 @@ def evaluate(analyses, events, files, flags, output, paths):
       if analysis_strongest_result == {}:
         analysis_strongest_result = results_r[sr].copy()
         analysis_strongest_result["origin"] = sr
+	analysis_strongest_result_all[analysis] = sr
+
       else:
         # Consider the signal region with the largest expected r.
         # If the r values are equal, prefer the one with the smallest allowed Sexp
         if (results_r[sr]["r_expected_cons"] > analysis_strongest_result["r_expected_cons"]) or (results_r[sr]["r_expected_cons"] == analysis_strongest_result["r_expected_cons"] and results_r[sr]["expected_upper_limit"] < analysis_strongest_result["expected_upper_limit"]):
           analysis_strongest_result = results_r[sr].copy()
           analysis_strongest_result["origin"] = sr
-        
+	  analysis_strongest_result_all[analysis] = sr
+      
       # Compare to best result over all analyses.
       if overall_strongest_result == {}:
         overall_strongest_result = results_r[sr].copy()
@@ -397,8 +426,9 @@ def evaluate(analyses, events, files, flags, output, paths):
           overall_strongest_result = results_r[sr].copy()
           overall_strongest_result["origin"] = analysis+" - "+sr
       
-      # Print results_r.        
-      if first_line:
+      # Print results_r.
+      output.set_cout_file(files['output_evaluation_r_limits'][analysis])
+      if first_line: 
         for m in results_r[sr]["messages"]:
           output.cout("@"+m)
         output.cout("SR  S  dS_stat  dS_sys  dS_tot  S95_obs  S95_exp  r^c_obs  r^c_exp")
@@ -444,7 +474,6 @@ def evaluate(analyses, events, files, flags, output, paths):
 # End of new code
 #--------------------------------------------------------------------------
 
-    
     #If desired, evaluate limits by calculating CLs    
     if flags["fullcl"] == True:
       # Reset old information
@@ -495,6 +524,9 @@ def evaluate(analyses, events, files, flags, output, paths):
           output.cout("SR  S  dS_stat  dS_sys  dS_tot  B  dB  O  CL_obs  dCL_obs  CL_exp  dCL_exp")
           first_line = False
         output.cout(sr+"  "+str(siground(results_cls[sr]["signal_events"]))+"  "+str(siground(results_cls[sr]["signal_events_error_stat"]))+"  "+str(siground(results_cls[sr]["signal_events_error_sys"]))+"  "+str(siground(results_cls[sr]["signal_events_error_tot"]))+"  "+str(siground(float(reference_data[sr]["bkg"])))+"  "+str(siground(float(reference_data[sr]["bkg_err_tot"])))+"  "+str(siground(float(reference_data[sr]["obs"])))+"  "+str(siground(results_cls[sr]["observed_cls"], 5))+"  "+str(siground(results_cls[sr]["observed_cls_err"], 5))+"  "+str(siground(results_cls[sr]["expected_cls"], 5))+"  "+str(siground(results_cls[sr]["expected_cls_err"], 5)))
+
+# ------- End of 'fullcl' code ----------------------------------------------------------------------------------------------------
+
     
     # Print the best result of the given analysis into a 'best results' file
     output.set_cout_file(files['output_bestsignalregions'])
@@ -551,9 +583,9 @@ def evaluate(analyses, events, files, flags, output, paths):
     if flags["likelihood"]:      
       format_columnated_file(files['output_evaluation_likelihood'][a])  
   
-  # Jamie added
-  output.mute()
+  # Jamie added for likelihood option
   if flags["likelihood"]:
+    output.mute()
     total_likelihood = float()
     total_NSR = float()
     if os.path.isfile(files['likelihood']):
@@ -566,6 +598,28 @@ def evaluate(analyses, events, files, flags, output, paths):
       total_NSR = analysis_NSR[a] + total_NSR
     output.cout("Total_likelihood  "+str(total_likelihood)+"  "+str(total_likelihood/total_NSR))  
     format_columnated_file(files['likelihood']) 
-  output.unmute()    
+    output.unmute()    
+ 
+  # Calculation and output of efficiency tables
+  if flags["eff_tab"]:
+    # Set header for efficiency table
+    output.mute()
+    for analysis in analyses: 
+      if os.path.isfile(files['eff_tab'][analysis]):
+        os.remove(files['eff_tab'][analysis])
+      output.set_cout_file(files['eff_tab'][analysis])
+      output.cout("Signal_Region  Efficiency  Eff_Err_Stat  Eff_Err_Sys  Eff_Err_Tot  Analysis_Best  Run_Best")
+      (header_lines, signal_regions, reference_data) = read_reference_file(files['evaluation_reference'][analysis])
+      for sr in signal_regions:
+        sig_eff = calc_sig_eff(reference_data, n_events_all[analysis], sr)
+        run_best = analysis_best = '0'
+        if sr == overall_strongest_result['origin'].split("-")[1].strip(): 
+          run_best = '1'
+        if sr == analysis_strongest_result_all[analysis]:
+          analysis_best = '1'
+        output.cout(sr+"  "+str(siground(sig_eff["signal_eff"],6))+"  "+str(siground(sig_eff["signal_eff_error_stat"],7))+"  "+str(siground(sig_eff["signal_eff_error_sys"],7))+"  "+str(siground(sig_eff["signal_eff_error_tot"],7))+"  "+str(analysis_best)+"  "+str(run_best))
+      format_columnated_file(files['eff_tab'][analysis]) 
+    output.unmute()
       
+ 
   return

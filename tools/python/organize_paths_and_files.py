@@ -46,11 +46,13 @@ def get_output_files(odir, oname, analyses, flags):
     files['output_evaluation_r_limits'] = dict()
     files['output_evaluation_cl_limits'] = dict()
     files['output_evaluation_likelihood'] = dict()
+    files['eff_tab'] = dict()
     for a in analyses:    
       files['output_evaluation_event_numbers'][a] = os.path.join(odir, oname, "evaluation", a+"_event_numbers.txt")
       files['output_evaluation_r_limits'][a] = os.path.join(odir, oname, "evaluation", a+"_r_limits.txt")
       files['output_evaluation_cl_limits'][a] = os.path.join(odir, oname, "evaluation", a+"_cl_limits.txt")
       files['output_evaluation_likelihood'][a] = os.path.join(odir, oname, "evaluation", a+"_likelihood.txt")
+      files['eff_tab'][a] = os.path.join(odir, oname, "evaluation", a+"_eff_tab.txt")
     files['output_bestsignalregions'] = os.path.join(odir, oname, "evaluation", "best_signal_regions.txt")
     files['output_result'] = os.path.join(odir, oname, "result.txt")
     if flags["likelihood"]:

@@ -310,9 +310,10 @@ def merge_settings(files, paths, flags):
           if ["b", b_eff, parameters[a]["experiment"]] not in tags_per_jet_module[jet_module_2]:
             tags_per_jet_module[jet_module_2].append(["b", b_eff, parameters[a]["experiment"]])
           all_jet2_btagging_lists[a].append(tags_per_jet_module[jet_module_2].index(["b", b_eff, parameters[a]["experiment"]]))
-          
-        
-    
+  
+  # Do the taus separately to not mess up the counting of indices
+  for a in analyses:
+    jet_module = all_fastjet_modules_per_analysis[a]
     if parameters[a]["jets_tautagging"] == "y" and ["t", parameters[a]["experiment"]] not in tags_per_jet_module[jet_module]:
       tags_per_jet_module[jet_module].append(["t" , parameters[a]["experiment"]])
       

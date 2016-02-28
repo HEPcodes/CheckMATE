@@ -27,6 +27,7 @@ def get_information_from_file(pfile):
     flags['md5'] = False
     flags['fullcl'] = False
     flags['likelihood'] = False
+    flags['eff_tab'] = False
     flags['tempmode'] = False
     flags['quietmode'] = False
     flags['verbosemode'] = False
@@ -65,12 +66,21 @@ def get_information_from_file(pfile):
         if line.startswith("cms"):
           analyses.append(line.split()[0])          
     elif Config.get("Mandatory Parameters", "analyses") == "all":
-      f = open(files['list_of_analyses'])
-      for line in f:
-        if not line.startswith("#"):
-          analyses.append(line.split()[0])
+      output.cerr_exit("'all' option has been discontinued, atlas and cms analyses must be run separately")
+#    else:
+#      analyses = [a.lstrip().rstrip() for a in Config.get("Mandatory Parameters", "analyses").split(",")]
+#    sections.remove("Mandatory Parameters")
+    
     else:
-      analyses = [a.lstrip().rstrip() for a in Config.get("Mandatory Parameters", "analyses").split(",")]
+      atlas_test = False
+      cms_test = False
+      analyses = []
+      for a in Config.get("Mandatory Parameters", "analyses").split(","):
+	analysis = a.lstrip().rstrip()
+	if analysis.startswith("atlas"): atlas_test = True
+	if analysis.startswith("cms"): cms_test = True
+	if ( (atlas_test == True) and (cms_test == True)): output.cerr_exit("atlas and cms analyses must be run separately")
+        analyses.append(analysis)
     sections.remove("Mandatory Parameters")
 
     # If there should be optional parameters, read them
@@ -96,6 +106,8 @@ def get_information_from_file(pfile):
                 flags['fullcl'] = Config.getboolean("Optional Parameters", "fullcl")
             elif optional_parameter == "likelihood":
                 flags['likelihood'] = Config.getboolean("Optional Parameters", "likelihood")
+            elif optional_parameter == "eff_tab":
+                flags['eff_tab'] = Config.getboolean("Optional Parameters", "eff_tab")
             elif optional_parameter == "randomseed":
                 flags['randomseed'] = Config.getint("Optional Parameters", "randomseed")
             elif optional_parameter == "controlregions":
@@ -172,6 +184,7 @@ def get_information_from_parameters():
     parser.add_argument('-xse', '--xsecterrs', dest='xsecterrs', required=True, type=str, help="Cross section errors, either one global for all events or for each event, separated by ;. Example format: 0.01*FB or 10.4 %%. ")
     parser.add_argument('-cl', '--full-cl', dest='fullcl', action='store_true', help="Evaluate full CLs to the evaluated number of signal events (instead of just comparing to 95 percent limit).")
     parser.add_argument('-likeli', '--likelihood', dest='likelihood', action='store_true', help="Evaluate likelihood for each signal region (and sum all signal regions).")
+    parser.add_argument('-eff_tab', '--eff_tab', dest='eff_tab', action='store_true', help="Creates efficiency tables for every signal region in each analysis run")
     parser.add_argument('-od', '--outdir', dest='odir', default=paths['results'], help='Directory where the results should be saved (default: '+paths['results']+').')
     parser.add_argument('-oe', '--output-exists', dest='output_exists', default="ask", type=str, help="What to do if output already exists. overwrite will delete existing output and overwrite it with the new results. add will add the current results to the old ones. In any other case, a prompt will ask you.")   
     parser.add_argument('-q', '--quiet', dest='quiet', action='store_true', help='Suppresses all output (sets --force automatially).')  
@@ -188,6 +201,7 @@ def get_information_from_parameters():
     
     flags['fullcl'] = False
     flags['likelihood'] = False
+    flags['eff_tab'] = False
     flags['tempmode'] = args.temp
     flags['skipparamcheck'] = args.force
     flags['randomseed'] = args.randomseed
@@ -213,6 +227,8 @@ def get_information_from_parameters():
       flags["fullcl"] = True
     if args.likelihood:
       flags["likelihood"] = True
+    if args.eff_tab:
+      flags["eff_tab"] = True  
     if args.controlregions:
       flags["controlregions"] = True
       flags["skipevaluation"] = True
@@ -230,12 +246,17 @@ def get_information_from_parameters():
         if line.startswith("cms"):
           analyses.append(line.split()[0])          
     elif args.analysis == "all":
-      f = open(files['list_of_analyses'])
-      for line in f:
-        if not line.startswith("#"):
-          analyses.append(line.split()[0])
+      output.cerr_exit("'all' option has been discontinued, atlas and cms analyses must be run separately")
     else:
-      analyses = [a.lstrip().rstrip() for a in args.analysis.split(",")]
+      atlas_test = False
+      cms_test = False
+      analyses = []
+      for a in args.analysis.split(","):
+	analysis = a.lstrip().rstrip()
+	if analysis.startswith("atlas"): atlas_test = True
+	if analysis.startswith("cms"): cms_test = True
+	if ( (atlas_test == True) and (cms_test == True)): output.cerr_exit("atlas and cms analyses must be run separately")
+        analyses.append(analysis)
       
     files.update(get_output_files(args.odir, args.name.replace(" ", "_"), analyses, flags))
     paths.update(get_output_paths(args.odir, args.name.replace(" ", "_")))
@@ -349,6 +370,8 @@ def prepare_run(analyses, events, files, flags, output, paths):
         output.cout("\t - Confidence of signal estimate will be explicitly calculated")
     if flags['likelihood']:
         output.cout("\t - Likelihood will be calculated for each signal region")
+    if flags['eff_tab']:
+        output.cout("\t - Efficiency tables will be calculated for each signal region of every analysis run")        
     if flags["outputexists"] == "overwrite":
         output.cout("\t - Old results will be deleted")
     if flags["outputexists"] == "add":
