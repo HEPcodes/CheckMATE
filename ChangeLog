@@ -1,8 +1,30 @@
 CheckMATE - Changelog
 
+Ver 1.1.13
+---------
 
-Ver 1.1.11
-----------
+2014-10-28   Daniel Schmeier <daschm@th.physik.uni-bonn.de>
+
+    ~ Fixed bug in tauid module as soon as the signal contains more than 2 taus.
+    ~ 3 prong ID is now applied to 2 track jet candidates.
+    ~ Fixed problem with HepMC weights
+
+
+Ver 1.1.12
+---------
+
+2014-10-23   Jamie Tattersall <tattersall@thphys.uni-heidelberg.de>
+
+    ~ MET smearing due to pile-up added (20 GeV gaussian) - Thanks to Travis Martin
+
+2014-10-22   Jamie Tattersall <tattersall@thphys.uni-heidelberg.de>
+
+    ~ Added alphaT and razor to analysis base
+
+
+
+Ver 1.1.10
+---------
 
 2014-10-07   Jamie Tattersall <tattersall@thphys.uni-heidelberg.de>
 

@@ -121,10 +121,14 @@ void AnalysisBase::loopOverEvents() {
     for(Int_t entry = 0; entry < nEvents; ++entry) {
 	treeReader->ReadEntry(entry);
 	weight = ((LHEFEvent*)branchEvent->At(0))->Weight;
+        // If the events do not have any weights / the wrong weight branch is used, Delphes will save NAN in the corresponding branch
+	if (weight != weight) {
+	    weight = ((HepMCEvent*)branchEvent->At(0))->Weight;
+   	    if (weight != weight) 
+	       weight=1.;
+	}
 
-        // If the events do not have any weights, Delphes will save NAN in the corresponding branch
-	if (weight != weight) 
-	    weight=1.;
+
 	sumOfWeights += weight;
 	sumOfWeights2 += weight*weight;
     

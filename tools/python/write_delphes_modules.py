@@ -328,7 +328,7 @@ module Calorimeter CalorimeterATLAS {
   add EnergyFraction {3122} {0.3 0.7}
   set ECalResolutionFormula {                  (abs(eta) <= 3.2) * sqrt(energy^2*0.0017^2 + energy*0.101^2) + \
                              (abs(eta) > 3.2 && abs(eta) <= 4.9) * sqrt(energy^2*0.0350^2 + energy*0.285^2)}
-  set HCalResolutionFormula {                  (abs(eta) <= 1.7) * sqrt(energy^2*0.0302^2 + energy*0.5205^2 + 1.59^2) + \
+  set HCalResolutionFormula {                  (abs(eta) <= 1.7) * sqrt(energy^2*0.0302^2 + energy*0.5205^2+1.59^2) + \
                              (abs(eta) > 1.7 && abs(eta) <= 3.2) * sqrt(energy^2*0.0500^2 + energy*0.706^2) + \
                              (abs(eta) > 3.2 && abs(eta) <= 4.9) * sqrt(energy^2*0.09420^2 + energy*0.075^2)}
 }
@@ -1185,10 +1185,10 @@ module TauTagging TauTagging_"""+jet_module+"""_l {
   set KillUponFail false
   set FlagValue 1
   set AddFlag false
-  add EfficiencyFormula {1} {("""+eff_string_s1loose_eta+""")*("""+eff_string_s1loose_pt1+""")*("""+eff_string_s1loose_pt2+""")}
-  add EfficiencyFormula {3} {("""+eff_string_s3loose+""")}
-  add EfficiencyFormula {-1} {("""+eff_string_b1loose+""")}
-  add EfficiencyFormula {-3} {("""+eff_string_b3loose+""")}
+  add EfficiencyFormula {1} {("""+eff_string_s1loose_eta+""")*("""+eff_string_s1loose_pt1+""")*("""+eff_string_s1loose_pt2+""")/((abs(eta)<=1.5)*0.95 + (abs(eta)>1.5)*0.85) }
+  add EfficiencyFormula {2} {("""+eff_string_s3loose+""")}
+  add EfficiencyFormula {-1} {("""+eff_string_b1loose+""")/((abs(eta)<=1.5)*0.95 + (abs(eta)>1.5)*0.85)}
+  add EfficiencyFormula {-2} {("""+eff_string_b3loose+""")}
 }
 
 module TauTagging TauTagging_"""+jet_module+"""_m {
@@ -1205,10 +1205,10 @@ module TauTagging TauTagging_"""+jet_module+"""_m {
   set FlagValue 2
   set AddFlag false
   
-  add EfficiencyFormula {1} {("""+eff_string_s1medium_eta+""")*("""+eff_string_s1medium_pt1+""")*("""+eff_string_s1medium_pt2+""")}
-  add EfficiencyFormula {3} {("""+eff_string_s3medium+""")}
-  add EfficiencyFormula {-1} {("""+eff_string_b1medium+""")}
-  add EfficiencyFormula {-3} {("""+eff_string_b3medium+""")}
+  add EfficiencyFormula {1} {("""+eff_string_s1medium_eta+""")*("""+eff_string_s1medium_pt1+""")*("""+eff_string_s1medium_pt2+""")/((abs(eta)<=1.5)*0.95 + (abs(eta)>1.5)*0.85)}
+  add EfficiencyFormula {2} {("""+eff_string_s3medium+""")}
+  add EfficiencyFormula {-1} {("""+eff_string_b1medium+""")/((abs(eta)<=1.5)*0.95 + (abs(eta)>1.5)*0.85)}
+  add EfficiencyFormula {-2} {("""+eff_string_b3medium+""")}
 }
 
 
@@ -1226,10 +1226,10 @@ module TauTagging TauTagging_"""+jet_module+"""_t {
   set FlagValue 3
   set AddFlag false
   
-  add EfficiencyFormula {1} {("""+eff_string_s1tight_eta+""")*("""+eff_string_s1tight_pt1+""")*("""+eff_string_s1tight_pt2+""")}
-  add EfficiencyFormula {3} {("""+eff_string_s3tight+""")}
-  add EfficiencyFormula {-1} {("""+eff_string_b1tight+""")}
-  add EfficiencyFormula {-3} {("""+eff_string_b3tight+""")}
+  add EfficiencyFormula {1} {("""+eff_string_s1tight_eta+""")*("""+eff_string_s1tight_pt1+""")*("""+eff_string_s1tight_pt2+""")/((abs(eta)<=1.5)*0.95 + (abs(eta)>1.5)*0.85)}
+  add EfficiencyFormula {2} {("""+eff_string_s3tight+""")}
+  add EfficiencyFormula {-1} {("""+eff_string_b1tight+""")/((abs(eta)<=1.5)*0.95 + (abs(eta)>1.5)*0.85)}
+  add EfficiencyFormula {-2} {("""+eff_string_b3tight+""")}
 }
 """
   return (module_names, module_string)
