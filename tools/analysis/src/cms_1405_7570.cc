@@ -406,9 +406,9 @@ void Cms_1405_7570::analyze() {
     double MET = missingET->P4().Perp();
     if ( MET < 60. ) break;
     
-    if (isoElecs.size() == 2 && mCTy( isoElecs[0]->P4(), isoElecs[1]->P4(), vds, missingET->P4() ) > 120. ) countSignalEvent("MCT120_SF"); 
-    if (isoMuons.size() == 2 && mCTy( isoMuons[0]->P4(), isoMuons[1]->P4(), vds, missingET->P4() ) > 120. ) countSignalEvent("MCT120_SF"); 
-    if (isoElecs.size() == 1 && mCTy( isoElecs[0]->P4(), isoMuons[0]->P4(), vds, missingET->P4() ) > 120. ) countSignalEvent("MCT120_OF"); 
+    if (isoElecs.size() == 2 && mCTperp( isoElecs[0]->P4(), isoElecs[1]->P4(), vds, missingET->P4() ) > 120. ) countSignalEvent("MCT120_SF"); 
+    if (isoMuons.size() == 2 && mCTperp( isoMuons[0]->P4(), isoMuons[1]->P4(), vds, missingET->P4() ) > 120. ) countSignalEvent("MCT120_SF"); 
+    if (isoElecs.size() == 1 && mCTperp( isoElecs[0]->P4(), isoMuons[0]->P4(), vds, missingET->P4() ) > 120. ) countSignalEvent("MCT120_OF"); 
   
     break;
   }

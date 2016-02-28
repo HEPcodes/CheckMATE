@@ -1,5 +1,17 @@
 CheckMATE - Changelog
 
+
+Ver 1.1.15
+----------
+2015-01-23   Jamie Tattersall <tattersall@thphys.uni-heidelberg.de>
+
+    ~ Fixed bug in cms_1405_7570 (many thanks to Michihisa Takeuchi)
+
+2015-01-22   Jamie Tattersall <tattersall@thphys.uni-heidelberg.de>
+
+    ~ Fixed bug in charm tagging (many thanks to Luka Mitzka)
+
+
 Ver 1.1.14
 ----------
 2014-12-16   Daniel Schmeier < daschm@th.physik.uni-bonn.de>

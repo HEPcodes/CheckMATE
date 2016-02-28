@@ -1,7 +1,7 @@
 {
   "CURRLEVEL": "1", 
   "analysis": "cms_1405_7570", 
-  "author": "user", 
+  "author": "Krzysztof Rolbiecki", 
   "cr": "n", 
   "electron_iso_absorrel": "['r', 'r', 'r']", 
   "electron_iso_dR": "['0.3', '0.3', '0.3']", 

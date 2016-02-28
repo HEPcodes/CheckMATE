@@ -254,11 +254,11 @@ void Atlas_1403_4853::analyze() {
 
       if ( m_t2 > 90 ){
 	int jetsel=10;
-	if( (jets.size() > 0 && jets[0]->PT > 100.) || (jets.size() > 1 && jets[0]->PT > 50.) )
+	if( jets.size() > 1 && jets[0]->PT > 100. && jets[1]->PT > 50. )
 	  jetsel = 0;
-	if( jets.size() > 1 && jets[0]->PT > 20. )
+	if( jets.size() > 1 && jetsel > 0 )
 	  jetsel = 1;
-	if( jets.size() < 1 && jets[0]->PT > 20. )
+	if( jets.size() < 2  )
 	  jetsel = 2;
 	
 	if( (jetsel == 0 && m_t2 < 100.) || (jetsel == 1 && m_t2 < 110.) || (jetsel == 2 && m_t2 < 120.) )
@@ -312,11 +312,11 @@ void Atlas_1403_4853::analyze() {
 
       if ( m_t2 > 90 ){
 	int jetsel=10;
-	if( (jets.size() > 0 && jets[0]->PT > 100.) || (jets.size() > 1 && jets[0]->PT > 50.) )
+	if( jets.size() > 1 && jets[0]->PT > 100. && jets[1]->PT > 50. )
 	  jetsel = 0;
-	if( jets.size() > 1 && jets[0]->PT > 20. )
+	if( jets.size() > 1 && jetsel > 0 )
 	  jetsel = 1;
-	if( jets.size() < 1 && jets[0]->PT > 20. )
+	if( jets.size() < 2  )
 	  jetsel = 2;
 	
 	if( (jetsel == 0 && m_t2 < 100.) || (jetsel == 1 && m_t2 < 110.) || (jetsel == 2 && m_t2 < 120.) )
@@ -563,11 +563,11 @@ void Atlas_1403_4853::analyze() {
 
       if ( deltaphibveto && m_t2 > 90 ){
 	int jetsel=10;
-	if( (jets.size() > 0 && jets[0]->PT > 100.) || (jets.size() > 1 && jets[0]->PT > 50.) )
+	if( jets.size() > 1 && jets[0]->PT > 100. && jets[1]->PT > 50. )
 	  jetsel = 0;
-	if( jets.size() > 1 && jets[0]->PT > 20. )
+	if( jets.size() > 1 && jetsel > 0 )
 	  jetsel = 1;
-	if( jets.size() < 1 && jets[0]->PT > 20. )
+	if( jets.size() < 2  )
 	  jetsel = 2;
 	
 	if( (jetsel == 0 && m_t2 < 100.) || (jetsel == 1 && m_t2 < 110.) || (jetsel == 2 && m_t2 < 120.) )
