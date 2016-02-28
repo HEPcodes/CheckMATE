@@ -80,11 +80,11 @@ void Atlas_1403_5294::analyze() {
   bool btag = false; bool centraljet = false; bool forwardjet = false;
   std::vector<TLorentzVector> centraljets;
   for (int i = 0; i < jets.size(); i++) {
-    if ( fabs(jets[i]->Eta) < 2.4 ) {
+    if ( (fabs(jets[i]->Eta) < 2.4) && (jets[i]->PT > 20.) ){
       if (checkBTag(jets[i]) ) btag = true;
       else {
-	centraljet = true;
-	centraljets.push_back(jets[i]->P4() );
+        centraljet = true;
+        centraljets.push_back(jets[i]->P4() );
       }
     }
     else if (jets[i]->PT > 30. ) forwardjet = true;  
@@ -94,10 +94,12 @@ void Atlas_1403_5294::analyze() {
   double deltaphi_temp = 10000.;
   double missingETrel;
   
-  for ( int i = 0; i < centraljets.size(); i++ ) {
-    deltaphi_temp = fabs( jets[i]->P4().DeltaPhi(missingET->P4()));
-    if ( deltaphi_temp < deltaphi_min )
-      deltaphi_min = deltaphi_temp;
+  for ( int i = 0; i < jets.size(); i++ ) {
+    if ( (fabs(jets[i]->Eta) < 2.4) &&  (jets[i]->PT > 20.) ) {
+      deltaphi_temp = fabs( jets[i]->P4().DeltaPhi(missingET->P4()));
+      if ( deltaphi_temp < deltaphi_min )
+        deltaphi_min = deltaphi_temp;
+    }
   }
   for ( int i = 0; i < isoMuons.size(); i++ ) {
     deltaphi_temp = fabs( isoMuons[i]->P4().DeltaPhi(missingET->P4()));

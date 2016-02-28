@@ -1,9 +1,12 @@
 #Name                 NSR  Description                                       Lumi  CR?  
+atlas_1308_1841       13   ATLAS, 0 lepton + >= 7 jets + etmiss              20.3  no
 atlas_1308_2631       6    ATLAS, 0 leptons + 2 b-jets + etmiss              20.1  yes  
 atlas_1402_7029       20   ATLAS, 3 leptons + etmiss (chargino+neutralino)   20.3  no   
-atlas_1403_4853       12   ATLAS, 2 leptons + etmiss (direct stop)           20.3  no   
+atlas_1403_4853       12   ATLAS, 2 leptons + etmiss (direct stop)           20.3  no
+atlas_1405_7875       15   ATLAS, 0 lepton + 2-6 jets + missingET            20.3  no    
 atlas_1407_0583       27   ATLAS, 1 lepton + (b-)jets + etmiss (stop)        20.3  no   
-atlas_1502_01518      9    ATLAS, Monojet plus missing energy                20.3  no    
+atlas_1502_01518      9    ATLAS, Monojet plus missing energy                20.3  no  
+atlas_1503_03290      1    ATLAS, 2 leptons + jets + missingET               20.3  no   
 atlas_conf_2012_104   2    ATLAS, 1 lepton + >= 4 jets + etmiss              5.8   yes  
 atlas_conf_2012_147   4    ATLAS, Monojet + etmiss                           10.0  yes  
 atlas_conf_2013_024   3    ATLAS, 0 leptons + 6 (2 b-)jets + etmiss          20.5  yes  
@@ -12,7 +15,8 @@ atlas_conf_2013_047   10   ATLAS, 0 leptons + 2-6 jets + etmiss              20.
 atlas_conf_2013_049   9    ATLAS, 2 leptons + etmiss                         20.3  yes  
 atlas_conf_2013_061   9    ATLAS, 0-1 leptons + >= 3 b-jets + etmiss         20.1  yes  
 atlas_conf_2013_089   12   ATLAS, 2 leptons (razor)                          20.3  yes  
-cms_1303_2985         59   CMS, alpha_T + b-jets                             11.7  yes  
+cms_1303_2985         59   CMS, alpha_T + b-jets                             11.7  yes 
+cms_1502_06031        6    CMS, 2 leptons, jets, missingET (only on-Z)       19.4  no 
 cms_sus_13_016        1    CMS, OS lep 3+ b-tags                             19.5  no   
 # Analyses in Beta Stage (download beta version for most up-to-date work in progrss #
 #atlas_1210_2979       1    ATLAS, WW measurement with 2 leptons (7TeV)       4.6   no   
@@ -35,6 +39,7 @@ cms_sus_13_016        1    CMS, OS lep 3+ b-tags                             19.
 #cms_sus_12_019        4    CMS, 2 leptons, >= 2 jets + etmiss (dilep edge)   19.4  no   
 # Superseded analyses
 #atlas_conf_2013_037  6    ATLAS, Superseded by atlas_1407_0583              20.7  no   
+#atlas_conf_2013_047  10   ATLAS, Superseded by atlas_1405_7875              20.3  yes 
 #atlas_conf_2013_048  4    ATLAS, Superseded by atlas_1403_4853              20.0  no   
 # User added analyses
   

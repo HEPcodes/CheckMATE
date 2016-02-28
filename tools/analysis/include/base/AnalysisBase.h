@@ -17,6 +17,9 @@
 #include <TSystem.h>
 
 #include "classes/DelphesClasses.h"
+
+#include "fastjet/ClusterSequence.hh"
+
 #include "external/ExRootAnalysis/ExRootTreeReader.h"
 #include "external/ExRootAnalysis/ExRootResult.h"
 
