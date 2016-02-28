@@ -55,9 +55,9 @@ void Atlas_conf_2013_037::analyze() {
     return;
   if ( jets[1]->PT < 60. ) 
     return;
-  if ( jets[0]->PT < 40. )
+  if ( jets[2]->PT < 40. )
     return;
-  if ( jets[0]->PT < 25. ) 
+  if ( jets[3]->PT < 25. ) 
     return;
   countCutflowEvent("c_FourJetPT");
   

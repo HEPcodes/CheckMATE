@@ -33,7 +33,7 @@ if len(sys.argv) == 1:
     print "\trun {inputfile}"
     print ""
     print "Examples:"
-    print "\t./CheckMATE -n testrun -a atlas_conf_2013_047 -p \"gg;gs;ss\" -xs \"1*FB;2.2 PB;3E-5 B\" -xse \"0.1 FB;4.2 %;0.1*PB\" /scratch/all/gluinopair.hepmc ~/susy/gs.lhe ../file3.hep"
+    print "\t./CheckMATE -n testrun -a atlas_1405_7875 -p \"gg;gs;ss\" -xs \"1*FB;2.2 PB;3E-5 B\" -xse \"0.1 FB;4.2 %;0.1*PB\" /scratch/all/gluinopair.hepmc ~/susy/gs.lhe ../file3.hep"
     print "\t./CheckMATE testparam.dat"
     print ""
     print "Type './CheckMATE -h' for more information about available parameters or check"

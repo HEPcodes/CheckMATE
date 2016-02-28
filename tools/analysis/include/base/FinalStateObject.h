@@ -34,6 +34,9 @@ class FinalStateObject {
         inline TLorentzVector P4() { return fourvector;} //!< returns a TLorentzVector of the full 4 momentum.
     private:
         TLorentzVector fourvector;
+        
+    public:    
+        static bool sortByPT(FinalStateObject *i, FinalStateObject *j);
 };
 
 #endif

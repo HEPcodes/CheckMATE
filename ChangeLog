@@ -1,7 +1,43 @@
 CheckMATE - Changelog
 
+Ver 1.2.1
+---------
+
+2015-10-08   Jamie Tattersall <tattersall@physik.rwth-aachen.de>
+
+    ~ Large R jet signal regions added to atlas_1308_1841 (thanks to Liangliang Shang)
+
+2015-09-07   Jamie Tattersall <tattersall@physik.rwth-aachen.de>
+
+    ~ Corrected bug in missingET_rel calculation (thanks to Liangliang Shang)
+
+2015-07-30   Jamie Tattersall <tattersall@physik.rwth-aachen.de>
+
+    ~ Added Gravitinos as MET (thanks to Oscar Vives)
+
+2015-07-03   Jamie Tattersall <tattersall@thphys.uni-heidelberg.de>
+
+    ~ Added Gravitinos as MET (thanks to Oscar Vives)
+
+2015-07-03   Jamie Tattersall <tattersall@thphys.uni-heidelberg.de>
+
+    ~ Formatting error fixed in atlas_1308_1841 ref file (would lead top spurious exclusion) (thanks to Oscar Vives)
+
+
+2015-04-30   Jamie Tattersall <tattersall@thphys.uni-heidelberg.de>
+
+    ~ atlas_1308_1841 added (thanks to Junjie Cao, Liangliang Shang, Jin Min Yang, Yang Zhang)
+    ~ atlas_1405_7875 added (thanks to Junjie Cao, Liangliang Shang, Jin Min Yang, Yang Zhang)
+    ~ atlas_1503_03290 added (thanks to Junjie Cao, Liangliang Shang, Jin Min Yang, Yang Zhang)
+    ~ cms_1502_06031 added (thanks to Junjie Cao, Liangliang Shang, Jin Min Yang, Yang Zhang)
+    ~ Deprecated atlas_conf_2013_047 (replaced by atlas_1405_7875)
+    ~ Deprecated cms_sus_12_019 (replaced by cms_1502_06031)
+
 Ver 1.2.0
 ---------
+2015-02-17   Daniel Schmeier <daschm@th.physik.uni-bonn.de>
+
+    ~ Added more accurate high-energy momentum smearing (thanks to Florian Jetter)
 
 2015-04-30   Jamie Tattersall <tattersall@thphys.uni-heidelberg.de>
 

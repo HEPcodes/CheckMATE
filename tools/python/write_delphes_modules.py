@@ -133,6 +133,96 @@ module Efficiency MuonTrackingEfficiencyCMS {
   return (module_names, module_string)
 
 def set_smearing(experiment):
+  
+  # Muon Fit parameters (We thank Florian Jetter for providing these)
+  
+  # Momentum for transition of low momentum ATLAS reconstruction to Z' invariant mass shape fit.
+  trans=100.0
+  
+  # Fit to Z' invariant mass distribution at masses 1.5TeV and 2.5TeV CERN-PH-EP-2014-053, arXiv:1405.4123v2 
+  # Linear fit. Parameters a,d,g,l not used, e.g. b + c * pt
+
+  # Eta<1.05
+  a = 0
+  b = -0.0193760449145
+  c = 0.000323217527579
+  # 1.05 < Eta < 2.0
+  d = 0
+  e = -0.00375088921447
+  f = 0.000318372382021
+  # Eta > 2.0
+  g = 0
+  h = -0.0142181617427
+  k = 0.000265583078347
+  
+
+  # Weight to apply to ID/MS detector resolution: weight * ID + (1-weight) * MS
+  weight = 0.77606210482
+
+  
+  # ATLAS Muon reconstruction CERN-PH-EP-2014-151
+  # Pseudoexperiments with Eq(9) to create gaussian and thus sigma/pt
+  # Fit to:  sqrt(a/pt**2 + b + c pt**2)
+
+  # ID Detector
+  #  Eta<1.05
+  atlas_ID_a = 0.0162922778815	
+  atlas_ID_b = 3.98210232503e-05	
+  atlas_ID_c = 2.04874310022e-08
+  # 1.05 < Eta < 2.0
+  atlas_ID_d = 1.60216481783e-06
+  atlas_ID_e = 0.000104210453477
+  atlas_ID_f = 8.4293604369e-08
+  # 2.0 < Eta
+  atlas_ID_g = 4.14162127826e-05	
+  atlas_ID_h = 4.71002561732e-05	
+  atlas_ID_i = 7.36887029151e-09
+
+  # MS Detector
+  atlas_MS_a = 1.38828212398e-05	
+  atlas_MS_b = 1.15840050992e-05	
+  atlas_MS_c = 1.03517299177e-11
+
+  atlas_MS_d = 0.00102757703667	
+  atlas_MS_e = 0.000350143367228	
+  atlas_MS_f = 1.92312928027e-10
+
+  atlas_MS_g = 0.000129262858873	
+  atlas_MS_h = 0.000289554742539	
+  atlas_MS_i = 1.26545113277e-12
+  
+  params = {
+    'trans' : str(trans),
+    'weight' : str(weight),
+    'a' : str(a), 
+    'b' : str(b), 
+    'c' : str(c), 
+    'd' : str(d),
+    'e' : str(e),
+    'f' : str(f),
+    'g' : str(g),
+    'h' : str(h),
+    'k' : str(k),
+    'atlas_ID_a' : str(atlas_ID_a),
+    'atlas_ID_b' : str(atlas_ID_b),
+    'atlas_ID_c' : str(atlas_ID_c),
+    'atlas_ID_d' : str(atlas_ID_d),
+    'atlas_ID_e' : str(atlas_ID_e),
+    'atlas_ID_f' : str(atlas_ID_f),
+    'atlas_ID_g' : str(atlas_ID_g),
+    'atlas_ID_h' : str(atlas_ID_h),
+    'atlas_ID_i' : str(atlas_ID_i),
+    'atlas_MS_a' : str(atlas_MS_a),
+    'atlas_MS_b' : str(atlas_MS_b),
+    'atlas_MS_c' : str(atlas_MS_c),
+    'atlas_MS_d' : str(atlas_MS_d),
+    'atlas_MS_e' : str(atlas_MS_e),
+    'atlas_MS_f' : str(atlas_MS_f),
+    'atlas_MS_g' : str(atlas_MS_g),
+    'atlas_MS_h' : str(atlas_MS_h),
+    'atlas_MS_i' : str(atlas_MS_i)
+    }
+
   module_string = ""
   if experiment == "A":
     module_names = ["ChargedHadronMomentumSmearingATLAS", "ElectronEnergySmearingATLAS", "MuonMomentumSmearingATLAS"] 
@@ -186,32 +276,27 @@ module MomentumSmearing MuonMomentumSmearingATLAS {
   set InputArray MuonTrackingEfficiencyATLAS/muons
   set OutputArray muons
 
-  set ResolutionFormula { (\\
-  ((abs(eta) < 1.1)*(pt < 80) + (abs(eta) > 1.1)*(pt < 20))*( \\
-     (abs(eta) < 1.05)*sqrt(pow(0.25/pt, 2) + pow(0.0327, 2) + pow(0.168*pt/1000., 2)) + \\
-     (abs(eta) >= 1.05)*(abs(eta) < 1.7)*sqrt(pow(0.0649, 2) + pow(0.336*pt/1000., 2)) + \\
-     (abs(eta) >= 1.7)*(abs(eta) < 2.0)*sqrt(pow(0.0379, 2) + pow(0.196*pt/1000., 2)) + \\
-     (abs(eta) > 2.0)*sqrt(pow(0.15/pt, 2) + pow(0.0282, 2) + pow(0.469*pt/1000., 2))) + \\
-  (pt > 100)*( \\
-     (abs(eta) < 1.05)*sqrt(pow(0.0155, 2) + pow(0.417*pt/1000., 2))+ \\
-     (abs(eta) >= 1.05)*(abs(eta) < 1.7)*sqrt(pow(0.0255, 2) + pow(0.801*pt/1000., 2))+ \\
-     (abs(eta) >= 1.7)*(abs(eta) < 1.9)*sqrt(pow(0.0332, 2) + pow(0.985*pt/1000., 2))+ \\
-     (abs(eta) >= 1.9)*(abs(eta) < 2.0)*sqrt(pow(0.0332, 2) + pow(0.985*pt/1000.*sinh(eta), 2))+ \\
-     (abs(eta) >= 2.0)*sqrt(pow(0.0486, 2) + pow(0.069*pt/1000.*sinh(eta), 2))) + \\
-  ((abs(eta) < 1.1)*(pt>80)*(pt < 100) + (abs(eta) > 1.1)*(pt>20)*(pt < 100))*(1/2*sqrt( \\
-     pow( \\
-        (abs(eta) < 1.05)*sqrt(pow(0.25/pt, 2) + pow(0.0327, 2) + pow(0.168*pt/1000., 2)) + \\
-        (abs(eta) >= 1.05)*(abs(eta) < 1.7)*sqrt(pow(0.0649, 2) + pow(0.336*pt/1000., 2)) + \\
-        (abs(eta) >= 1.7)*(abs(eta) < 2.0)*sqrt(pow(0.0379, 2) + pow(0.196*pt/1000., 2)) + \\
-        (abs(eta) > 2.0)*sqrt(pow(0.15/pt, 2) + pow(0.0282, 2) + pow(0.469*pt/1000., 2)), 2) + \\
-     pow( \     
-        (abs(eta) < 1.05)*sqrt(pow(0.0155, 2) + pow(0.417*pt/1000., 2))+ \\
-        (abs(eta) >= 1.05)*(abs(eta) < 1.7)*sqrt(pow(0.0255, 2) + pow(0.801*pt/1000., 2))+ \\
-        (abs(eta) >= 1.7)*(abs(eta) < 1.9)*sqrt(pow(0.0332, 2) + pow(0.985*pt/1000., 2))+ \\
-        (abs(eta) >= 1.9)*(abs(eta) < 2.0)*sqrt(pow(0.0332, 2) + pow(0.985*pt/1000.*sinh(eta), 2))+ \\
-        (abs(eta) >= 2.0)*sqrt(pow(0.0486, 2) + pow(0.069*pt/1000.*sinh(eta), 2)), 2)))) }
+  set ResolutionFormula {(pt>%(trans)s)*(\\
+  (eta <= 1.05) * (pt>%(trans)s)*(%(b)s + %(c)s * pt) +\\
+  (eta > 1.05) * \\
+  (eta <= 2.0) * (pt>%(trans)s)*(%(e)s + %(f)s * pt ) +\\
+  (eta > 2.0 ) * (pt>%(trans)s)*(%(h)s + %(k)s * pt) \\
+  )+ \\
+  (pt <= %(trans)s) * (\\
+  %(weight)s* (
+  (eta <= 1.05) * sqrt(%(atlas_ID_a)s/pow(pt,2) + %(atlas_ID_b)s + %(atlas_ID_c)s * pow(pt,2)) +\\
+  (eta > 1.05) * (eta <= 2.0) * sqrt(%(atlas_ID_d)s/pow(pt,2) + %(atlas_ID_e)s + %(atlas_ID_f)s * pow(pt,2))  +\\
+  (eta > 2.0 ) * sqrt(%(atlas_ID_g)s/pow(pt,2) + %(atlas_ID_h)s + %(atlas_ID_i)s * pow(pt,2)) \\
+  ) + \\
+  (1 - %(weight)s) * (\\
+  (eta <= 1.05) * sqrt(%(atlas_MS_a)s/pow(pt,2) + %(atlas_MS_b)s + %(atlas_MS_c)s * pow(pt,2)) +\\
+  (eta > 1.05) * (eta <= 2.0) * sqrt(%(atlas_MS_d)s/pow(pt,2) + %(atlas_MS_e)s + %(atlas_MS_f)s * pow(pt,2))  +\\
+  (eta > 2.0 ) * sqrt(%(atlas_MS_g)s/pow(pt,2) + %(atlas_MS_h)s + %(atlas_MS_i)s * pow(pt,2))
+)\\
+)
 }
-"""    
+}
+"""%params 
   elif experiment == "C":
     module_names = ["ChargedHadronMomentumSmearingCMS", "ElectronEnergySmearingCMS", "MuonMomentumSmearingCMS"]
     module_string = """
@@ -319,10 +404,13 @@ module Calorimeter CalorimeterATLAS {
   add EnergyFraction {13} {0.0 0.0}
   add EnergyFraction {14} {0.0 0.0}
   add EnergyFraction {16} {0.0 0.0}
+  add EnergyFraction {1000012} {0.0 0.0}
+  add EnergyFraction {5000012} {0.0 0.0}
   add EnergyFraction {1000022} {0.0 0.0}
   add EnergyFraction {1000023} {0.0 0.0}
   add EnergyFraction {1000025} {0.0 0.0}
   add EnergyFraction {1000035} {0.0 0.0}
+  add EnergyFraction {1000039} {0.0 0.0}
   add EnergyFraction {1000045} {0.0 0.0}
   add EnergyFraction {310} {0.3 0.7}
   add EnergyFraction {3122} {0.3 0.7}
@@ -378,6 +466,7 @@ module Calorimeter CalorimeterCMS {
   add EnergyFraction {1000023} {0.0 0.0}
   add EnergyFraction {1000025} {0.0 0.0}
   add EnergyFraction {1000035} {0.0 0.0}
+  add EnergyFraction {1000039} {0.0 0.0}
   add EnergyFraction {1000045} {0.0 0.0}
   add EnergyFraction {310} {0.3 0.7}
   add EnergyFraction {3122} {0.3 0.7}
