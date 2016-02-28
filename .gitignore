@@ -1,0 +1,15 @@
+/Makefile
+/config.log
+/config.status
+/bin/CheckMATE
+
+/tools/analysis/cMSSM.slha
+/tools/analysis/doAnalysis
+/tools/python/calculate_cls.py
+
+/tools/analysis/**/.deps
+/tools/analysis/Makefile
+/tools/delphes/Delphes-*/Makefile
+*.pyc
+*.o
+.dirstamp
