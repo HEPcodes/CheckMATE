@@ -322,9 +322,9 @@ void AnalysisBase::ignore(std::string ignore_what) {
     }
 }
 
-double AnalysisBase::mT(const TLorentzVector & vis, const TLorentzVector & invis, const double m_vis, const double m_invis) {
+double AnalysisBase::mT(const TLorentzVector & vis, const TLorentzVector & invis, const double m_invis) {
     // If no masses are given, assumed to be zero  
-    return sqrt(m_vis*m_vis + m_invis*m_invis +  2.*vis.Pt()*invis.Et()*(1.-cos(fabs(vis.DeltaPhi(invis)))));
+    return sqrt(m_invis*m_invis +  2.*vis.Pt()*invis.Et()*(1.-cos(fabs(vis.DeltaPhi(invis)))));
 }
 
 double AnalysisBase::mT2(const TLorentzVector & vis1, const TLorentzVector & vis2, double m_inv, const TLorentzVector & invis) {

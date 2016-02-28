@@ -333,7 +333,7 @@ class AnalysisBase {
     };
 
     // Evaluates mT 
-    double mT(const TLorentzVector & vis, const TLorentzVector & invis, const double m_vis=0., const double m_invis=0.);
+    double mT(const TLorentzVector & vis, const TLorentzVector & invis, const double m_invis=0.);
     
     // Evaluates mT2 (arXiv:0810.5178)
     double mT2(const TLorentzVector & vis1, const TLorentzVector & vis2, double m_inv, const TLorentzVector & invis = TLorentzVector(0., 0., 0., 0.));

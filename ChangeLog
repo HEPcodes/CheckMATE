@@ -1,6 +1,32 @@
 CheckMATE - Changelog
 
 
+Ver 1.2.0
+---------
+2015-02-17   Daniel Schmeier <daschm@th.physik.uni-bonn.de>
+
+    ~ Refined some of the explanations in the AnalysisManager
+    ~ AnalysisManager now calculates S95_obs and S95_exp automatically on the fly
+    ~ AnalysisManager allows analyses without observation and locks them for statistical evaluation
+    ~ AnalysisManager can edit analysis information easier
+    ~ AnalysisManager stores name and email of the author and prints it into analysis files
+    ~ _var.j data files for analyses are easier to read/edit
+    ~ Changed approximation of bkg_err when asymmetric errors are given
+    ~ AnalysisBase files show detailled DoxyGen documentation and are split and ordered into subfiles
+    ~ FinalStateObject class allows for easier combination of electron-, muon-, jet- or etmiss objects inside analysis
+
+2015-02-17   Jamie Tattersall <tattersall@thphys.uni-heidelberg.de>
+
+    ~ Added option to create efficiency tables
+
+
+Ver 1.1.16
+----------
+2015-02-02   Jamie Tattersall <tattersall@thphys.uni-heidelberg.de>
+
+    ~ Added lock so that atlas and cms analyses can no longer be run simultaneously (many thanks to Michihisa Takeuchi)
+
+
 Ver 1.1.15
 ----------
 2015-01-23   Jamie Tattersall <tattersall@thphys.uni-heidelberg.de>
