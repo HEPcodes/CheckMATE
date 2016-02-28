@@ -338,8 +338,12 @@ def prepare_run(analyses, events, files, flags, output, paths):
     # Setup analysis configuration and check whether it is valid.
     
     analysis_info = dict()
-    for a in analyses:
-        analysis_info[a] = get_analysis_info(a)
+    for analysis in analyses:
+      parameters = read_analysis_parameters(analysis)
+      analysis_info[analysis] = ""
+      if parameters["expectation_known"] == "n":
+        analysis_info[analysis] += "[NO EXPECTATION KNOWN -> NO EXCLUSION TEST]   "
+      analysis_info[analysis] += parameters["short_info"]
 
     if flags["quietmode"]:
       flags["skipparamcheck"] = True
@@ -357,8 +361,8 @@ def prepare_run(analyses, events, files, flags, output, paths):
     for i in range(len(events['raw'])):
         output.cout("\t"+events['raw'][i]+" (process: "+events['processes'][i]+", xsect: "+events['xsects'][i][0]+" "+events['xsects'][i][1]+" +- "+events['xsecterrs'][i][0]+" "+events['xsecterrs'][i][1]+")")
     output.cout("Analyses: ")
-    for a in analyses:
-        output.cout("\t"+a+" ("+analysis_info[a]+")")
+    for analysis in analyses:
+        output.cout("\t"+analysis+" ("+analysis_info[analysis]+")")
     output.cout("Output Directories: ")
     output.cout("\t"+paths['output'])
     output.cout("Additional Settings: ")

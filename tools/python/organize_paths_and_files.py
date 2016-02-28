@@ -21,9 +21,11 @@ def get_standard_files():
     files['analysis_bin'] = os.path.join(paths['analysis'], "doAnalysis")
     files['analysis_makefile'] = os.path.join(paths['analysis'], "Makefile.am")
     files['analysis_main'] = os.path.join(paths['analysis'], 'src', 'main.cc')
-    files['analysis_template_source'] = os.path.join(paths['analysis'], 'src', 'template.cc.raw')
-    files['analysis_template_CR_source'] = os.path.join(paths['analysis'], 'src', 'template_CR.cc.raw')
-    files['analysis_template_header'] = os.path.join(paths['analysis'], 'include', 'template.h.raw')
+    files['analysis_template_source_atlas'] = os.path.join(paths['analysis'], 'src', 'base', 'template_atlas.cc.raw')
+    files['analysis_template_CR_source_atlas'] = os.path.join(paths['analysis'], 'src', 'base', 'template_CR_atlas.cc.raw')
+    files['analysis_template_source_cms'] = os.path.join(paths['analysis'], 'src', 'base', 'template_cms.cc.raw')
+    files['analysis_template_CR_source_cms'] = os.path.join(paths['analysis'], 'src', 'base', 'template_CR_cms.cc.raw')
+    files['analysis_template_header'] = os.path.join(paths['analysis'], 'include', 'base', 'template.h.raw')
     return files
 
 def get_output_paths(odir, oname):
@@ -71,9 +73,9 @@ def get_analysis_files(analyses):
     files['evaluation_reference'] = dict()
     for a in analyses:
         files['analysis_settings'][a] = os.path.join(paths['data'], a+'_var.j')
-        files["analysis_source"][a] = os.path.join(paths['analysis'], 'src', a+'.cc')
-        files["analysis_CR_source"][a] = os.path.join(paths['analysis'], 'src', a+'_CR.cc')
-        files["analysis_header"][a] = os.path.join(paths['analysis'], 'include', a+'.h')
+        files["analysis_source"][a] = os.path.join(paths['analysis'], 'src', 'analyses', a+'.cc')
+        files["analysis_CR_source"][a] = os.path.join(paths['analysis'], 'src',  'analyses', a+'_CR.cc')
+        files["analysis_header"][a] = os.path.join(paths['analysis'], 'include',  'analyses', a+'.h')
         files['delphes_config'][a] = os.path.join(paths['tools'], 'delphes', 'settings', a+'.tcl')
         files['evaluation_reference'][a] = os.path.join(paths['data'], a+'_ref.dat')
     return files

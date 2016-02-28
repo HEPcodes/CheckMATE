@@ -273,11 +273,13 @@ def calculate_cls_limit(reference_data, n_events, sr, randomseed):
   if "bkg_err" in reference_data[sr]:
     background_error = float(reference_data[sr]["bkg_err"])
   elif "bkg_errp" in reference_data[sr]:
-    background_error = sqrt(float(reference_data[sr]["bkg_errp"])*float(reference_data[sr]["bkg_errp"])+float(reference_data[sr]["bkg_errm"])*float(reference_data[sr]["bkg_errm"]))/2.
+    # Asymmetric error: as a rough approximation, use the mean of the squares
+    background_error = sqrt(float(reference_data[sr]["bkg_errp"])**2 + float(reference_data[sr]["bkg_errm"])**2)/sqrt(2.)
   elif "bkg_err_sys" in reference_data[sr]:
-    background_error = sqrt(float(reference_data[sr]["bkg_err_stat"])*float(reference_data[sr]["bkg_err_stat"])+float(reference_data[sr]["bkg_err_sys"])*float(reference_data[sr]["bkg_err_sys"]))
+    # Total error = independent quadratic sum of statistical and systematical component
+    background_error = sqrt(float(reference_data[sr]["bkg_err_stat"])**2 + float(reference_data[sr]["bkg_err_sys"])**2 )
   elif "bkg_err_sysp" in reference_data[sr]:
-    background_error = sqrt(float(reference_data[sr]["bkg_err_stat"])*float(reference_data[sr]["bkg_err_stat"])+float(reference_data[sr]["bkg_err_sysp"])*float(reference_data[sr]["bkg_err_sysp"])/4.+float(reference_data[sr]["bkg_err_sysp"])*float(reference_data[sr]["bkg_err_sysp"])/4.)
+    background_error = sqrt(float(reference_data[sr]["bkg_err_stat"])**2 + (float(reference_data[sr]["bkg_err_sysp"])**2)/2. + (float(reference_data[sr]["bkg_err_sysp"])**2)/2.)
   else:
     background_error = 0
   reference_data[sr]["bkg_err_tot"] = background_error
@@ -362,7 +364,9 @@ def evaluate(analyses, events, files, flags, output, paths):
   n_events_all = dict()
   analysis_strongest_result_all = dict()
   overall_strongest_result = dict() # keeps track of the most constraining signal region's results over all analyses
+  did_something_exclude = False # Set to true if any analysis has "expectation_known" and hence continued to the exclucion part
   for analysis in analyses:
+    parameters = read_analysis_parameters(analysis)
     analysis_strongest_result = dict() # keeps track of the most constraining signal region's results for this analysis
     
     # Update file information with all output files available in output directory.
@@ -374,18 +378,24 @@ def evaluate(analyses, events, files, flags, output, paths):
     
     output.set_cout_file("#None")
     output.cout("** "+analysis+" **")
-    # Read reference file to get all signal regions, all reference data and all header information to construct reference table and header lines.
-    (header_lines, signal_regions, reference_data) = read_reference_file(files['evaluation_reference'][analysis])
     
     # Go through all analysed processes, add number of signal events and print information to the output file.
     output.set_cout_file(files['output_evaluation_event_numbers'][analysis])   
-    for line in header_lines:
-      output.cout("@"+line)
+    #for line in header_lines:
+    #  output.cout("@"+line)
+    signal_regions = parameters["signal_regions"]
     n_events = collect_n_events_per_run(signal_regions, files, output)
     n_events_all[analysis] = n_events
     
     format_columnated_file(files['output_evaluation_event_numbers'][analysis])
-      
+    
+    # Stop here if there is no expectation for this analysis
+    if parameters["expectation_known"] == "n":
+      continue
+    
+    did_something_exclude = True
+    # Read reference file to get all signal regions, all reference data and all header information to construct reference table and header lines.
+    (header_lines, signal_regions, reference_data) = read_reference_file(files['evaluation_reference'][analysis])
     
     if os.path.isfile(files['output_evaluation_r_limits'][analysis]):
       os.remove(files['output_evaluation_r_limits'][analysis])
@@ -435,7 +445,7 @@ def evaluate(analyses, events, files, flags, output, paths):
         first_line = False
       output.cout(sr+"  "+str(siground(results_r[sr]["signal_events"]))+"  "+str(siground(results_r[sr]["signal_events_error_stat"]))+"  "+str(siground(results_r[sr]["signal_events_error_sys"]))+"  "+str(siground(results_r[sr]["signal_events_error_tot"]))+"  "+str(siground(results_r[sr]["observed_upper_limit"]))+"  "+str(siground(results_r[sr]["expected_upper_limit"]))+"  "+str(siground(results_r[sr]["r_observed_cons"]))+"  "+str(siground(results_r[sr]["r_expected_cons"])))
 
-
+    
 #----------------------------------------------------------
 #Jamie new code
 
@@ -536,10 +546,15 @@ def evaluate(analyses, events, files, flags, output, paths):
       output.cout(analysis+"  "+analysis_strongest_result["origin"]+"  "+str(siground(analysis_strongest_result["r_observed_cons"]))+"  "+str(siground(analysis_strongest_result["r_expected_cons"]))+"  "+str(siground(analysis_strongest_result["signal_events"]))+"  "+str(siground(analysis_strongest_result["signal_events_error_stat"]))+"  "+str(siground(analysis_strongest_result["signal_events_error_sys"]))+"  "+str(siground(analysis_strongest_result["signal_events_error_tot"]))+"  "+str(siground(analysis_strongest_result["observed_upper_limit"]))+"  "+str(siground(results_r[analysis_strongest_result["origin"]]["expected_upper_limit"])))
     output.mute()
 
-  # Print final result
   format_columnated_file(files['output_bestsignalregions'])
   output.unmute()
-  output.set_cout_file(files['output_result'])
+  output.set_cout_file(files['output_result'])  
+  # Print final result, if something did exclude something
+  if not did_something_exclude:
+    output.cout("No analysis had expected numbers.")
+    output.cout("Evaluation ends without exclusion statement.")
+    output.cout("Use AnalysisManager to add expected numbers.")
+    return
   status = "Allowed"
   if flags["fullcl"]:
     test = "Calculation of CLs from determined signal"
@@ -606,18 +621,19 @@ def evaluate(analyses, events, files, flags, output, paths):
     output.mute()
     for analysis in analyses: 
       if os.path.isfile(files['eff_tab'][analysis]):
-        os.remove(files['eff_tab'][analysis])
+	os.remove(files['eff_tab'][analysis])
       output.set_cout_file(files['eff_tab'][analysis])
       output.cout("Signal_Region  Efficiency  Eff_Err_Stat  Eff_Err_Sys  Eff_Err_Tot  Analysis_Best  Run_Best")
-      (header_lines, signal_regions, reference_data) = read_reference_file(files['evaluation_reference'][analysis])
+      parameters = read_analysis_parameters(analysis)
+      signal_regions = parameters["signal_regions"]
       for sr in signal_regions:
-        sig_eff = calc_sig_eff(reference_data, n_events_all[analysis], sr)
-        run_best = analysis_best = '0'
-        if sr == overall_strongest_result['origin'].split("-")[1].strip(): 
-          run_best = '1'
-        if sr == analysis_strongest_result_all[analysis]:
-          analysis_best = '1'
-        output.cout(sr+"  "+str(siground(sig_eff["signal_eff"],6))+"  "+str(siground(sig_eff["signal_eff_error_stat"],7))+"  "+str(siground(sig_eff["signal_eff_error_sys"],7))+"  "+str(siground(sig_eff["signal_eff_error_tot"],7))+"  "+str(analysis_best)+"  "+str(run_best))
+	sig_eff = calc_sig_eff(reference_data, n_events_all[analysis], sr)
+	run_best = analysis_best = '0'
+	if sr == overall_strongest_result['origin'].split("-")[1].strip(): 
+	  run_best = '1'
+	if sr == analysis_strongest_result_all[analysis]:
+	  analysis_best = '1'
+	output.cout(sr+"  "+str(siground(sig_eff["signal_eff"],6))+"  "+str(siground(sig_eff["signal_eff_error_stat"],7))+"  "+str(siground(sig_eff["signal_eff_error_sys"],7))+"  "+str(siground(sig_eff["signal_eff_error_tot"],7))+"  "+str(analysis_best)+"  "+str(run_best))
       format_columnated_file(files['eff_tab'][analysis]) 
     output.unmute()
       
