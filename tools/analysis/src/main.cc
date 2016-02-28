@@ -7,16 +7,23 @@
 
 #include "AnalysisBase.h"
 
-#include "atlas_conf_2013_047.h" 
-#include "atlas_conf_2013_089.h" 
-#include "atlas_conf_2013_035.h" 
-#include "atlas_conf_2013_024.h" 
-#include "cms_sus_13_016.h" 
-#include "atlas_conf_2012_147.h" 
-#include "cms_1303_2985.h" 
-#include "atlas_conf_2013_049.h" 
+#include "atlas_1308_2631.h" 
 #include "atlas_conf_2012_104.h" 
+#include "atlas_conf_2012_147.h" 
+#include "atlas_conf_2013_024.h" 
+#include "atlas_conf_2013_035.h" 
+#include "atlas_conf_2013_047.h" 
+#include "atlas_conf_2013_049.h" 
 #include "atlas_conf_2013_061.h" 
+#include "atlas_conf_2013_089.h" 
+
+#include "cms_1303_2985.h" 
+#include "cms_sus_13_016.h" 
+
+
+
+
+
 
 
 
@@ -113,32 +120,17 @@ int main(int argc, char* argv[]) {
       }
     }
     
-    if(analysis == "atlas_conf_2013_047") {
-      Atlas_conf_2013_047 a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
+    
+    if(analysis == "atlas_1308_2631") {
+      Atlas_1308_2631 a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
+      a.loopOverEvents();
+    } 
+    else if(analysis == "atlas_conf_2012_104") {
+      Atlas_conf_2012_104 a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
       a.loopOverEvents();
     }
-    else if(analysis == "atlas_conf_2013_047_CR") {
-      Atlas_conf_2013_047_CR a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
-      a.loopOverEvents();
-    }
-    else if(analysis == "atlas_conf_2013_089") {
-      Atlas_conf_2013_089 a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
-      a.loopOverEvents();
-    }
-    else if(analysis == "atlas_conf_2013_089_CR") {
-      Atlas_conf_2013_089_CR a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
-      a.loopOverEvents();
-    }
-    else if(analysis == "atlas_conf_2013_035") {
-      Atlas_conf_2013_035 a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
-      a.loopOverEvents();
-    }
-    else if(analysis == "atlas_conf_2013_024") {
-      Atlas_conf_2013_024 a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
-      a.loopOverEvents();
-    }
-    else if(analysis == "atlas_conf_2013_024_CR") {
-      Atlas_conf_2013_024_CR a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
+    else if(analysis == "atlas_conf_2012_104_CR") {
+      Atlas_conf_2012_104_CR a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
       a.loopOverEvents();
     }
     else if(analysis == "atlas_conf_2012_147") {
@@ -149,12 +141,24 @@ int main(int argc, char* argv[]) {
       Atlas_conf_2012_147_CR a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
       a.loopOverEvents();
     }
-    else if(analysis == "cms_1303_2985") {
-      Cms_1303_2985 a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
+    else if(analysis == "atlas_conf_2013_024") {
+      Atlas_conf_2013_024 a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
       a.loopOverEvents();
     }
-    else if(analysis == "cms_1303_2985_CR") {
-      Cms_1303_2985_CR a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
+    else if(analysis == "atlas_conf_2013_024_CR") {
+      Atlas_conf_2013_024_CR a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
+      a.loopOverEvents();
+    }
+    else if(analysis == "atlas_conf_2013_035") {
+      Atlas_conf_2013_035 a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
+      a.loopOverEvents();
+    }
+    else if(analysis == "atlas_conf_2013_047") {
+      Atlas_conf_2013_047 a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
+      a.loopOverEvents();
+    }
+    else if(analysis == "atlas_conf_2013_047_CR") {
+      Atlas_conf_2013_047_CR a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
       a.loopOverEvents();
     }
     else if(analysis == "atlas_conf_2013_049") {
@@ -165,20 +169,28 @@ int main(int argc, char* argv[]) {
       Atlas_conf_2013_049_CR a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
       a.loopOverEvents();
     }
-    else if(analysis == "atlas_conf_2012_104") {
-      Atlas_conf_2012_104 a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
-      a.loopOverEvents();
-    }
-    else if(analysis == "atlas_conf_2012_104_CR") {
-      Atlas_conf_2012_104_CR a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
-      a.loopOverEvents();
-    }
     else if(analysis == "atlas_conf_2013_061") {
       Atlas_conf_2013_061 a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
       a.loopOverEvents();
     }
     else if(analysis == "atlas_conf_2013_061_CR") {
       Atlas_conf_2013_061_CR a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
+      a.loopOverEvents();
+    }
+    else if(analysis == "atlas_conf_2013_089") {
+      Atlas_conf_2013_089 a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
+      a.loopOverEvents();
+    }
+    else if(analysis == "atlas_conf_2013_089_CR") {
+      Atlas_conf_2013_089_CR a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
+      a.loopOverEvents();
+    }
+    else if(analysis == "cms_1303_2985") {
+      Cms_1303_2985 a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
+      a.loopOverEvents();
+    }
+    else if(analysis == "cms_1303_2985_CR") {
+      Cms_1303_2985_CR a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
       a.loopOverEvents();
     }
     else if(analysis == "cms_sus_13_016") {
