@@ -420,6 +420,7 @@ def list_analyses():
    
   
 def remove_analysis():
+  global PRINTLEVEL
   myprint('This will remove all source files and other appearances in the analysis framework.')
   myprint('(You can re-add the analysis as long as you keep the settings file in the /data directory).')
   PRINTLEVEL += 1

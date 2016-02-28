@@ -24,8 +24,10 @@ atlas_conf_2014_014  1    ATLAS, 2 leptons + b-jets (stop)                  20.3
 atlas_conf_2014_033  3    ATLAS, WW standard model measurement              20.3  yes  
 cms_1303_2985        59   CMS, alpha_T + b-jets                             11.7  yes
 cms_1301_4698_WW     1    CMS, WW standard model measurement                3.5   no 
-cms_1306_1126_WW     1    CMS, WW standard model measurement (7TeV          4.9   no 
+cms_1306_1126_WW     1    CMS, WW standard model measurement (7TeV)         4.9   no 
+cms_1405_7570        57   CMS, Various chargino and neutralino              19.5  no
 cms_smp_12_006       4    CMS, WZ standard model (3 leptons + etmiss)       19.6  no 
-cms_sus_12_019       2    CMS, 2 leptons, >= 2 jets + etmiss (dilep edge)   19.4  no         
+cms_sus_12_019       2    CMS, 2 leptons, >= 2 jets + etmiss (dilep edge)   19.4  no  
+cms_sus_13_016       1    CMS, OS lep 3+ b-tags                             19.5  no         
 atlas_conf_2013_035  6    ATLAS, 3 leptons + etmiss                         20.7  no    
 atlas_conf_2013_048  4    ATLAS, 2 leptons + etmiss (direct stop)           20.0  no         

@@ -362,6 +362,16 @@ double AnalysisBase::mCTcorr(const TLorentzVector & v1, const TLorentzVector & v
     return mct_event.mctcorr(v1t,v2t,vdst,ptmt,ecm,mxlo);
 }
 
+double AnalysisBase::mCTy(const TLorentzVector & v1, const TLorentzVector & v2,const TLorentzVector & vds,const TLorentzVector & invis)
+{
+    mctlib::mct mct_event;
+    double v1t[4] = {v1.E(),v1.Px(),v1.Py(),v1.Pz()};
+    double v2t[4] = {v2.E(),v2.Px(),v2.Py(),v2.Pz()};
+    double vdst[4] = {vds.E(),vds.Px(),vds.Py(),vds.Pz()};
+    double ptmt[2] = {invis.Px(),invis.Py()};
+    return mct_event.mcy(v1t,v2t,vdst,ptmt);
+}
+
 double AnalysisBase::mT2_bl(const TLorentzVector & pl_in, const TLorentzVector & pb1_in, const TLorentzVector & pb2_in, const TLorentzVector & invis) {
     // Setup mt2_bl evaluation object.
     mt2bl_bisect::mt2bl mt2bl_event;

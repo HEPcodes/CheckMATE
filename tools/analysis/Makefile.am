@@ -32,11 +32,13 @@ src/atlas_conf_2013_061_CR.cc src/atlas_conf_2013_061.cc include/atlas_conf_2013
 src/atlas_conf_2013_089_CR.cc src/atlas_conf_2013_089.cc include/atlas_conf_2013_089.h \
 src/atlas_conf_2014_014.cc include/atlas_conf_2014_014.h \
 src/atlas_conf_2014_033.cc include/atlas_conf_2014_033.h \
+src/cms_1301_4698.cc include/cms_1301_4698.h \
 src/cms_1303_2985_CR.cc src/cms_1303_2985.cc include/cms_1303_2985.h \
-src/cms_1301_4698_WW.cc include/cms_1301_4698_WW.h \
 src/cms_1306_1126_WW.cc include/cms_1306_1126_WW.h \
+src/cms_1405_7570.cc include/cms_1405_7570.h \
 src/cms_smp_12_006.cc include/cms_smp_12_006.h \
-src/cms_sus_12_019.cc include/cms_sus_12_019.h 
+src/cms_sus_12_019.cc include/cms_sus_12_019.h \
+src/cms_sus_13_016.cc include/cms_sus_13_016.h 
 
 doAnalysis_CXXFLAGS =  @ROOTCFLAGS@ -Iinclude -I$(abs_top_builddir)/tools/delphes/Delphes-3.0.10X
 doAnalysis_LDADD =  -L@ROOTLIBDIR@ @ROOTGLIBS@ @ROOTLIBS@ -L$(abs_top_builddir)/tools/delphes/Delphes-3.0.10X -lEG -lDelphes

@@ -31,13 +31,14 @@
 #include "atlas_conf_2013_061.h" 
 #include "atlas_conf_2013_089.h"
 #include "atlas_conf_2014_014.h"
-#include "atlas_conf_2014_033.h"
-#include "cms_1303_2985.h" 
+#include "atlas_conf_2014_033.h" 
 #include "cms_1301_4698_WW.h" 
+#include "cms_1303_2985.h"
 #include "cms_1306_1126_WW.h" 
+#include "cms_1405_7570.h"
 #include "cms_smp_12_006.h"
 #include "cms_sus_12_019.h" 
-
+#include "cms_sus_13_016.h"
 
 int main(int argc, char* argv[]) {
     if(argc <= 6) {
@@ -282,6 +283,14 @@ int main(int argc, char* argv[]) {
     }
     else if(analysis == "cms_sus_12_019") {
       Cms_sus_12_019 a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
+      a.loopOverEvents();
+    }
+    else if(analysis == "cms_1405_7570") {
+      Cms_1405_7570 a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
+      a.loopOverEvents();
+    }
+    else if(analysis == "cms_sus_13_016") {
+      Cms_sus_13_016 a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
       a.loopOverEvents();
     }
 

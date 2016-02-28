@@ -82,12 +82,14 @@ am_doAnalysis_OBJECTS = src/doAnalysis-main.$(OBJEXT) \
 	src/doAnalysis-atlas_conf_2013_089.$(OBJEXT) \
 	src/doAnalysis-atlas_conf_2014_014.$(OBJEXT) \
 	src/doAnalysis-atlas_conf_2014_033.$(OBJEXT) \
+	src/doAnalysis-cms_1301_4698.$(OBJEXT) \
 	src/doAnalysis-cms_1303_2985_CR.$(OBJEXT) \
 	src/doAnalysis-cms_1303_2985.$(OBJEXT) \
-	src/doAnalysis-cms_1301_4698_WW.$(OBJEXT) \
 	src/doAnalysis-cms_1306_1126_WW.$(OBJEXT) \
+	src/doAnalysis-cms_1405_7570.$(OBJEXT) \
 	src/doAnalysis-cms_smp_12_006.$(OBJEXT) \
-	src/doAnalysis-cms_sus_12_019.$(OBJEXT)
+	src/doAnalysis-cms_sus_12_019.$(OBJEXT) \
+	src/doAnalysis-cms_sus_13_016.$(OBJEXT)
 doAnalysis_OBJECTS = $(am_doAnalysis_OBJECTS)
 doAnalysis_DEPENDENCIES =
 doAnalysis_LINK = $(CXXLD) $(doAnalysis_CXXFLAGS) $(CXXFLAGS) \
@@ -250,12 +252,14 @@ doAnalysis_SOURCES = src/main.cc src/AnalysisBase.cc \
 	src/atlas_conf_2013_089.cc include/atlas_conf_2013_089.h \
 	src/atlas_conf_2014_014.cc include/atlas_conf_2014_014.h \
 	src/atlas_conf_2014_033.cc include/atlas_conf_2014_033.h \
+	src/cms_1301_4698.cc include/cms_1301_4698.h \
 	src/cms_1303_2985_CR.cc src/cms_1303_2985.cc \
-	include/cms_1303_2985.h src/cms_1301_4698_WW.cc \
-	include/cms_1301_4698_WW.h src/cms_1306_1126_WW.cc \
-	include/cms_1306_1126_WW.h src/cms_smp_12_006.cc \
+	include/cms_1303_2985.h src/cms_1306_1126_WW.cc \
+	include/cms_1306_1126_WW.h src/cms_1405_7570.cc \
+	include/cms_1405_7570.h src/cms_smp_12_006.cc \
 	include/cms_smp_12_006.h src/cms_sus_12_019.cc \
-	include/cms_sus_12_019.h
+	include/cms_sus_12_019.h src/cms_sus_13_016.cc \
+	include/cms_sus_13_016.h
 doAnalysis_CXXFLAGS = @ROOTCFLAGS@ -Iinclude -I$(abs_top_builddir)/tools/delphes/Delphes-3.0.10X
 doAnalysis_LDADD = -L@ROOTLIBDIR@ @ROOTGLIBS@ @ROOTLIBS@ -L$(abs_top_builddir)/tools/delphes/Delphes-3.0.10X -lEG -lDelphes
 LD_RUN_PATH = @ROOTLIBDIR@:$(abs_top_builddir)/tools/delphes/Delphes-3.0.10X
@@ -397,17 +401,21 @@ src/doAnalysis-atlas_conf_2014_014.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/doAnalysis-atlas_conf_2014_033.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
+src/doAnalysis-cms_1301_4698.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
 src/doAnalysis-cms_1303_2985_CR.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/doAnalysis-cms_1303_2985.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
-src/doAnalysis-cms_1301_4698_WW.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
 src/doAnalysis-cms_1306_1126_WW.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
+src/doAnalysis-cms_1405_7570.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/doAnalysis-cms_smp_12_006.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/doAnalysis-cms_sus_12_019.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
+src/doAnalysis-cms_sus_13_016.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 doAnalysis$(EXEEXT): $(doAnalysis_OBJECTS) $(doAnalysis_DEPENDENCIES) 
 	@rm -f doAnalysis$(EXEEXT)
@@ -449,12 +457,14 @@ mostlyclean-compile:
 	-rm -f src/doAnalysis-atlas_conf_2013_089_CR.$(OBJEXT)
 	-rm -f src/doAnalysis-atlas_conf_2014_014.$(OBJEXT)
 	-rm -f src/doAnalysis-atlas_conf_2014_033.$(OBJEXT)
-	-rm -f src/doAnalysis-cms_1301_4698_WW.$(OBJEXT)
+	-rm -f src/doAnalysis-cms_1301_4698.$(OBJEXT)
 	-rm -f src/doAnalysis-cms_1303_2985.$(OBJEXT)
 	-rm -f src/doAnalysis-cms_1303_2985_CR.$(OBJEXT)
 	-rm -f src/doAnalysis-cms_1306_1126_WW.$(OBJEXT)
+	-rm -f src/doAnalysis-cms_1405_7570.$(OBJEXT)
 	-rm -f src/doAnalysis-cms_smp_12_006.$(OBJEXT)
 	-rm -f src/doAnalysis-cms_sus_12_019.$(OBJEXT)
+	-rm -f src/doAnalysis-cms_sus_13_016.$(OBJEXT)
 	-rm -f src/doAnalysis-main.$(OBJEXT)
 	-rm -f src/doAnalysis-mctlib.$(OBJEXT)
 	-rm -f src/doAnalysis-mt2_bisect.$(OBJEXT)
@@ -497,12 +507,14 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/doAnalysis-atlas_conf_2013_089_CR.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/doAnalysis-atlas_conf_2014_014.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/doAnalysis-atlas_conf_2014_033.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/doAnalysis-cms_1301_4698_WW.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/doAnalysis-cms_1301_4698.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/doAnalysis-cms_1303_2985.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/doAnalysis-cms_1303_2985_CR.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/doAnalysis-cms_1306_1126_WW.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/doAnalysis-cms_1405_7570.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/doAnalysis-cms_smp_12_006.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/doAnalysis-cms_sus_12_019.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/doAnalysis-cms_sus_13_016.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/doAnalysis-main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/doAnalysis-mctlib.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/doAnalysis-mt2_bisect.Po@am__quote@
@@ -1056,6 +1068,20 @@ src/doAnalysis-atlas_conf_2014_033.obj: src/atlas_conf_2014_033.cc
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(doAnalysis_CXXFLAGS) $(CXXFLAGS) -c -o src/doAnalysis-atlas_conf_2014_033.obj `if test -f 'src/atlas_conf_2014_033.cc'; then $(CYGPATH_W) 'src/atlas_conf_2014_033.cc'; else $(CYGPATH_W) '$(srcdir)/src/atlas_conf_2014_033.cc'; fi`
 
+src/doAnalysis-cms_1301_4698.o: src/cms_1301_4698.cc
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(doAnalysis_CXXFLAGS) $(CXXFLAGS) -MT src/doAnalysis-cms_1301_4698.o -MD -MP -MF src/$(DEPDIR)/doAnalysis-cms_1301_4698.Tpo -c -o src/doAnalysis-cms_1301_4698.o `test -f 'src/cms_1301_4698.cc' || echo '$(srcdir)/'`src/cms_1301_4698.cc
+@am__fastdepCXX_TRUE@	mv -f src/$(DEPDIR)/doAnalysis-cms_1301_4698.Tpo src/$(DEPDIR)/doAnalysis-cms_1301_4698.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/cms_1301_4698.cc' object='src/doAnalysis-cms_1301_4698.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(doAnalysis_CXXFLAGS) $(CXXFLAGS) -c -o src/doAnalysis-cms_1301_4698.o `test -f 'src/cms_1301_4698.cc' || echo '$(srcdir)/'`src/cms_1301_4698.cc
+
+src/doAnalysis-cms_1301_4698.obj: src/cms_1301_4698.cc
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(doAnalysis_CXXFLAGS) $(CXXFLAGS) -MT src/doAnalysis-cms_1301_4698.obj -MD -MP -MF src/$(DEPDIR)/doAnalysis-cms_1301_4698.Tpo -c -o src/doAnalysis-cms_1301_4698.obj `if test -f 'src/cms_1301_4698.cc'; then $(CYGPATH_W) 'src/cms_1301_4698.cc'; else $(CYGPATH_W) '$(srcdir)/src/cms_1301_4698.cc'; fi`
+@am__fastdepCXX_TRUE@	mv -f src/$(DEPDIR)/doAnalysis-cms_1301_4698.Tpo src/$(DEPDIR)/doAnalysis-cms_1301_4698.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/cms_1301_4698.cc' object='src/doAnalysis-cms_1301_4698.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(doAnalysis_CXXFLAGS) $(CXXFLAGS) -c -o src/doAnalysis-cms_1301_4698.obj `if test -f 'src/cms_1301_4698.cc'; then $(CYGPATH_W) 'src/cms_1301_4698.cc'; else $(CYGPATH_W) '$(srcdir)/src/cms_1301_4698.cc'; fi`
+
 src/doAnalysis-cms_1303_2985_CR.o: src/cms_1303_2985_CR.cc
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(doAnalysis_CXXFLAGS) $(CXXFLAGS) -MT src/doAnalysis-cms_1303_2985_CR.o -MD -MP -MF src/$(DEPDIR)/doAnalysis-cms_1303_2985_CR.Tpo -c -o src/doAnalysis-cms_1303_2985_CR.o `test -f 'src/cms_1303_2985_CR.cc' || echo '$(srcdir)/'`src/cms_1303_2985_CR.cc
 @am__fastdepCXX_TRUE@	mv -f src/$(DEPDIR)/doAnalysis-cms_1303_2985_CR.Tpo src/$(DEPDIR)/doAnalysis-cms_1303_2985_CR.Po
@@ -1084,20 +1110,6 @@ src/doAnalysis-cms_1303_2985.obj: src/cms_1303_2985.cc
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(doAnalysis_CXXFLAGS) $(CXXFLAGS) -c -o src/doAnalysis-cms_1303_2985.obj `if test -f 'src/cms_1303_2985.cc'; then $(CYGPATH_W) 'src/cms_1303_2985.cc'; else $(CYGPATH_W) '$(srcdir)/src/cms_1303_2985.cc'; fi`
 
-src/doAnalysis-cms_1301_4698_WW.o: src/cms_1301_4698_WW.cc
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(doAnalysis_CXXFLAGS) $(CXXFLAGS) -MT src/doAnalysis-cms_1301_4698_WW.o -MD -MP -MF src/$(DEPDIR)/doAnalysis-cms_1301_4698_WW.Tpo -c -o src/doAnalysis-cms_1301_4698_WW.o `test -f 'src/cms_1301_4698_WW.cc' || echo '$(srcdir)/'`src/cms_1301_4698_WW.cc
-@am__fastdepCXX_TRUE@	mv -f src/$(DEPDIR)/doAnalysis-cms_1301_4698_WW.Tpo src/$(DEPDIR)/doAnalysis-cms_1301_4698_WW.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/cms_1301_4698_WW.cc' object='src/doAnalysis-cms_1301_4698_WW.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(doAnalysis_CXXFLAGS) $(CXXFLAGS) -c -o src/doAnalysis-cms_1301_4698_WW.o `test -f 'src/cms_1301_4698_WW.cc' || echo '$(srcdir)/'`src/cms_1301_4698_WW.cc
-
-src/doAnalysis-cms_1301_4698_WW.obj: src/cms_1301_4698_WW.cc
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(doAnalysis_CXXFLAGS) $(CXXFLAGS) -MT src/doAnalysis-cms_1301_4698_WW.obj -MD -MP -MF src/$(DEPDIR)/doAnalysis-cms_1301_4698_WW.Tpo -c -o src/doAnalysis-cms_1301_4698_WW.obj `if test -f 'src/cms_1301_4698_WW.cc'; then $(CYGPATH_W) 'src/cms_1301_4698_WW.cc'; else $(CYGPATH_W) '$(srcdir)/src/cms_1301_4698_WW.cc'; fi`
-@am__fastdepCXX_TRUE@	mv -f src/$(DEPDIR)/doAnalysis-cms_1301_4698_WW.Tpo src/$(DEPDIR)/doAnalysis-cms_1301_4698_WW.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/cms_1301_4698_WW.cc' object='src/doAnalysis-cms_1301_4698_WW.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(doAnalysis_CXXFLAGS) $(CXXFLAGS) -c -o src/doAnalysis-cms_1301_4698_WW.obj `if test -f 'src/cms_1301_4698_WW.cc'; then $(CYGPATH_W) 'src/cms_1301_4698_WW.cc'; else $(CYGPATH_W) '$(srcdir)/src/cms_1301_4698_WW.cc'; fi`
-
 src/doAnalysis-cms_1306_1126_WW.o: src/cms_1306_1126_WW.cc
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(doAnalysis_CXXFLAGS) $(CXXFLAGS) -MT src/doAnalysis-cms_1306_1126_WW.o -MD -MP -MF src/$(DEPDIR)/doAnalysis-cms_1306_1126_WW.Tpo -c -o src/doAnalysis-cms_1306_1126_WW.o `test -f 'src/cms_1306_1126_WW.cc' || echo '$(srcdir)/'`src/cms_1306_1126_WW.cc
 @am__fastdepCXX_TRUE@	mv -f src/$(DEPDIR)/doAnalysis-cms_1306_1126_WW.Tpo src/$(DEPDIR)/doAnalysis-cms_1306_1126_WW.Po
@@ -1111,6 +1123,20 @@ src/doAnalysis-cms_1306_1126_WW.obj: src/cms_1306_1126_WW.cc
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/cms_1306_1126_WW.cc' object='src/doAnalysis-cms_1306_1126_WW.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(doAnalysis_CXXFLAGS) $(CXXFLAGS) -c -o src/doAnalysis-cms_1306_1126_WW.obj `if test -f 'src/cms_1306_1126_WW.cc'; then $(CYGPATH_W) 'src/cms_1306_1126_WW.cc'; else $(CYGPATH_W) '$(srcdir)/src/cms_1306_1126_WW.cc'; fi`
+
+src/doAnalysis-cms_1405_7570.o: src/cms_1405_7570.cc
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(doAnalysis_CXXFLAGS) $(CXXFLAGS) -MT src/doAnalysis-cms_1405_7570.o -MD -MP -MF src/$(DEPDIR)/doAnalysis-cms_1405_7570.Tpo -c -o src/doAnalysis-cms_1405_7570.o `test -f 'src/cms_1405_7570.cc' || echo '$(srcdir)/'`src/cms_1405_7570.cc
+@am__fastdepCXX_TRUE@	mv -f src/$(DEPDIR)/doAnalysis-cms_1405_7570.Tpo src/$(DEPDIR)/doAnalysis-cms_1405_7570.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/cms_1405_7570.cc' object='src/doAnalysis-cms_1405_7570.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(doAnalysis_CXXFLAGS) $(CXXFLAGS) -c -o src/doAnalysis-cms_1405_7570.o `test -f 'src/cms_1405_7570.cc' || echo '$(srcdir)/'`src/cms_1405_7570.cc
+
+src/doAnalysis-cms_1405_7570.obj: src/cms_1405_7570.cc
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(doAnalysis_CXXFLAGS) $(CXXFLAGS) -MT src/doAnalysis-cms_1405_7570.obj -MD -MP -MF src/$(DEPDIR)/doAnalysis-cms_1405_7570.Tpo -c -o src/doAnalysis-cms_1405_7570.obj `if test -f 'src/cms_1405_7570.cc'; then $(CYGPATH_W) 'src/cms_1405_7570.cc'; else $(CYGPATH_W) '$(srcdir)/src/cms_1405_7570.cc'; fi`
+@am__fastdepCXX_TRUE@	mv -f src/$(DEPDIR)/doAnalysis-cms_1405_7570.Tpo src/$(DEPDIR)/doAnalysis-cms_1405_7570.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/cms_1405_7570.cc' object='src/doAnalysis-cms_1405_7570.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(doAnalysis_CXXFLAGS) $(CXXFLAGS) -c -o src/doAnalysis-cms_1405_7570.obj `if test -f 'src/cms_1405_7570.cc'; then $(CYGPATH_W) 'src/cms_1405_7570.cc'; else $(CYGPATH_W) '$(srcdir)/src/cms_1405_7570.cc'; fi`
 
 src/doAnalysis-cms_smp_12_006.o: src/cms_smp_12_006.cc
 @am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(doAnalysis_CXXFLAGS) $(CXXFLAGS) -MT src/doAnalysis-cms_smp_12_006.o -MD -MP -MF src/$(DEPDIR)/doAnalysis-cms_smp_12_006.Tpo -c -o src/doAnalysis-cms_smp_12_006.o `test -f 'src/cms_smp_12_006.cc' || echo '$(srcdir)/'`src/cms_smp_12_006.cc
@@ -1139,6 +1165,20 @@ src/doAnalysis-cms_sus_12_019.obj: src/cms_sus_12_019.cc
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/cms_sus_12_019.cc' object='src/doAnalysis-cms_sus_12_019.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(doAnalysis_CXXFLAGS) $(CXXFLAGS) -c -o src/doAnalysis-cms_sus_12_019.obj `if test -f 'src/cms_sus_12_019.cc'; then $(CYGPATH_W) 'src/cms_sus_12_019.cc'; else $(CYGPATH_W) '$(srcdir)/src/cms_sus_12_019.cc'; fi`
+
+src/doAnalysis-cms_sus_13_016.o: src/cms_sus_13_016.cc
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(doAnalysis_CXXFLAGS) $(CXXFLAGS) -MT src/doAnalysis-cms_sus_13_016.o -MD -MP -MF src/$(DEPDIR)/doAnalysis-cms_sus_13_016.Tpo -c -o src/doAnalysis-cms_sus_13_016.o `test -f 'src/cms_sus_13_016.cc' || echo '$(srcdir)/'`src/cms_sus_13_016.cc
+@am__fastdepCXX_TRUE@	mv -f src/$(DEPDIR)/doAnalysis-cms_sus_13_016.Tpo src/$(DEPDIR)/doAnalysis-cms_sus_13_016.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/cms_sus_13_016.cc' object='src/doAnalysis-cms_sus_13_016.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(doAnalysis_CXXFLAGS) $(CXXFLAGS) -c -o src/doAnalysis-cms_sus_13_016.o `test -f 'src/cms_sus_13_016.cc' || echo '$(srcdir)/'`src/cms_sus_13_016.cc
+
+src/doAnalysis-cms_sus_13_016.obj: src/cms_sus_13_016.cc
+@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(doAnalysis_CXXFLAGS) $(CXXFLAGS) -MT src/doAnalysis-cms_sus_13_016.obj -MD -MP -MF src/$(DEPDIR)/doAnalysis-cms_sus_13_016.Tpo -c -o src/doAnalysis-cms_sus_13_016.obj `if test -f 'src/cms_sus_13_016.cc'; then $(CYGPATH_W) 'src/cms_sus_13_016.cc'; else $(CYGPATH_W) '$(srcdir)/src/cms_sus_13_016.cc'; fi`
+@am__fastdepCXX_TRUE@	mv -f src/$(DEPDIR)/doAnalysis-cms_sus_13_016.Tpo src/$(DEPDIR)/doAnalysis-cms_sus_13_016.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='src/cms_sus_13_016.cc' object='src/doAnalysis-cms_sus_13_016.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(doAnalysis_CXXFLAGS) $(CXXFLAGS) -c -o src/doAnalysis-cms_sus_13_016.obj `if test -f 'src/cms_sus_13_016.cc'; then $(CYGPATH_W) 'src/cms_sus_13_016.cc'; else $(CYGPATH_W) '$(srcdir)/src/cms_sus_13_016.cc'; fi`
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \

@@ -200,6 +200,21 @@ void Atlas_1402_7029::analyze() {
       return;
   }
 
+  if ( 12. < mSFOS && mSFOS < 40.)
+    for (int j=0; j<4; j++)
+      countCutflowEvent("CR0taua"+sr_index[j]+"_"+cf_index[2]);
+  if ( 40. < mSFOS && mSFOS < 60.)
+    for (int j=4; j<8; j++)
+      countCutflowEvent("CR0taua"+sr_index[j]+"_"+cf_index[2]);    
+  if ( 60. < mSFOS && mSFOS < 81.2)
+    for (int j=8; j<12; j++)
+      countCutflowEvent("CR0taua"+sr_index[j]+"_"+cf_index[2]);       
+  if ( 81.2 < mSFOS && mSFOS < 101.2)
+    for (int j=12; j<16; j++)
+      countCutflowEvent("CR0taua"+sr_index[j]+"_"+cf_index[2]);    
+  if ( mSFOS > 101.2)
+    for (int j=16; j<20; j++)
+      countCutflowEvent("CR0taua"+sr_index[j]+"_"+cf_index[2]);  
   for (int j=0; j<20; j++)
     countCutflowEvent("CR0taua"+sr_index[j]+"_"+cf_index[3]);      
   
