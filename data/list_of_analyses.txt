@@ -8,3 +8,4 @@ cms_1303_2985        59   CMS, alpha_T + b-jets                      11.7  yes
 atlas_conf_2013_049  9    ATLAS: 2 leptons + etmiss                  20.3  yes  
 atlas_conf_2012_104  2    ATLAS: 1 lepton + >= 4 jets + etmiss       5.8   yes  
 atlas_conf_2013_061  9    ATLAS: 0-1 leptons + >= 3 b-jets + etmiss  20.1  yes  
+cms_sus_13_016       1    CMS, OS lep 3+ b-tags                      19.5  no        

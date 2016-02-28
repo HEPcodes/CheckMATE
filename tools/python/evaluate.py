@@ -139,9 +139,7 @@ def collect_n_events_per_process(results_per_process, signal_regions, files, out
       # Determine weighted average of all runs
       n_events_per_process["signal_sumofweights"][sr] += n_events_per_file["signal_sumofweights"][sr]
       n_events_per_process["signal_sumofweights2"][sr] += n_events_per_file["signal_sumofweights2"][sr]
-      if n_events_per_file["signal_normevents"][sr] == 0:
-        delta_xsect = 0
-      else:
+      if n_events_per_file["signal_normevents"][sr] != 0: # If n == 0, just ignore. Any signal region with n != 0 is enough to define universal delta_xsect
         delta_xsect = n_events_per_file["signal_err_sys"][sr]/n_events_per_file["signal_normevents"][sr] # This number is universal for all signal regions
       
       

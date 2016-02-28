@@ -6,16 +6,18 @@
 #include <vector>
 
 #include "AnalysisBase.h"
+
 #include "atlas_conf_2013_047.h" 
 #include "atlas_conf_2013_089.h" 
 #include "atlas_conf_2013_035.h" 
 #include "atlas_conf_2013_024.h" 
+#include "cms_sus_13_016.h" 
 #include "atlas_conf_2012_147.h" 
 #include "cms_1303_2985.h" 
 #include "atlas_conf_2013_049.h" 
 #include "atlas_conf_2012_104.h" 
 #include "atlas_conf_2013_061.h" 
-//@@extraheader@@
+
 
 
 int main(int argc, char* argv[]) {
@@ -177,6 +179,10 @@ int main(int argc, char* argv[]) {
     }
     else if(analysis == "atlas_conf_2013_061_CR") {
       Atlas_conf_2013_061_CR a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
+      a.loopOverEvents();
+    }
+    else if(analysis == "cms_sus_13_016") {
+      Cms_sus_13_016 a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
       a.loopOverEvents();
     }
 //@@extracode@@
