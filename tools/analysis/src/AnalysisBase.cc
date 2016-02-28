@@ -10,8 +10,6 @@ AnalysisBase::AnalysisBase(std::string inFile, std::string outFol, std::string o
     luminosity = 0;
     ignoreElectrons = ignoreElectrons_LooseIsolation = ignoreElectrons_MediumEfficiency = ignoreElectrons_TightEfficiency = ignoreMuons = ignoreMuons_LooseIsolation = ignoreMuons_CombinedPlusEfficiency = ignoreMuons_CombinedEfficiency = ignorePhotons = ignorePhotons_LooseIsolation = ignoreTracks  = ignoreTowers = false;
 
-    // Setting the random number generator
-    srand(time(0));
 
     // Reading the Delphes Tree
     chain = new TChain("Delphes");
@@ -34,6 +32,14 @@ AnalysisBase::AnalysisBase(std::string inFile, std::string outFol, std::string o
     photonIsolationFlags = flags["photon_isolation"];
     jetBTagFlags = flags["jet_btags"];
     jet2BTagFlags = flags["jet2_btags"];
+   
+    // Setting the random number generator
+    if (!flags["randomseed"].empty())
+       srand(flags["randomseed"][0]);
+    else      
+       srand(time(0));
+    
+    std::cout << rand() << std::endl;
 }
 
 AnalysisBase::~AnalysisBase() {
@@ -313,13 +319,18 @@ void AnalysisBase::ignore(std::string ignore_what) {
     }
 }
 
-double AnalysisBase::mT2(TLorentzVector vis1, TLorentzVector vis2, double m_inv, TLorentzVector invis) {
+double AnalysisBase::mT(const TLorentzVector & vis, const TLorentzVector & invis) {
+    
+    return sqrt(2.*vis.Pt()*invis.Et()*(1.-cos(fabs(vis.DeltaPhi(invis)))));
+}
+
+double AnalysisBase::mT2(const TLorentzVector & vis1, const TLorentzVector & vis2, double m_inv, const TLorentzVector & invis) {
     // Setup mt2 evaluation object.
     mt2_bisect::mt2 mt2_event;
-  
+    TLorentzVector zeroVector = TLorentzVector(0. ,0. ,0. ,0.);
     // If no invis is given, use missingET. Note that pmiss[0] is irrelvant, which is why we set it to -1.
     double pmiss[] = {-1, missingET->P4().Px(), missingET->P4().Py()};
-    if (invis != (0. ,0. ,0. ,0.)) {
+    if (invis != zeroVector) {
 	pmiss[0] = -1;
 	pmiss[1] = invis.Px();
 	pmiss[2] = invis.Py();
@@ -331,4 +342,45 @@ double AnalysisBase::mT2(TLorentzVector vis1, TLorentzVector vis2, double m_inv,
     mt2_event.set_momenta( p1, p2, pmiss );
     mt2_event.set_mn( m_inv );
     return mt2_event.get_mt2();  
+}
+
+double AnalysisBase::mCT(const TLorentzVector & v1,const TLorentzVector & v2)
+{
+    mctlib::mct mct_event;
+    double v1t[4] = {v1.E(),v1.Px(),v1.Py(),v1.Pz()};
+    double v2t[4] = {v2.E(),v2.Px(),v2.Py(),v2.Pz()};
+    return mct_event.mctnorm(v1t,v2t);  //returns 'normal' mCT
+}
+
+double AnalysisBase::mCTcorr(const TLorentzVector & v1, const TLorentzVector & v2,const TLorentzVector & vds,const TLorentzVector & invis,const double ecm,const double mxlo)
+{
+    mctlib::mct mct_event;
+    double v1t[4] = {v1.E(),v1.Px(),v1.Py(),v1.Pz()};
+    double v2t[4] = {v2.E(),v2.Px(),v2.Py(),v2.Pz()};
+    double vdst[4] = {vds.E(),vds.Px(),vds.Py(),vds.Pz()};
+    double ptmt[2] = {invis.Px(),invis.Py()};
+    return mct_event.mctcorr(v1t,v2t,vdst,ptmt,ecm,mxlo);
+}
+
+double AnalysisBase::mT2_bl(const TLorentzVector & pl_in, const TLorentzVector & pb1_in, const TLorentzVector & pb2_in, const TLorentzVector & invis) {
+    // Setup mt2_bl evaluation object.
+    mt2bl_bisect::mt2bl mt2bl_event;
+    TLorentzVector zeroVector = TLorentzVector(0. ,0. ,0. ,0.);
+    
+    double pl[4] = {pl_in.E(), pl_in.Px(), pl_in.Py(), pl_in.Pz()};      // El, plx, ply, plz,     (visible lepton)
+    double pb1[4] = {pb1_in.E(), pb1_in.Px(), pb1_in.Py(), pb1_in.Pz()};  // Eb1, pb1x, pb1y, pb1z  (bottom on the same side as the visible lepton)
+    double pb2[4] = {pb2_in.E(), pb2_in.Px(), pb2_in.Py(), pb2_in.Pz()};  // Eb2, pb2x, pb2y, pb2z  (other bottom, paired with the invisible W)
+  
+    // If no invis is given, use missingET. Note that pmiss[0] is irrelvant, which is why we set it to -1.
+    double pmiss[] = {-1, missingET->P4().Px(), missingET->P4().Py()};
+    if (invis != zeroVector) {
+	pmiss[0] = -1;
+	pmiss[1] = invis.Px();
+	pmiss[2] = invis.Py();
+    }
+  
+    // Construct arrays that mt2_bisect needs as input and start evaluation
+    mt2bl_event.set_momenta(pl,pb1,pb2,pmiss);
+
+    return mt2bl_event.get_mt2bl();  
 }

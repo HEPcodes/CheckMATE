@@ -3,31 +3,14 @@ import os
 from global_functions import *
 from organize_paths_and_files import *
 from calculate_cls import *
+from likelihood import *
 from math import sqrt, fabs
 
-def siground(x):
-    n = 3
+def siground(x, n = 4):
     if x == "_":
-        return x
+      return x
     x = float(x)
-    #if fabs(x) > 1000 or fabs(x) < 0.01:
-    format = "%." + str(n-1) + "f"
-    #else:
-    #    format = "%." + str(n-1) + "f"
-    
-    as_string = format % x
-    return as_string
-
-def siground_cls(x):
-    n = 6
-    if x == "_":
-        return x
-    x = float(x)
-    #if fabs(x) > 1000 or fabs(x) < 0.01:
-    format = "%." + str(n-1) + "f"
-    #else:
-    #    format = "%." + str(n-1) + "f"
-    
+    format = "%." + str(n-1) + "f"    
     as_string = format % x
     return as_string
 
@@ -162,8 +145,8 @@ def collect_n_events_per_process(results_per_process, signal_regions, files, out
   # Find number of events per process and errors by determining the weighted sums  
   for sr in signal_regions:
     n_events_per_process["signal_normevents"][sr] = n_events_per_process["total_normevents"]*n_events_per_process["signal_sumofweights"][sr]/n_events_per_process["total_sumofweights"]
-    if n_events_per_process["signal_sumofweights"][sr] < 0:
-      n_events_per_process["signal_err_stat"][sr] = 0
+    if n_events_per_process["signal_sumofweights"][sr] <= 0:
+      n_events_per_process["signal_err_stat"][sr] = 1.*n_events_per_process["total_normevents"]/n_events_per_process["total_sumofweights"] # Error on 1 Monte Carlo Event
       n_events_per_process["signal_err_sys"][sr] = 0
     else:
       n_events_per_process["signal_err_stat"][sr] = n_events_per_process["total_normevents"]*sqrt(n_events_per_process["signal_sumofweights2"][sr])/(n_events_per_process["total_sumofweights"])
@@ -239,13 +222,13 @@ def compare_to_cls_limit(reference_data, n_events, sr):
   
   # If no expected upper limit is given, it cannot be evaluated
   if "S95_exp" not in reference_data[sr]:
-    results["expected_upper_limit"] = reference_data[sr]["S95_obs"]
+    results["expected_upper_limit"] = float(reference_data[sr]["S95_obs"])
     results["messages"].append("No expected limit could be found in reference data. Using expected = observed.")
     results["r_expected"] = results["r_observed"]
     results["r_expected_cons"] = results["r_observed_cons"]
   # Otherwise, determine ratio
   else:    
-    results["expected_upper_limit"] = reference_data[sr]["S95_exp"]
+    results["expected_upper_limit"] = float(reference_data[sr]["S95_exp"])
     results["r_expected"] = results["signal_events"] / float(results["expected_upper_limit"])
     results["r_expected_cons"] = (results["signal_events"] - 1.95996*results["signal_events_error_tot"]) / float(results["expected_upper_limit"])
     if results["r_expected_cons"] < 0:
@@ -253,7 +236,7 @@ def compare_to_cls_limit(reference_data, n_events, sr):
   
   return results
 
-def calculate_cls_limit(reference_data, n_events, sr):
+def calculate_cls_limit(reference_data, n_events, sr, randomseed):
   results = dict()
   results["messages"] = []
   
@@ -281,7 +264,7 @@ def calculate_cls_limit(reference_data, n_events, sr):
     results["expected_cls"] = 1
     results["expected_cls_err"] = 0
   else:
-    (results["expected_cls"], results["expected_cls_err"]) = cls(float(reference_data[sr]["bkg"]), background_error, float(reference_data[sr]["bkg"]), results["signal_events"], results["signal_events_error_tot"])
+    (results["expected_cls"], results["expected_cls_err"]) = cls(float(reference_data[sr]["bkg"]), background_error, float(reference_data[sr]["bkg"]), results["signal_events"], results["signal_events_error_tot"], randomseed)
   #results["expected_cls_cons"] = 1
   #if results["signal_events"] > 1.95996*results["signal_events_error_tot"]:
   #  results["expected_cls_cons"] = cls(float(reference_data[sr]["bkg"]), background_error, float(reference_data[sr]["bkg"]), results["signal_events"]-1.95996*results["signal_events_error_tot"])[0]
@@ -290,14 +273,49 @@ def calculate_cls_limit(reference_data, n_events, sr):
     results["observed_cls"] = 1
     results["observed_cls_err"] = 0
   else:
-    (results["observed_cls"], results["observed_cls_err"])  = cls(float(reference_data[sr]["bkg"]), background_error, float(reference_data[sr]["obs"]), results["signal_events"], results["signal_events_error_tot"])
+    (results["observed_cls"], results["observed_cls_err"])  = cls(float(reference_data[sr]["bkg"]), background_error, float(reference_data[sr]["obs"]), results["signal_events"], results["signal_events_error_tot"], randomseed)
   #results["observed_cls_cons"] = 1
   #if results["signal_events"] > 1.95996*results["signal_events_error_tot"]:
   #  results["observed_cls_cons"] = cls(float(reference_data[sr]["bkg"]), background_error, float(reference_data[sr]["obs"]), results["signal_events"]-1.95996*results["signal_events_error_tot"])[0]
   return results
 
-#
+#-----------------------------------------------------------------------------
+# Jamie added
+
+def calculate_likelihood(reference_data, n_events, sr, randomseed):
+  results = dict()
+  results["messages"] = []
   
+  # Expected signal events from analyses
+  results["signal_events"] = n_events["signal_normevents"][sr]
+  results["signal_events_error_stat"] =  0.  # n_events["signal_err_stat"][sr]
+  results["signal_events_error_sys"] =  0.   #n_events["signal_err_sys"][sr]
+  results["signal_events_error_tot"] = 0.   #sqrt(n_events["signal_err_stat"][sr]**2 + n_events["signal_err_sys"][sr]**2)
+  
+  # Determine the total background error.
+  background_error = 0
+  if "bkg_err" in reference_data[sr]:
+    background_error = float(reference_data[sr]["bkg_err"])
+  elif "bkg_errp" in reference_data[sr]:
+    background_error = sqrt(float(reference_data[sr]["bkg_errp"])*float(reference_data[sr]["bkg_errp"])+float(reference_data[sr]["bkg_errm"])*float(reference_data[sr]["bkg_errm"]))/2.
+  elif "bkg_err_sys" in reference_data[sr]:
+    background_error = float(reference_data[sr]["bkg_err_sys"])
+  elif "bkg_err_sysp" in reference_data[sr]:
+    background_error = (float(reference_data[sr]["bkg_err_sysp"])+float(reference_data[sr]["bkg_err_sysm"]))/2.
+  else:
+    background_error = 0
+  reference_data[sr]["bkg_err_tot"] = background_error
+
+  results["likelihood"]  = likelihood(float(reference_data[sr]["bkg"]), background_error, float(reference_data[sr]["obs"]), results["signal_events"], results["signal_events_error_tot"], randomseed)
+  #results["observed_cls_cons"] = 1
+  #if results["signal_events"] > 1.95996*results["signal_events_error_tot"]:
+  #  results["observed_cls_cons"] = cls(float(reference_data[sr]["bkg"]), background_error, float(reference_data[sr]["obs"]), results["signal_events"]-1.95996*results["signal_events_error_tot"])[0]
+  return results
+
+# End of Jamie Added
+#----------------------------------------------------------------------------------
+
+
 
 def evaluate(analyses, events, files, flags, output, paths):
   output.mute()
@@ -305,8 +323,23 @@ def evaluate(analyses, events, files, flags, output, paths):
   if os.path.isfile(files['output_result']):
     os.remove(files['output_result'])
   
-  strongest_result = dict() # keeps track of the most constraining signal region's results
+  # Set header in "best signal region" file
+  output.set_cout_file(files['output_bestsignalregions'])
+  if flags["fullcl"] == True:
+    output.cout("analysis  bestSR  r_obs^c  r_exp^c  CLs_obs  dCLs_obs  CLs_exp  dCLs_exp  S  dS_stat  dS_sys  dS_tot  B  dB  O  S95_obs  S95_exp")
+  else:
+    output.cout("analysis  bestSR  r_obs^c  r_exp^c  S  dS_stat  dS_sys  dS_tot  S95_obs  S95_exp")
+  
+  #Jamie added
+  if flags["likelihood"] == True:
+    for analysis in analyses:
+      analysis_likelihood = dict()
+      analysis_NSR = dict()
+  
+  overall_strongest_result = dict() # keeps track of the most constraining signal region's results over all analyses
   for analysis in analyses:
+    analysis_strongest_result = dict() # keeps track of the most constraining signal region's results for this analysis
+    
     # Update file information with all output files available in output directory.
     files.update(get_result_files(paths['output_analysis'], analysis))
       
@@ -342,29 +375,78 @@ def evaluate(analyses, events, files, flags, output, paths):
       # Calculate results.
       results_r[sr] = compare_to_cls_limit(reference_data, n_events, sr)
       
-      # Compare to bestresult.
-      if strongest_result == {}:
-        strongest_result = results_r[sr]
-        strongest_result["origin"] = analysis+" - "+sr
+      # Compare to best result for this analysis.
+      if analysis_strongest_result == {}:
+        analysis_strongest_result = results_r[sr].copy()
+        analysis_strongest_result["origin"] = sr
       else:
         # Consider the signal region with the largest expected r.
-        if results_r[sr]["r_expected_cons"] > strongest_result["r_expected_cons"]:
-          strongest_result = results_r[sr]
-          strongest_result["origin"] = analysis+" - "+sr
+        # If the r values are equal, prefer the one with the smallest allowed Sexp
+        if (results_r[sr]["r_expected_cons"] > analysis_strongest_result["r_expected_cons"]) or (results_r[sr]["r_expected_cons"] == analysis_strongest_result["r_expected_cons"] and results_r[sr]["expected_upper_limit"] < analysis_strongest_result["expected_upper_limit"]):
+          analysis_strongest_result = results_r[sr].copy()
+          analysis_strongest_result["origin"] = sr
+        
+      # Compare to best result over all analyses.
+      if overall_strongest_result == {}:
+        overall_strongest_result = results_r[sr].copy()
+        overall_strongest_result["origin"] = analysis+" - "+sr
+      else:
+        # Consider the signal region with the largest expected r.
+        if (results_r[sr]["r_expected_cons"] > overall_strongest_result["r_expected_cons"]) or (results_r[sr]["r_expected_cons"] == overall_strongest_result["r_expected_cons"] and results_r[sr]["expected_upper_limit"] < overall_strongest_result["expected_upper_limit"]):
+          overall_strongest_result = results_r[sr].copy()
+          overall_strongest_result["origin"] = analysis+" - "+sr
       
       # Print results_r.        
       if first_line:
         for m in results_r[sr]["messages"]:
           output.cout("@"+m)
-        output.cout("")
         output.cout("SR  S  dS_stat  dS_sys  dS_tot  S95_obs  S95_exp  r^c_obs  r^c_exp")
         first_line = False
       output.cout(sr+"  "+str(siground(results_r[sr]["signal_events"]))+"  "+str(siground(results_r[sr]["signal_events_error_stat"]))+"  "+str(siground(results_r[sr]["signal_events_error_sys"]))+"  "+str(siground(results_r[sr]["signal_events_error_tot"]))+"  "+str(siground(results_r[sr]["observed_upper_limit"]))+"  "+str(siground(results_r[sr]["expected_upper_limit"]))+"  "+str(siground(results_r[sr]["r_observed_cons"]))+"  "+str(siground(results_r[sr]["r_expected_cons"])))
+
+
+#----------------------------------------------------------
+#Jamie new code
+
+    #If desired, evaluate limits by calculating CLs    
+    if flags["likelihood"] == True:
+      # Reset old information
+      results_likelihood = dict()
+      analysis_likelihood[analysis] = 0.
+      
+      if os.path.isfile(files['output_evaluation_likelihood'][analysis]):
+        os.remove(files['output_evaluation_likelihood'][analysis])
+      output.set_cout_file(files['output_evaluation_likelihood'][analysis])
+
+      # Startup
+      for line in header_lines:
+          output.cout(line)
+      first_line = True
+
+      analysis_NSR[analysis] = len(signal_regions)
+
+      # Loop through all signal regions.
+      for sr in signal_regions:
+        # Evaluate results.
+        results_likelihood[sr] = calculate_likelihood(reference_data, n_events, sr, flags["randomseed"])
+        analysis_likelihood[analysis] = float(analysis_likelihood[analysis]) + float(results_likelihood[sr]["likelihood"])
+        
+       # Print results.
+        if first_line:
+          for m in results_likelihood[sr]["messages"]:
+            output.cout(m)
+          output.cout("SR  S  B  dB  O  Likelihood  Stan.Dev")
+          first_line = False
+        output.cout(sr+"  "+str(siground(results_likelihood[sr]["signal_events"]))+"  "+str(siground(float(reference_data[sr]["bkg"])))+"  "+str(siground(float(reference_data[sr]["bkg_err_tot"])))+"  "+str(siground(float(reference_data[sr]["obs"])))+"  "+str(siground(results_likelihood[sr]["likelihood"], 5))+"  "+str(siground(sqrt(results_likelihood[sr]["likelihood"]), 5)))
+        
+
+# End of new code
+#--------------------------------------------------------------------------
+
     
     #If desired, evaluate limits by calculating CLs    
     if flags["fullcl"] == True:
       # Reset old information
-      strongest_result = dict()
       results_cls = dict()
       
       if os.path.isfile(files['output_evaluation_cl_limits'][analysis]):
@@ -379,55 +461,72 @@ def evaluate(analyses, events, files, flags, output, paths):
       # Loop through all signal regions.
       for sr in signal_regions:
         # Evaluate results.
-        results_cls[sr] = calculate_cls_limit(reference_data, n_events, sr)
+        results_cls[sr] = calculate_cls_limit(reference_data, n_events, sr, flags["randomseed"])
         
-        # Compare to bestresult.
-        if strongest_result == {}:
-          strongest_result = results_cls[sr]
-          strongest_result.update(results_r[sr])
-          strongest_result["origin"] = analysis+" - "+sr
+        # Compare to best result of this analysis.
+        if "expected_cls" not in analysis_strongest_result:
+          analysis_strongest_result = results_cls[sr].copy()
+          analysis_strongest_result.update(results_r[sr])
+          analysis_strongest_result["origin"] = sr
         else:
           # Consider the signal region with the smallest expected CLs.
-          if results_cls[sr]["expected_cls"] < strongest_result["expected_cls"]:
-            strongest_result = results_cls[sr]
-            strongest_result.update(results_r[sr])
-            strongest_result["origin"] = analysis+" - "+sr
+          if (results_cls[sr]["expected_cls"] < analysis_strongest_result["expected_cls"]) or (results_cls[sr]["expected_cls"]  == analysis_strongest_result["expected_cls"] and results_r[sr]["expected_upper_limit"] < analysis_strongest_result["expected_upper_limit"]):
+            analysis_strongest_result = results_cls[sr].copy()
+            analysis_strongest_result.update(results_r[sr])
+            analysis_strongest_result["origin"] = sr
         
+        # Compare to best result over all analyses.
+        if "expected_cls" not in overall_strongest_result:
+          overall_strongest_result = results_cls[sr].copy()
+          overall_strongest_result.update(results_r[sr])
+          overall_strongest_result["origin"] = analysis+" - "+sr
+        else:
+          # Consider the signal region with the smallest expected CLs.
+          if (results_cls[sr]["expected_cls"] < overall_strongest_result["expected_cls"]) or (results_cls[sr]["expected_cls"]  == overall_strongest_result["expected_cls"] and results_r[sr]["expected_upper_limit"] < overall_strongest_result["expected_upper_limit"]):
+            overall_strongest_result = results_cls[sr].copy()
+            overall_strongest_result.update(results_r[sr])
+            overall_strongest_result["origin"] = analysis+" - "+sr
+            
         # Print results.
         if first_line:
           for m in results_cls[sr]["messages"]:
             output.cout(m)
-          output.cout("")
           output.cout("SR  S  dS_stat  dS_sys  dS_tot  B  dB  O  CL_obs  dCL_obs  CL_exp  dCL_exp")
           first_line = False
-        output.cout(sr+"  "+str(siground(results_cls[sr]["signal_events"]))+"  "+str(siground(results_cls[sr]["signal_events_error_stat"]))+"  "+str(siground(results_cls[sr]["signal_events_error_sys"]))+"  "+str(siground(results_cls[sr]["signal_events_error_tot"]))+"  "+str(siground(float(reference_data[sr]["bkg"])))+"  "+str(siground(float(reference_data[sr]["bkg_err_tot"])))+"  "+str(siground(float(reference_data[sr]["obs"])))+"  "+str(siground_cls(results_cls[sr]["observed_cls"]))+"  "+str(siground_cls(results_cls[sr]["observed_cls_err"]))+"  "+str(siground_cls(results_cls[sr]["expected_cls"]))+"  "+str(siground_cls(results_cls[sr]["expected_cls_err"])))
+        output.cout(sr+"  "+str(siground(results_cls[sr]["signal_events"]))+"  "+str(siground(results_cls[sr]["signal_events_error_stat"]))+"  "+str(siground(results_cls[sr]["signal_events_error_sys"]))+"  "+str(siground(results_cls[sr]["signal_events_error_tot"]))+"  "+str(siground(float(reference_data[sr]["bkg"])))+"  "+str(siground(float(reference_data[sr]["bkg_err_tot"])))+"  "+str(siground(float(reference_data[sr]["obs"])))+"  "+str(siground(results_cls[sr]["observed_cls"], 5))+"  "+str(siground(results_cls[sr]["observed_cls_err"], 5))+"  "+str(siground(results_cls[sr]["expected_cls"], 5))+"  "+str(siground(results_cls[sr]["expected_cls_err"], 5)))
     
+    # Print the best result of the given analysis into a 'best results' file
+    output.set_cout_file(files['output_bestsignalregions'])
+    if flags["fullcl"] == True:
+      output.cout(analysis+"  "+analysis_strongest_result["origin"]+"  "+str(siground(analysis_strongest_result["r_observed_cons"]))+"  "+str(siground(analysis_strongest_result["r_expected_cons"]))+"  "+str(siground(analysis_strongest_result["observed_cls"], 5))+"  "+str(siground(analysis_strongest_result["observed_cls_err"], 5))+"  "+str(siground(analysis_strongest_result["expected_cls"], 5))+"  "+str(siground(analysis_strongest_result["expected_cls_err"], 5))+"  "+str(siground(analysis_strongest_result["signal_events"]))+"  "+str(siground(analysis_strongest_result["signal_events_error_stat"]))+"  "+str(siground(analysis_strongest_result["signal_events_error_sys"]))+"  "+str(siground(analysis_strongest_result["signal_events_error_tot"]))+"  "+str(siground(float(reference_data[analysis_strongest_result["origin"]]["bkg"])))+"  "+str(siground(float(reference_data[analysis_strongest_result["origin"]]["bkg_err_tot"])))+"  "+str(siground(float(reference_data[analysis_strongest_result["origin"]]["obs"])))+"  "+str(siground(results_r[analysis_strongest_result["origin"]]["observed_upper_limit"]))+"  "+str(siground(results_r[analysis_strongest_result["origin"]]["expected_upper_limit"])))
+    else:
+      output.cout(analysis+"  "+analysis_strongest_result["origin"]+"  "+str(siground(analysis_strongest_result["r_observed_cons"]))+"  "+str(siground(analysis_strongest_result["r_expected_cons"]))+"  "+str(siground(analysis_strongest_result["signal_events"]))+"  "+str(siground(analysis_strongest_result["signal_events_error_stat"]))+"  "+str(siground(analysis_strongest_result["signal_events_error_sys"]))+"  "+str(siground(analysis_strongest_result["signal_events_error_tot"]))+"  "+str(siground(analysis_strongest_result["observed_upper_limit"]))+"  "+str(siground(results_r[analysis_strongest_result["origin"]]["expected_upper_limit"])))
+    output.mute()
 
   # Print final result
-  output.cout("")
+  format_columnated_file(files['output_bestsignalregions'])
   output.unmute()
   output.set_cout_file(files['output_result'])
   status = "Allowed"
   if flags["fullcl"]:
     test = "Calculation of CLs from determined signal"
-    if strongest_result["observed_cls"] < 0.05:
+    if overall_strongest_result["observed_cls"] < 0.05:
       status = "Excluded"
-    result_cls = "cls_min = "+str(strongest_result["observed_cls"])
-    result_r = "r_max = "+str(strongest_result["r_observed_cons"])
+    result_cls = "cls_min = "+str(siground(overall_strongest_result["observed_cls"], 6))
+    result_r = "r_max = "+str(siground(overall_strongest_result["r_observed_cons"], 6))
   else:
     test = "Calculation of r = signal/(95%CL limit on signal)"
-    statusmessage = "r_max = "+str(strongest_result["r_observed_cons"])
-    if strongest_result["r_observed_cons"] > 1:
+    statusmessage = "r_max = "+str(overall_strongest_result["r_observed_cons"])
+    if overall_strongest_result["r_observed_cons"] > 1:
       status = "Excluded"
     result_cls = ""
-    result_r = "r_max = "+str(strongest_result["r_observed_cons"])
-      
+    result_r = "r_max = "+str(siground(overall_strongest_result["r_observed_cons"], 6))
   
   # Check if strongest result includes potential issues  
   warnings = list()
-  if strongest_result["signal_events_error_sys"] < strongest_result["signal_events_error_stat"]:
+  if overall_strongest_result["signal_events_error_sys"] < overall_strongest_result["signal_events_error_stat"]:
     warnings.append("Error is dominated by Monte Carlo statistics!")
-  if status == "Allowed" and strongest_result["r_observed_cons"] < 1 and strongest_result["r_observed_sysonly"] > 1:
+  if status == "Allowed" and overall_strongest_result["r_observed_cons"] < 1 and overall_strongest_result["r_observed_sysonly"] > 1:
     warnings.append("The model could be excluded if you provided more input events!")
     
   for line in header_lines:
@@ -441,11 +540,31 @@ def evaluate(analyses, events, files, flags, output, paths):
   if result_cls != "":
       output.cout("Result for CLs: "+result_cls)
   output.cout("Result for r: "+result_r)
-  output.cout("SR: "+strongest_result["origin"])
+  output.cout("SR: "+overall_strongest_result["origin"])
   #output.cout("MC_status:  Undefined")
   output.set_cout_file("#None")
   for a in analyses:
     format_columnated_file(files['output_evaluation_r_limits'][a])
     if flags["fullcl"]:      
       format_columnated_file(files['output_evaluation_cl_limits'][a])
+    if flags["likelihood"]:      
+      format_columnated_file(files['output_evaluation_likelihood'][a])  
+  
+  # Jamie added
+  output.mute()
+  if flags["likelihood"]:
+    total_likelihood = float()
+    total_NSR = float()
+    if os.path.isfile(files['likelihood']):
+      os.remove(files['likelihood'])
+    output.set_cout_file(files['likelihood'])
+    output.cout("Analysis  Likelihood  Chi^2/n.d.f")
+    for a in analyses:
+      output.cout(a+"  "+str(analysis_likelihood[a])+"  "+str(analysis_likelihood[a]/analysis_NSR[a]))
+      total_likelihood = analysis_likelihood[a] + total_likelihood
+      total_NSR = analysis_NSR[a] + total_NSR
+    output.cout("Total_likelihood  "+str(total_likelihood)+"  "+str(total_likelihood/total_NSR))  
+    format_columnated_file(files['likelihood']) 
+  output.unmute()    
+      
   return

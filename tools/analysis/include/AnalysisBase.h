@@ -21,6 +21,8 @@
 #include "external/ExRootAnalysis/ExRootResult.h"
 
 #include "mt2_bisect.h"
+#include "mctlib.h"
+#include "mt2bl_bisect.h"
 
 // This class serves as an intrinsic parametrisation of the missingET
 // vector, which is defined such that it has the same properties as there
@@ -44,7 +46,7 @@ class ETMiss {
     // Muons have to be added manually to missingET. With this general function,
     //  one can decide which muon set(s) one wants to add.
     void addMuons(std::vector<Muon*> muons) {
-      TLorentzVector sum = (0., 0., 0., 0.);
+	TLorentzVector sum = TLorentzVector(0,0,0,0);
       for(int i = 0; i < muons.size(); i++)
         sum += muons[i]->P4();
       
@@ -318,9 +320,22 @@ class AnalysisBase {
 	return x*xsect*luminosity/sumOfWeights;
     };
 
-    // Evaluates mT2 (arXiv:0810.5178)
-    double mT2(TLorentzVector vis1, TLorentzVector vis2, double m_inv, TLorentzVector invis = (0., 0., 0., 0.));
+    // Evaluates mT 
+    double mT(const TLorentzVector & vis, const TLorentzVector & invis);
     
+    // Evaluates mT2 (arXiv:0810.5178)
+    double mT2(const TLorentzVector & vis1, const TLorentzVector & vis2, double m_inv, const TLorentzVector & invis = TLorentzVector(0., 0., 0., 0.));
+
+    // Evaluates 'normal' MCT (JHEP 0804:034,2008, arXiv:0802.2879 [hep-ph])
+    double mCT(const TLorentzVector & v1, const TLorentzVector & v2);
+    
+    // Evaluates boost corrected MCT (JHEP 0804:034,2008, arXiv:0802.2879 [hep-ph])
+    double mCTcorr(const TLorentzVector & v1, const TLorentzVector & v2, const TLorentzVector & vds, const TLorentzVector & invis, const double ecm = 8000.0, const double mxlo = 0.0);
+    
+    // Evaluates mT2_bl (arXiv:1203.4813), Also known as asymmetric mT2 in atlas_conf_2013_037
+    double mT2_bl(const TLorentzVector & pl_in, const TLorentzVector & pb1_in, const TLorentzVector & pb2_in, const TLorentzVector & invis = TLorentzVector(0., 0., 0., 0.));    
+
+
     // For using ExRootAnalysis
     ExRootResult *result;
 

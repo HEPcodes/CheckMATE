@@ -58,7 +58,9 @@ def get_analysis_info(analysis):
     for line in f:
         line = remove_extra_spaces(line)
         # Split line into tokens; tokens[0] is name.
-        tokens = line.split("  ")    
+        tokens = line.split("  ") 
+        if "CR" in analysis and tokens[0]+"_CR" == analysis and tokens[4] == "yes":             
+            return tokens[2].rstrip("\n")
         if tokens[0] == analysis:
             return tokens[2].rstrip("\n")
     pr = AdvPrint()

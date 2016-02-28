@@ -337,6 +337,8 @@ clean:
 distclean: clean
 	@rm -f $(DELPHES) $(DELPHESLIB) $(DISPLAY) $(DISPLAYLIB) $(EXECUTABLE) Makefile
 
+maintainer-clean: distclean
+
 dist:
 	@echo ">> Building $(DISTTAR)"
 	@mkdir -p $(DISTDIR)

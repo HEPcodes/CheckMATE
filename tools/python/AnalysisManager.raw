@@ -68,7 +68,7 @@ def create_analysis():
       while short_info.find("  ") != -1:
         short_info = short_info.replace("  ", " ")
     
-      long_info = ask_multiline("Description (long, multiple lines, finish with ';;'): ")
+      long_info = ask_multiline("Description (long, multiple lines, finish with ';;' on a new line): ")
       lumi = ask("Luminosity (in fb^-1): ")
       cr = ask("Do you plan to implement control regions to that analysis? [(y)es, (n)o)", "yn")
       break
@@ -90,13 +90,14 @@ def create_analysis():
       PRINTLEVEL = CURRLEVEL
       myprint('2. Information on Signal Regions')
       PRINTLEVEL += 1
-      signal_regions = ask_multiline("List all signal regions (one per line, finish with ';;'):")
+      signal_regions = ask_multiline("List all signal regions (one per line, finish with ';;' on a new line):")
       while (True): 
         myprint("Information: We are now going to ask you which numbers you want to provide for each signal region. ")
         myprint("Different analyses usually give their results with varying details, e.g. some give only the full background ")
         myprint("uncertainty, whereas others show the individual statistical and systematical contributions. We therefore ")
         myprint("first have to declare, which sets of numbers are actually given, and whether this information is sufficient")
         myprint("for CheckMATE to run properly.");
+	myprint("List one per line, finish with ';;' on a new line");
         allowed = ["obs", "bkg", "bkg_err_stat", "bkg_err_sys", "bkg_errm_sys", "bkg_errp_sys", "bkg_err", "bkg_errp", "bkg_errm",  "S95_obs", "S95_exp", "S95_exp_errp", "S95_exp_errm", "S95_exp_err"]
         myprint("Allowed categories are:")
         myprint("     "+str(allowed).replace("[", "").replace("]", "").replace("'", ""))

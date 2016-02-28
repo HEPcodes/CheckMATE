@@ -330,7 +330,7 @@ module Calorimeter CalorimeterATLAS {
                              (abs(eta) > 3.2 && abs(eta) <= 4.9) * sqrt(energy^2*0.0350^2 + energy*0.285^2)}
   set HCalResolutionFormula {                  (abs(eta) <= 1.7) * sqrt(energy^2*0.0302^2 + energy*0.5205^2 + 1.59^2) + \
                              (abs(eta) > 1.7 && abs(eta) <= 3.2) * sqrt(energy^2*0.0500^2 + energy*0.706^2) + \
-                             (abs(eta) > 3.2 && abs(eta) <= 4.9) * sqrt(energy^2*0.9420^2 + energy*0.075^2)}
+                             (abs(eta) > 3.2 && abs(eta) <= 4.9) * sqrt(energy^2*0.09420^2 + energy*0.075^2)}
 }
     """
   elif experiment == "C":
@@ -595,8 +595,10 @@ def set_electron_isolation(n_iso, isolation_set):
     isolation_input = "TrackMerger"+experiment+"/tracks"       
   # Define correct abs_or_rel criterion
   absolute_limit = "false"
+  ratio_or_sum = "PTRatioMax"
   if isolation_set[5] == "a":
-    absolute_limit = "true"         
+    absolute_limit = "true"  
+    ratio_or_sum = "PTSumMax" 
     
   module_name = "ElectronIsolation"""+experiment+str(n_iso)
   module_string = """
@@ -610,7 +612,7 @@ module Isolation ElectronIsolation"""+experiment+str(n_iso)+""" {
   
   set DeltaRMax """+str(eval(isolation_set[2]))+"""
   set PTMin """+str(eval(isolation_set[3]))+"""
-  set PTRatioMax """+str(eval(isolation_set[4]))+"""
+  set """+ratio_or_sum+""" """+str(eval(isolation_set[4]))+"""
   set UsePTSum """+absolute_limit+"""
 }
 """
@@ -770,9 +772,11 @@ def set_muon_isolation(n_iso, isolation_set):
   if isolation_set[1] == "t":
     isolation_input = "TrackMerger"+experiment+"/tracks"       
   # Define correct abs_or_rel criterion
-  absolute_limit = "0"
+  absolute_limit = "false"
+  ratio_or_sum = "PTRatioMax"
   if isolation_set[5] == "a":
-    absolute_limit = "1"         
+    absolute_limit = "true"  
+    ratio_or_sum = "PTSumMax"       
   module_name = "MuonIsolation"+experiment+str(n_iso)
   module_string = """
 module Isolation """+module_name+""" {
@@ -786,8 +790,8 @@ module Isolation """+module_name+""" {
   
   set DeltaRMax """+str(eval(isolation_set[2]))+"""
   set PTMin """+str(eval(isolation_set[3]))+"""
-  set PTRatioMax """+str(eval(isolation_set[4]))+"""
-  set AbsoluteLimit """+absolute_limit+"""
+  set """+ratio_or_sum+""" """+str(eval(isolation_set[4]))+"""
+  set UsePTSum """+absolute_limit+"""
 }
 """
   return (module_name, module_string)
@@ -964,7 +968,7 @@ module BTagging """+module_name+""" {
   set FlagValue """+str(pow(2, n_bflag))+"""
   set AddFlag true
   
-  set DeltaR 0.5
+  set DeltaR 0.4
   set PartonPTMin 1.0
   set PartonEtaMax 2.5
   """+ljets+cjets+bjets+"""
@@ -1174,7 +1178,7 @@ module TauTagging TauTagging_"""+jet_module+"""_l {
   set TrackInputArray TrackMerger"""+suffix+"""/tracks
   set JetInputArray """+jet_module+"""/jets
    
-  set DeltaR 0.5
+  set DeltaR 0.2
   set TauPTMin 1.0
   set TauEtaMax 2.5
   
@@ -1193,7 +1197,7 @@ module TauTagging TauTagging_"""+jet_module+"""_m {
   set TrackInputArray TrackMerger"""+suffix+"""/tracks
   set JetInputArray """+jet_module+"""/jets
    
-  set DeltaR 0.5
+  set DeltaR 0.2
   set TauPTMin 1.0
   set TauEtaMax 2.5
   
@@ -1214,7 +1218,7 @@ module TauTagging TauTagging_"""+jet_module+"""_t {
   set TrackInputArray TrackMerger"""+suffix+"""/tracks
   set JetInputArray """+jet_module+"""/jets
    
-  set DeltaR 0.5
+  set DeltaR 0.2
   set TauPTMin 1.0
   set TauEtaMax 2.5
   

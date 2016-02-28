@@ -52,7 +52,7 @@ void Atlas_conf_2012_104::analyze() {
     trigger = true;
   else if ( (electronsTight.size() > 0) && (electronsTight[0]->PT > cutTriggerElectronPT)  && (triggerRatio <= 1.) )
     trigger = true;
-  else if ( (muonsCombinedPlus.size() > 0) && (muonsCombinedPlus[0]->PT > cutTriggerMuonPT) && (jets[0]->PT > cutTriggerMuon_JetPT) && (missingET->P4().Et() > cutTriggerMuon_ETmiss) && (triggerRatio <= 1.0) )
+  else if ( (muonsCombinedPlus.size() > 0) && (muonsCombinedPlus[0]->PT > cutTriggerMuonPT) && (jets.size() > 0) && (jets[0]->PT > cutTriggerMuon_JetPT) && (missingET->P4().Et() > cutTriggerMuon_ETmiss) && (triggerRatio <= 1.0) )
     trigger = true;
   if ( ( electronsTight.size() + muonsCombinedPlus.size() != 1 ) || !trigger )
     return;

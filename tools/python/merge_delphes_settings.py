@@ -24,7 +24,7 @@ def save_module_information(function_output, output_file, module_name_list):
     module_name_list.append(module_names)
 
 # Read input parameters for all given analyses
-def merge_settings(files, paths):
+def merge_settings(files, paths, flags):
   parameters = dict()
   analyses = files["delphes_config"].keys()
   for analysis in analyses:
@@ -45,6 +45,10 @@ def merge_settings(files, paths):
       atlas_used = True
     elif parameters[a]["experiment"] == "C":
       cms_used = True
+  
+  # If random seed is fixed, put it into config file
+  if flags["randomseed"] != 0:
+    save_module_information(([], "set RandomSeed "+str(flags["randomseed"])), files["delphes_merged_config"], [])
   
   ##=========================================================
   ## Particle Propagator, Tracking, Smearing and Calorimeter

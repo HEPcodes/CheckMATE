@@ -81,6 +81,7 @@ int main(int argc, char* argv[]) {
     flags["photon_isolation"];
     flags["jet_btags"];
     flags["jet2_btags"];
+    flags["randomseed"];
     if( argc >= 10) {
       char* longString = argv[10];
       std::string currKey = "";

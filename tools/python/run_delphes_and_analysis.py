@@ -36,7 +36,7 @@ def run_delphes_and_analyze(analyses, events, files, flags, output, paths):
         event_delphes = os.path.join(paths['output_delphes'], "%03i_delphes.root" % eventcounter)
         
         # Merge settings
-        (branches_per_analysis, flags_per_analysis, files, paths) = merge_settings(files, paths)
+        (branches_per_analysis, flags_per_analysis, files, paths) = merge_settings(files, paths, flags)
         
         # Run Delphes and redirect output.
         output.cout("** - Delphes")
@@ -104,6 +104,9 @@ def run_delphes_and_analyze(analyses, events, files, flags, output, paths):
             flag_tuple = ""
             for f in flags_per_analysis[analysis]:
               flag_tuple += f+":"+str(flags_per_analysis[analysis][f]).replace(" ", "")+";"
+            # Randomseed is saved as flag
+            if flags["randomseed"] != 0:
+              flag_tuple += "randomseed:["+str(flags["randomseed"])+"];"
             if flags["controlregions"]:
               analysis = analysis+"_CR" 
             output.cout("     -"+analysis)
@@ -146,5 +149,10 @@ def run_delphes_and_analyze(analyses, events, files, flags, output, paths):
             events['delphes'] = []
         eventcounter += 1
         output.cout("")
+        
+        # To prevent correlated results, increase random seed by 1 for the next event file
+        #  if randomseeds have been set
+        if flags["randomseed"] != 0:
+          flags["randomseed"] += 1
         
     return

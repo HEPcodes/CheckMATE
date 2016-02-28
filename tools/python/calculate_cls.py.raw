@@ -13,11 +13,14 @@ import ROOT
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 from ROOT import *
 
-def cls(b0, sigmab, nobs, s0, sigmas):
+def cls(b0, sigmab, nobs, s0, sigmas, randomseed = 0):
   s0 = float(("%." + str(6) + "e") % s0)
   sigmas = float(("%." + str(6) + "e") % sigmas)
   RooMsgService.instance().setGlobalKillBelow(RooFit.WARNING)
   
+  if randomseed != 0:
+    RooRandom.randomGenerator().SetSeed(randomseed);
+    
   # Load Workspace
   w = RooWorkspace("w")
   # Assume Gaussian background with given width and uncertainty

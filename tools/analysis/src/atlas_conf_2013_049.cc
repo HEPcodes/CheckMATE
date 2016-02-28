@@ -186,10 +186,10 @@ void Atlas_conf_2013_049::analyze() {
     }
     
     if (  met_flag  && mt2 > 90. )
-      countSignalEvent("SR_mT2_90_ee");
+      countSignalEvent("SR_mT2_90_elel");
     
     if ( met_flag && mt2 > 110. )
-      countSignalEvent("SR_mT2_110_ee");
+      countSignalEvent("SR_mT2_110_elel");
   }
   
   if ( (muonsCombined.size() == 2) && (muonsCombined[0]->Charge*muonsCombined[1]->Charge < 0) && trigger ) {
@@ -267,9 +267,9 @@ void Atlas_conf_2013_049::analyze() {
     }
     
     if ( met_flag && (mt2 > 90.) )
-      countSignalEvent("SR_mT2_90_emu");
+      countSignalEvent("SR_mT2_90_elmu");
     if ( met_flag && (mt2 > 110.) )
-      countSignalEvent("SR_mT2_110_emu");
+      countSignalEvent("SR_mT2_110_elmu");
   }
   
   //SRWWa, SRWWb, SRWWc    

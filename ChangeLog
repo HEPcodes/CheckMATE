@@ -1,21 +1,134 @@
 CheckMATE - Changelog
----------------------
 
-2013-12-05   Daniel Schmeier <daschm@th.physik.uni-bonn.de>
+
+Ver 1.1.8
+-----------
+
+2014-08-13   Jamie Tattersall <tattersall@thphys.uni-heidelberg.de>
+
+        ~ Added likelihood calculator option
+
+2014-07-16   Jamie Tattersall <tattersall@thphys.uni-heidelberg.de>
+
+        ~ Add mT to list of functions in AnalysisBase
+
+
+Ver 1.1.7
+---------
+
+2014-07-11   Jamie Tattersall <tattersall@thphys.uni-heidelberg.de>
+
+        ~ Fixed Delphes bug in forward ATLAS calorimeter
+
+Ver 1.1.6
+---------
+
+2014-05-13   Daniel Schmeier <daschm@th.physik.uni-bonn.de>
+
+        ~ Fixed bugs in isolation module writers (sometimes not the
+           right setting was considered)
+
+
+Ver 1.1.5 
+---------
+
+2014-05-06   Daniel Schmeier <daschm@th.physik.uni-bonn.de>
+
+        ~ Updated STDHep interpreter in Delphes to be compatible with
+           the most recent MadGraph_aMC@NLO update
+
+
+2014-05-02   Jamie Tattersall <tattersall@thphys.uni-heidelberg.de>
+
+        ~ Fixed tau-tagging radius
+
+2014-04-18   Jamie Tattersall <tattersall@thphys.uni-heidelberg.de>
+
+        ~ Added makefile option to allow autoreconf on macs
+
+2014-04-09   Jamie Tattersall <tattersall@thphys.uni-heidelberg.de>
+
+        ~ Added mctlib JHEP 0804:034,2008 (arXiv:0802.2879 [hep-ph]). 
+	  The algorithm is described in detail in arXiv:0910.0174 [hep-ph].
+	  No current analyses use this variable (tba)
+	~ Added mt2bl_bisect (arXiv:1203.4813 [hep-ph])
+	  No current analyses use this variable (tba)
+
+Ver 1.1.4 
+---------
+
+2014-03-11   Jamie Tattersall <tattersall@thphys.uni-heidelberg.de>
+
+        ~ Made commands in AnalysisManager clearer (thanks to Krzysztof Rolbiecki for suggestions).
+
+
+Ver 1.1.3
+---------
+
+2014-03-04   Daniel Schmeier <daschm@th.physik.uni-bonn.de>
+
+        ~ Bugfix in atlas_conf_2013_049, which did not properly count signal regions
+          signal regions with electrons
+
+
+Ver 1.1.2
+---------
+
+2014-02-10   Daniel Schmeier <daschm@th.physik.uni-bonn.de>
+
+        ~ Fixed removal of old result directory if choosing 'overwrite' option
         
-        ~ First version of CheckMATE goes public. 
 
-Ver 1.01
---------
+Ver 1.1.1
+---------
 
-2013-12-27   Jamie Tattersall <tattersall@thphys.uni-heidelberg.de>
-        
-        ~ Muons added to met vector in atlas_conf_2013_061, atlas_conf_2013_089 and cms_1303_2985. 
-	~ Reference data added for atlas_conf_2013_061.
+2014-01-31   Jamie Tattersall <tattersall@thphys.uni-heidelberg.de>
 
-Ver 1.01
---------
+        ~ Fixed bug in atlas_conf_2012_104 that gave SegFault for events with 0 jets.
+
+
+2014-01-31   Daniel Schmeier <daschm@th.physik.uni-bonn.de>
+
+        ~ Signal regions with 0 events passing get a statistical error of 1 event (for the whole process)
+        ~ If two signal regions have equal r / CLs, the one with the smallest S95_max is chosen
+        ~ Bugfix in final evaluation output
+
+Ver 1.1.0
+---------
+
+2014-01-22   Daniel Schmeier <daschm@th.physik.uni-bonn.de>
+
+        ~ Removed bug in determination of the overall most sensitive signal region.
+        ~ Seed for random number generator can now be set by using "RandomSeed: " in 'Optional
+          Parameters' block or alternatively -rs in the command line version.
+        ~ 'Analyses' input option also accepts 'atlas', 'cms' or 'all', which automatically finds
+          and uses all corresponding analyses.
+        ~ 'best_signal_regions.txt' in results/evaluation sums up all important information on the
+          most sensitive signal region of each individual analysis.
+
+
+Ver 1.0.2
+---------
 
 2014-01-04   Jamie Tattersall <tattersall@thphys.uni-heidelberg.de>
         
         ~ Typo in reference data for atlas_conf_2012_147 fixed.
+       
+
+Ver 1.0.1
+---------
+
+2013-12-27   Jamie Tattersall <tattersall@thphys.uni-heidelberg.de>
+        
+        ~ Muons added to met vector in atlas_conf_2013_061, atlas_conf_2013_089 and cms_1303_2985. 
+        ~ Reference data added for atlas_conf_2013_061.
+
+
+Ver 1.0.0
+---------
+       
+2013-12-05   Daniel Schmeier <daschm@th.physik.uni-bonn.de>
+        
+        ~ First version of CheckMATE goes public. 
+
+
