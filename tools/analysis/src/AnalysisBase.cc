@@ -37,9 +37,7 @@ AnalysisBase::AnalysisBase(std::string inFile, std::string outFol, std::string o
     if (!flags["randomseed"].empty())
        srand(flags["randomseed"][0]);
     else      
-       srand(time(0));
-    
-    std::cout << rand() << std::endl;
+       srand(time(0));    
 }
 
 AnalysisBase::~AnalysisBase() {
@@ -324,9 +322,9 @@ void AnalysisBase::ignore(std::string ignore_what) {
     }
 }
 
-double AnalysisBase::mT(const TLorentzVector & vis, const TLorentzVector & invis) {
-   
-    return sqrt(2.*vis.Pt()*invis.Et()*(1.-cos(fabs(vis.DeltaPhi(invis)))));
+double AnalysisBase::mT(const TLorentzVector & vis, const TLorentzVector & invis, const double m_vis, const double m_invis) {
+    // If no masses are given, assumed to be zero  
+    return sqrt(m_vis*m_vis + m_invis*m_invis +  2.*vis.Pt()*invis.Et()*(1.-cos(fabs(vis.DeltaPhi(invis)))));
 }
 
 double AnalysisBase::mT2(const TLorentzVector & vis1, const TLorentzVector & vis2, double m_inv, const TLorentzVector & invis) {
@@ -367,7 +365,7 @@ double AnalysisBase::mCTcorr(const TLorentzVector & v1, const TLorentzVector & v
     return mct_event.mctcorr(v1t,v2t,vdst,ptmt,ecm,mxlo);
 }
 
-double AnalysisBase::mCTy(const TLorentzVector & v1, const TLorentzVector & v2,const TLorentzVector & vds,const TLorentzVector & invis)
+double AnalysisBase::mCTperp(const TLorentzVector & v1, const TLorentzVector & v2,const TLorentzVector & vds,const TLorentzVector & invis)
 {
     mctlib::mct mct_event;
     double v1t[4] = {v1.E(),v1.Px(),v1.Py(),v1.Pz()};
@@ -375,6 +373,16 @@ double AnalysisBase::mCTy(const TLorentzVector & v1, const TLorentzVector & v2,c
     double vdst[4] = {vds.E(),vds.Px(),vds.Py(),vds.Pz()};
     double ptmt[2] = {invis.Px(),invis.Py()};
     return mct_event.mcy(v1t,v2t,vdst,ptmt);
+}
+
+double AnalysisBase::mCTparallel(const TLorentzVector & v1, const TLorentzVector & v2,const TLorentzVector & vds,const TLorentzVector & invis)
+{
+    mctlib::mct mct_event;
+    double v1t[4] = {v1.E(),v1.Px(),v1.Py(),v1.Pz()};
+    double v2t[4] = {v2.E(),v2.Px(),v2.Py(),v2.Pz()};
+    double vdst[4] = {vds.E(),vds.Px(),vds.Py(),vds.Pz()};
+    double ptmt[2] = {invis.Px(),invis.Py()};
+    return mct_event.mcx(v1t,v2t,vdst,ptmt);
 }
 
 double AnalysisBase::mT2_bl(const TLorentzVector & pl_in, const TLorentzVector & pb1_in, const TLorentzVector & pb2_in, const TLorentzVector & invis) {

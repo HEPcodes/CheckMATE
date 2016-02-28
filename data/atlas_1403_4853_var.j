@@ -33,7 +33,7 @@
   "photon_iso_ptratiomax": "['0.2']", 
   "photon_iso_source": "['c']", 
   "photon_niso": "1", 
-  "reference_data": "{'H160': {'S95_obs': '22', 'S95_exp': '17', 'bkg': '26', 'bkg_err': '6', 'obs': '33'}, 'L100': {'S95_obs': '5.6', 'S95_exp': '6.4', 'bkg': '5.2', 'bkg_err': '2.2', 'obs': '3'}, 'L120': {'S95_obs': '17', 'S95_exp': '17', 'bkg': '19', 'bkg_err': '9', 'obs': '18'}, 'L90': {'S95_obs': '74', 'S95_exp': '8.5', 'bkg': '300', 'bkg_err': '50', 'obs': '274'}, 'L110': {'S95_obs': '9.0', 'S95_exp': '9.4', 'bkg': '9.3', 'bkg_err': '3.5', 'obs': '8'}}", 
+  "reference_data": "{'H160': {'S95_obs': '22', 'S95_exp': '17', 'bkg': '26', 'bkg_err': '6', 'obs': '33'}, 'L100': {'S95_obs': '5.6', 'S95_exp': '6.4', 'bkg': '5.2', 'bkg_err': '2.2', 'obs': '3'}, 'L120': {'S95_obs': '17', 'S95_exp': '17', 'bkg': '19', 'bkg_err': '9', 'obs': '18'}, 'L90': {'S95_obs': '74', 'S95_exp': '8.5', 'bkg': '300', 'bkg_err': '50', 'obs': '274'}, 'SR1': {'S95_obs': '76.3', 'S95_exp': '76.9', 'bkg': '270', 'bkg_err': '40', 'obs': '250'}, 'SR2': {'S95_obs': '3.7', 'S95_exp': '4.5', 'bkg': '3.4', 'bkg_err': '1.8', 'obs': '1'}, 'SR3': {'S95_obs': '4.7', 'S95_exp': '4.1', 'bkg': '1.3', 'bkg_err': '0.6', 'obs': '2'}, 'SR4': {'S95_obs': '6.5', 'S95_exp': '6.5', 'bkg': '3.7', 'bkg_err': '2.7', 'obs': '3'}, 'SR5': {'S95_obs': '3.1', 'S95_exp': '3.1', 'bkg': '0.5', 'bkg_err': '0.4', 'obs': '0'}, 'SR6': {'S95_obs': '5.7', 'S95_exp': '5.7', 'bkg': '3.8', 'bkg_err': '1.6', 'obs': '3'}, 'SR7': {'S95_obs': '9.7', 'S95_exp': '9.3', 'bkg': '15', 'bkg_err': '7', 'obs': '15'}}", 
   "short_info": "search for stops in dilepton final states", 
-  "signal_regions": "['L90', 'L100', 'L110', 'L120', 'H160']"
+  "signal_regions": "['L90', 'L100', 'L110', 'L120', 'H160', 'SR1', 'SR2', 'SR3', 'SR4', 'SR5', 'SR6', 'SR7']"
 }

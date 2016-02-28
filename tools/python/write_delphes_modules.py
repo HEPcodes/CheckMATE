@@ -907,12 +907,12 @@ def set_btagger(jet_module, b_eff, n_bflag):
   c_rej_norm = c_rejection(0.7)
 
 #  ljets = "  add EfficiencyFormula {0} {1./(238.65*(pt*pt-33.388*pt+290.796)*exp(-(pt+641.967)*(pt+641.967)/(268.67*268.67))*"+str(jet_rej)+"/"+str(jet_rej_norm)+")}\n"
-#  cjets = "  add EfficiencyFormula {3} {"+b_eff+"/70.*(0.460622*1/(1+exp(-0.0463993)*(pt-20.4359)))}\n"
+#  cjets = "  add EfficiencyFormula {4} {"+b_eff+"/70.*(0.460622*1/(1+exp(-0.0463993)*(pt-20.4359)))}\n"
 
   # Jamie Temp test
 
 #  ljets = "  add EfficiencyFormula {0} {0.}\n"
-#  cjets = "  add EfficiencyFormula {3} {0.}\n"
+#  cjets = "  add EfficiencyFormula {4} {0.}\n"
 
 
   # Jamie light fake rate with flat tail
@@ -943,9 +943,9 @@ def set_btagger(jet_module, b_eff, n_bflag):
 #  ljets = "  add EfficiencyFormula {0} {0.0}\n"
 
   # The pt distribution is taken from ATLAS-CONF-2012-039 [5a] and is rescaled to the given working point according to ATLAS-CONF-2012-043 [1b]
-  cjets = "  add EfficiencyFormula {3} {0.4*(0.460622*1./(1.+exp(-0.0463993*(pt-20.4359))))*"+str(c_rej_norm)+"/"+str(c_rej)+"}\n"
+  cjets = "  add EfficiencyFormula {4} {0.4*(0.460622*1./(1.+exp(-0.0463993*(pt-20.4359))))*"+str(c_rej_norm)+"/"+str(c_rej)+"}\n"
 
-#  cjets = "  add EfficiencyFormula {3} {0.2}\n"  
+#  cjets = "  add EfficiencyFormula {4} {0.2}\n"  
 
   # We take a distribution fitted to both ATLAS-CONF-2012-043 (3a) and ATLAS-CONF-2012-097 (10a), assuming a damping for large pt and reducing the total efficiency phenomenologically (in real events, the algorithm most likely do worse than what the given working point efficiency says
   y0 = "0.5523"

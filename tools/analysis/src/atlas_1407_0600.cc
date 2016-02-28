@@ -275,16 +275,20 @@ void Atlas_1407_0600::analyze() {
 
   if( nbjets_flag && electronsMedium.size() + muonsCombined.size() >= 1 ){
     
-    if( electronsTight[0]->PT < 25. && muonsCombined[0]->PT < 25. ){
+    if( electronsMedium.size() == 0 &&  muonsCombined[0]->PT < 25.  ){
       return;
     }
-
+    else if( muonsCombined.size() == 0 &&  electronsMedium[0]->PT < 25.  ){
+      return;
+    }    
+    else if(  muonsCombined[0]->PT < 25. && electronsMedium[0]->PT < 25.) { return;}
+    
     countCutflowEvent("SR1l6jA"+cf_index[4]);
     countCutflowEvent("SR1l6jB"+cf_index[4]);
     countCutflowEvent("SR1l6jC"+cf_index[4]);
 
     
-    if( nJets > 5 && jets[6]->PT > 30. ){
+    if( nJets > 5 && jets[5]->PT > 30. ){
 
     countCutflowEvent("SR1l6jA"+cf_index[5]);
     countCutflowEvent("SR1l6jB"+cf_index[5]);

@@ -974,10 +974,14 @@ void Atlas_1407_0583::analyze() {
 	  if( (missingET->P4().Et()/ sqrt(HT)) > 7) {
 	    countCutflowEvent("bCd_bulk_"+lep[lepNormFlag]+"_07_met/ht");	  
 	
-	    // mT > 120
+	    // mT > 90 (120 for cutflow)
 	    double mT = AnalysisBase::mT(lepNorm, missingET->P4());
-	    if(mT > 120){
-	      countCutflowEvent("bCd_bulk_"+lep[lepNormFlag]+"_08_mT");
+	    if(mT > 90){
+	      bool mT_cutflow = false;
+	      if(mT > 120){
+		countCutflowEvent("bCd_bulk_"+lep[lepNormFlag]+"_08_mT");
+		mT_cutflow = true;
+	      }
 
 	      //---------------------------------
 	      // Need to calculate aMT2 -> need two b-jets (use 80% eff)
@@ -1002,7 +1006,7 @@ void Atlas_1407_0583::analyze() {
 		amT2 = std::min(amT2_1,amT2_2);
 	      }
 	      if(amT2 > 175.){
-		countCutflowEvent("bCd_bulk_"+lep[lepNormFlag]+"_09_aMT2");
+		if(mT_cutflow == true) countCutflowEvent("bCd_bulk_"+lep[lepNormFlag]+"_09_aMT2");
 		
 		//Veto on isolated tracks
 		std::vector<Track*> tracksHard = filterPhaseSpace(tracks, 10., -2.5, 2.5);  
@@ -1043,7 +1047,7 @@ void Atlas_1407_0583::analyze() {
 		}
 		  
 		if(isoCheck == true){
-		  countCutflowEvent("bCd_bulk_"+lep[lepNormFlag]+"_10_trackIso");
+		  if(mT_cutflow == true) countCutflowEvent("bCd_bulk_"+lep[lepNormFlag]+"_10_trackIso");
 		    
 		  //*********************************
 		  // Signal Region
@@ -1055,8 +1059,12 @@ void Atlas_1407_0583::analyze() {
 		  }
 		
 		  if (tauVeto == false){
-		    countCutflowEvent("bCd_bulk_"+lep[lepNormFlag]+"_11_tauVeto");
-		    countSignalEvent("bCd_bulk");
+		    if(mT_cutflow == true) countCutflowEvent("bCd_bulk_"+lep[lepNormFlag]+"_11_tauVeto");
+		    
+		    if( (amT2>175.) && (amT2<250.) && (mT > 90.) && (mT < 120.0)) countSignalEvent("bCd_bulk_a");
+		    if( (amT2>175.) && (amT2<250.) && (mT > 120.0)) countSignalEvent("bCd_bulk_b");
+		    if( (amT2>250.) && (mT > 90.) && (mT < 120.0)) countSignalEvent("bCd_bulk_c");
+		    if( (amT2>250.) && (mT > 120.0)) countSignalEvent("bCd_bulk_d");
 		  }
 		}
 	      }

@@ -53,11 +53,6 @@ class ETMiss {
 	PT = content.Pt();
 	Eta = content.Eta();
 	Phi = content.Phi();	
-
-	//std::cout << "missingET_Ex: " << missingET_Ex << ", smear_x: " << smear_x << ", tot_x: " << content.Px() << std::endl;
-	//std::cout << "missingET_Ey: " << missingET_Ey << ", smear_y: " << smear_y << ", tot_y: " << content.Py() << std::endl;
-	//std::cout << "missingET_ET: " << missingET_ET << ", tot_ET: " << content.Et() << std::endl;
-	//std::cout << "missingET_Phi: " << missingET_Phi << ", tot_Phi: " << content.Phi() << std::endl;
     }
     
     // Muons have to be added manually to missingET. With this general function,
@@ -338,7 +333,7 @@ class AnalysisBase {
     };
 
     // Evaluates mT 
-    double mT(const TLorentzVector & vis, const TLorentzVector & invis);
+    double mT(const TLorentzVector & vis, const TLorentzVector & invis, const double m_vis=0., const double m_invis=0.);
     
     // Evaluates mT2 (arXiv:0810.5178)
     double mT2(const TLorentzVector & vis1, const TLorentzVector & vis2, double m_inv, const TLorentzVector & invis = TLorentzVector(0., 0., 0., 0.));
@@ -350,8 +345,11 @@ class AnalysisBase {
     double mCTcorr(const TLorentzVector & v1, const TLorentzVector & v2, const TLorentzVector & vds, const TLorentzVector & invis, const double ecm = 8000.0, const double mxlo = 0.0);
     
     // Evaluates MCT transverse (arXiv:0910.1584 [hep-ph])
-    double mCTy(const TLorentzVector & v1, const TLorentzVector & v2, const TLorentzVector & vds, const TLorentzVector & invis);        
+    double mCTperp(const TLorentzVector & v1, const TLorentzVector & v2, const TLorentzVector & vds, const TLorentzVector & invis);        
     
+    // Evaluates MCT parallel (arXiv:0910.1584 [hep-ph])
+    double mCTparallel(const TLorentzVector & v1, const TLorentzVector & v2, const TLorentzVector & vds, const TLorentzVector & invis);        
+       
     // Evaluates mT2_bl (arXiv:1203.4813), Also known as asymmetric mT2 in atlas_conf_2013_037
     double mT2_bl(const TLorentzVector & pl_in, const TLorentzVector & pb1_in, const TLorentzVector & pb2_in, const TLorentzVector & invis = TLorentzVector(0., 0., 0., 0.));    
 

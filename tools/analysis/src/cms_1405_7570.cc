@@ -41,7 +41,7 @@ void Cms_1405_7570::analyze() {
   
   while (isoElecs.size() + isoMuons.size() == 3) {
     
-    double mOSSF = 0.; double mT = 0.; double mOSSFZ = 10000.; int i_min = 10.; int j_min = 10.;
+    double mOSSF = 0.; double mT = 0.; double mOSSFZ = 10000.; int i_min = 10; int j_min = 10;
     if (isoElecs.size() == 2) {
       if ( isoElecs[0]->Charge * isoElecs[1]->Charge > 0 ) break;
       if ( isoElecs[0]->PT < 20. && isoMuons[0]->PT < 20. ) break;
@@ -77,7 +77,7 @@ void Cms_1405_7570::analyze() {
 	      j_min = j;
 	    }
 	  }
-      mOSSF = (isoElecs[i_min]->P4() + isoElecs[j_min]->P4() ).M();
+      if ( i_min == 10) {return;} else mOSSF = (isoElecs[i_min]->P4() + isoElecs[j_min]->P4() ).M();
       for (int  i = 0; i < 3 ; i++)
 	if ( i != i_min && i != j_min ) mT = sqrt( 2.*missingET->P4().Et()*isoElecs[i]->PT*(1.-cos( missingET->P4().DeltaPhi(isoElecs[i]->P4()) ) ));     
       countCutflowEvent("eee");
@@ -96,7 +96,7 @@ void Cms_1405_7570::analyze() {
 	      j_min = j;
 	    }
 	  }
-      mOSSF = (isoMuons[i_min]->P4() + isoMuons[j_min]->P4() ).M();
+      if ( i_min == 10) {return;} else mOSSF = (isoMuons[i_min]->P4() + isoMuons[j_min]->P4() ).M();
       for (int  i = 0; i < 3 ; i++)
 	if ( i != i_min && i != j_min ) mT = sqrt( 2.*missingET->P4().Et()*isoMuons[i]->PT*(1.-cos( missingET->P4().DeltaPhi(isoMuons[i]->P4()) ) ));      
       countCutflowEvent("mumumu");

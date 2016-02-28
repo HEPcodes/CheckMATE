@@ -20,7 +20,7 @@ void Atlas_conf_2013_062::initialize() {
   ignore("towers");
 //  ignore("genParticles");
 //  ignore("photons");
-  bookSignalRegions("SoftLep1BLow;SoftLep1BHigh;SoftLep2BLow;SoftLep2BHigh;SoftLepJ3;SoftLepJ5;DiMuon;HardElecJ3;HardElecJ3Ortho;HardElecJ5;HardElecJ5Ortho;HardElecJ6;HardElecJ6Ortho;HardMuonJ3;HardMuonJ3Ortho;HardMuonJ5;HardMuonJ5Ortho;HardMuonJ6;HardMuonJ6Ortho;");
+  bookSignalRegions("SoftLep1BLow;SoftLep1BHigh;SoftLep2BLow;SoftLep2BHigh;SoftLepJ3;SoftLepJ5;DiMuon;HardElecJ3Inclu;HardElecJ3Ortho;HardElecJ5Inclu;HardElecJ5Ortho;HardElecJ6Inclu;HardElecJ6Ortho;HardMuonJ3Inclu;HardMuonJ3Ortho;HardMuonJ3Inclu;HardMuonJ5Ortho;HardMuonJ6Inclu;HardMuonJ6Ortho;");
   
   bookCutflowRegions("0;1;2");  
   bookCutflowRegions("CFSingSoftLep0;CFSingSoftLep1;CFSingSoftLep2");
@@ -664,19 +664,19 @@ void Atlas_conf_2013_062::analyze() {
     //--------------------------
     // Hard lepton signal regions
     if(flagLep==0){
-	if(flagHardLepJ3 == true) countSignalEvent("HardElecJ3");
+	if(flagHardLepJ3 == true) countSignalEvent("HardElecJ3Inclu");
 	if(flagHardLepJ3Ortho == true) countSignalEvent("HardElecJ3Ortho");
-	if(flagHardLepJ5 == true) countSignalEvent("HardElecJ5");
+	if(flagHardLepJ5 == true) countSignalEvent("HardElecJ5Inclu");
 	if(flagHardLepJ5Ortho == true) countSignalEvent("HardElecJ5Ortho");
-	if(flagHardLepJ6 == true)countSignalEvent("HardElecJ6");
+	if(flagHardLepJ6 == true)countSignalEvent("HardElecJ6Inclu");
 	if(flagHardLepJ6Ortho == true)countSignalEvent("HardElecJ6Ortho");
     }
     if(flagLep==1){
-	if(flagHardLepJ3 == true) countSignalEvent("HardMuonJ3");
+	if(flagHardLepJ3 == true) countSignalEvent("HardMuonJ3Inclu");
 	if(flagHardLepJ3Ortho == true) countSignalEvent("HardMuonJ3Ortho");
-	if(flagHardLepJ5 == true) countSignalEvent("HardMuonJ5");
+	if(flagHardLepJ5 == true) countSignalEvent("HardMuonJ3Inclu");
 	if(flagHardLepJ5Ortho == true) countSignalEvent("HardMuonJ5Ortho");
-	if(flagHardLepJ6 == true)countSignalEvent("HardMuonJ6");
+	if(flagHardLepJ6 == true)countSignalEvent("HardMuonJ6Inclu");
 	if(flagHardLepJ6Ortho == true)countSignalEvent("HardMuonJ6Ortho");
     }  
     

@@ -22,7 +22,7 @@ bCd_bulk_a   144  133   22       36.1     33.9
 bCd_bulk_b   78   73    8        58.7     71.4     
 bCd_bulk_c   61   66    6        17.5     20.9     
 bCd_bulk_d   29   26.5  2.6      14.8     12.6     
-threebody_a  12   16.9  2.8      7.3      9.9      
-threebody_b  8    8.4   2.2      7.9      7.8      
-threebody_c  29   35    4        11.7     14.7     
-threebody_d  22   29    5        55.4     47.8     
+threeBody_a  12   16.9  2.8      7.3      9.9      
+threeBody_b  8    8.4   2.2      7.9      7.8      
+threeBody_c  29   35    4        11.7     14.7     
+threeBody_d  22   29    5        55.4     47.8     

@@ -10,7 +10,7 @@ void Atlas_1403_4853::initialize() {
   setLuminosity(20.3*units::INVFB);      
   ignore("towers"); // These won't read tower or track information from the
   ignore("tracks"); //  Delphes output branches to save computing time.
-  bookSignalRegions("L90;L100;L110;L120;H160;SR1;SR2;SR3;SR4;SR5;SR6;SR7");
+  bookSignalRegions("L90;L100;L110;L120;H160;SR1;SR2;SR3;SR4;SR5;SR6;SR7;");
   for (int i=0; i<12; i++)
     bookCutflowRegions("SFM90"+cf_index[i]+";SFM100"+cf_index[i]+";SFM110"+cf_index[i]+";SFM120"+cf_index[i]+";DFM90"+cf_index[i]+";DFM100"+cf_index[i]+";DFM110"+cf_index[i]+";DFM120"+cf_index[i]+";SFH160"+cf_index[i]+";DFH160"+cf_index[i]);
   // You should initialize any declared variables here
@@ -29,9 +29,9 @@ void Atlas_1403_4853::analyze() {
   //remove jets within 0.2 of electrons
   jets = overlapRemoval(jets, electronsMedium, 0.2);
   //remove leptons within 0.4 of any reconstructed jets
-  //  electronsMedium = overlapRemoval(electronsMedium, jets, 0.4);
-  //  electronsTight = overlapRemoval(electronsTight, jets, 0.4);
-  //  muonsCombined = overlapRemoval(muonsCombined, jets, 0.4);
+    electronsMedium = overlapRemoval(electronsMedium, jets, 0.4);
+    electronsTight = overlapRemoval(electronsTight, jets, 0.4);
+    muonsCombined = overlapRemoval(muonsCombined, jets, 0.4);
 
   countCutflowEvent("SFM90"+cf_index[0]);
   countCutflowEvent("SFM100"+cf_index[0]);
@@ -77,10 +77,10 @@ void Atlas_1403_4853::analyze() {
 	    (double) rand() / (double) RAND_MAX < 0.70 )
      trigger=true;
    
-   trigger = true;
+  // trigger = true;
 
-   if( !trigger )
-     return;
+//   if( !trigger )
+//     return; (*moved down*)
 
    //   if (  (double) rand() / (double) RAND_MAX < 0.40 )
    //     return;
@@ -114,7 +114,7 @@ void Atlas_1403_4853::analyze() {
   countCutflowEvent("DFH160"+cf_index[2]);
 
   
-  if( ( electronsMedium.size() == 2 || muonsCombined.size() == 2 )  ){
+  if(  electronsMedium.size() == 2  || muonsCombined.size() == 2  ){
     countCutflowEvent("SFM90"+cf_index[3]);
     countCutflowEvent("SFM100"+cf_index[3]);
     countCutflowEvent("SFM110"+cf_index[3]);
@@ -124,8 +124,8 @@ void Atlas_1403_4853::analyze() {
 
     electronsTight = filterIsolation(electronsTight);
     muonsCombined = filterIsolation(muonsCombined);
-    electronsTight = overlapRemoval(electronsTight, jets, 0.4);
-    muonsCombined = overlapRemoval(muonsCombined, jets, 0.4);
+//    electronsTight = overlapRemoval(electronsTight, jets, 0.4);
+//    muonsCombined = overlapRemoval(muonsCombined, jets, 0.4);
 
     
     if( electronsTight.size() + muonsCombined.size() != 2 )
@@ -167,6 +167,9 @@ void Atlas_1403_4853::analyze() {
     countCutflowEvent("SFM120"+cf_index[6]);
     countCutflowEvent("SFH160"+cf_index[6]);
     
+    if( !trigger )
+      return;
+    
     if( leadingleptonpt < 25. )
       return;
 
@@ -189,7 +192,8 @@ void Atlas_1403_4853::analyze() {
     deltamin=10000.;
       
     for( int i=0; i<jets.size(); i++ ){
-      deltatemp=missingET->P4().DeltaR(jets[i]->P4());
+     deltatemp=missingET->P4().DeltaR(jets[i]->P4());
+//      deltatemp=missingET->P4().DeltaPhi(jets[i]->P4());
       if(deltatemp < deltamin){
 	deltamin=deltatemp;
 	i_closestjet=i;
@@ -197,7 +201,7 @@ void Atlas_1403_4853::analyze() {
     }
 
     bool deltaphiveto= false;
-    if( zveto && jets.size() != 0 && fabs(missingET->P4().DeltaPhi(jets[i_closestjet]->P4())) > 1. ){
+    if( (zveto && jets.size() != 0 && fabs(missingET->P4().DeltaPhi(jets[i_closestjet]->P4())) > 1.) || (zveto && jets.size() == 0 ) ){
       deltaphiveto = true;
       countCutflowEvent("SFM90"+cf_index[9]);
       countCutflowEvent("SFM100"+cf_index[9]);
@@ -219,14 +223,17 @@ void Atlas_1403_4853::analyze() {
     //--------------------------
 
     if( deltaphibveto && electronsTight.size() == 2 ){
-      double pa[3] = { electronsTight[0]->P4().M(), electronsTight[0]->P4().Px(), electronsTight[0]->P4().Py() };
-      double pb[3] = { electronsTight[1]->P4().M(), electronsTight[1]->P4().Px(), electronsTight[1]->P4().Py() };
+//    double pa[3] = { electronsTight[0]->P4().M(), electronsTight[0]->P4().Px(), electronsTight[0]->P4().Py() };
+//   double pb[3] = { electronsTight[1]->P4().M(), electronsTight[1]->P4().Px(), electronsTight[1]->P4().Py() };
+      double pa[3] = { 0. , electronsTight[0]->P4().Px(), electronsTight[0]->P4().Py() };
+      double pb[3] = { 0. , electronsTight[1]->P4().Px(), electronsTight[1]->P4().Py() };
       double pmiss[3] = {0.,missingET->P4().Px(), missingET->P4().Py() };
       mt2_bisect::mt2 mt2_event;
       mt2_event.set_momenta( pa, pb, pmiss );
       mt2_event.set_mn( 0. );
       double m_t2 = mt2_event.get_mt2();
-      if( jets.size() > 0 && m_t2 > 90. ){
+
+      if(  m_t2 > 90. ){
 	countCutflowEvent("SFM90"+cf_index[11]);
 	countSignalEvent("L90");
       }
@@ -238,7 +245,7 @@ void Atlas_1403_4853::analyze() {
 	countCutflowEvent("SFM110"+cf_index[11]);
 	countSignalEvent("L110");
       }
-      if( jets.size() > 0 && m_t2 > 120. ){
+      if(  m_t2 > 120. ){
 	countCutflowEvent("SFM120"+cf_index[11]);
 	countSignalEvent("L120");
       }
@@ -275,14 +282,16 @@ void Atlas_1403_4853::analyze() {
       
     }
     if( deltaphibveto && muonsCombined.size() == 2 ){
-      double pa[3] = { muonsCombined[0]->P4().M(), muonsCombined[0]->P4().Px(), muonsCombined[0]->P4().Py() };
-      double pb[3] = { muonsCombined[1]->P4().M(), muonsCombined[1]->P4().Px(), muonsCombined[1]->P4().Py() };
+//   double pa[3] = { muonsCombined[0]->P4().M(), muonsCombined[0]->P4().Px(), muonsCombined[0]->P4().Py() };
+//   double pb[3] = { muonsCombined[1]->P4().M(), muonsCombined[1]->P4().Px(), muonsCombined[1]->P4().Py() };
+      double pa[3] = { 0. , muonsCombined[0]->P4().Px(), muonsCombined[0]->P4().Py() };
+      double pb[3] = { 0. , muonsCombined[1]->P4().Px(), muonsCombined[1]->P4().Py() };
       double pmiss[3] = {0.,missingET->P4().Px(), missingET->P4().Py() };
       mt2_bisect::mt2 mt2_event;
       mt2_event.set_momenta( pa, pb, pmiss );
       mt2_event.set_mn( 0. );
       double m_t2 = mt2_event.get_mt2();
-      if( jets.size() > 0 && m_t2 > 90. ){
+      if(  m_t2 > 90. ){
 	countCutflowEvent("SFM90"+cf_index[11]);
 	countSignalEvent("L90");
       }
@@ -294,7 +303,7 @@ void Atlas_1403_4853::analyze() {
 	countCutflowEvent("SFM110"+cf_index[11]);
 	countSignalEvent("L110");
       }
-      if( jets.size() > 0 && m_t2 > 120. ){
+      if(  m_t2 > 120. ){
 	countCutflowEvent("SFM120"+cf_index[11]);
 	countSignalEvent("L120");
       }
@@ -465,6 +474,9 @@ void Atlas_1403_4853::analyze() {
     countCutflowEvent("DFM110"+cf_index[6]);
     countCutflowEvent("DFM120"+cf_index[6]);
     countCutflowEvent("DFH160"+cf_index[6]);
+    
+   if( !trigger )
+      return;    
 
     if( electronsTight[0]->PT >= muonsCombined[0]->PT )
       leadingleptonpt = electronsTight[0]->PT;
@@ -494,6 +506,7 @@ void Atlas_1403_4853::analyze() {
 
     for( int i=0; i<jets.size(); i++ ){
 	deltatemp=missingET->P4().DeltaR(jets[i]->P4());
+//        deltatemp=missingET->P4().DeltaPhi(jets[i]->P4());
 	if(deltatemp < deltamin){
 	  deltamin=deltatemp;
 	  i_closestjet=i;
@@ -501,7 +514,7 @@ void Atlas_1403_4853::analyze() {
     }
 
     bool deltaphiveto= false;
-    if( jets.size() != 0 && fabs(missingET->P4().DeltaPhi(jets[i_closestjet]->P4())) > 1. ){
+    if( (jets.size() != 0 && fabs(missingET->P4().DeltaPhi(jets[i_closestjet]->P4())) > 1.) || jets.size() == 0  ){
       deltaphiveto = true;
       countCutflowEvent("DFM90"+cf_index[9]);
       countCutflowEvent("DFM100"+cf_index[9]);
@@ -510,7 +523,7 @@ void Atlas_1403_4853::analyze() {
     }
 
     bool deltaphibveto = false;
-    if( fabs(pllTb.DeltaPhi(missingET->P4())) < 1.5 ){
+    if( deltaphiveto && fabs(pllTb.DeltaPhi(missingET->P4())) < 1.5 ){
       deltaphibveto = true;
       countCutflowEvent("DFM90"+cf_index[10]);
       countCutflowEvent("DFM100"+cf_index[10]);
@@ -518,8 +531,10 @@ void Atlas_1403_4853::analyze() {
       countCutflowEvent("DFM120"+cf_index[10]);
     }
     
-    double pa[3] = { electronsTight[0]->P4().M(), electronsTight[0]->P4().Px(), electronsTight[0]->P4().Py() };
-    double pb[3] = { muonsCombined[0]->P4().M(), muonsCombined[0]->P4().Px(), muonsCombined[0]->P4().Py() };
+// change KR    double pa[3] = { electronsTight[0]->P4().M(), electronsTight[0]->P4().Px(), electronsTight[0]->P4().Py() };
+// change KR    double pb[3] = { muonsCombined[0]->P4().M(), muonsCombined[0]->P4().Px(), muonsCombined[0]->P4().Py() };
+    double pa[3] = { 0. , electronsTight[0]->P4().Px(), electronsTight[0]->P4().Py() };
+    double pb[3] = { 0. , muonsCombined[0]->P4().Px(), muonsCombined[0]->P4().Py() };
     double pmiss[3] = { 0., missingET->P4().Px(), missingET->P4().Py() };
     mt2_bisect::mt2 mt2_event;
     mt2_event.set_momenta( pa, pb, pmiss );
@@ -527,7 +542,7 @@ void Atlas_1403_4853::analyze() {
     double m_t2 = mt2_event.get_mt2();
     
 
-    if( deltaphibveto && jets.size() > 0 && m_t2 > 90. ){
+    if( deltaphibveto && m_t2 > 90. ){
       countCutflowEvent("DFM90"+cf_index[11]);
       countSignalEvent("L90");
     }
@@ -539,7 +554,7 @@ void Atlas_1403_4853::analyze() {
       countCutflowEvent("DFM110"+cf_index[11]);
       countSignalEvent("L110");
     }
-    if( deltaphibveto && jets.size() > 0 && m_t2 > 120.  ){
+    if( deltaphibveto && m_t2 > 120.  ){
       countCutflowEvent("DFM120"+cf_index[11]);
       countSignalEvent("L120");
     }

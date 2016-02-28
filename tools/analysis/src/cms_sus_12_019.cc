@@ -64,6 +64,48 @@ void Cms_sus_12_019::analyze() {
     return;
   countCutflowEvent("e_2lep_transition");
   
+  
+  //If more than 2 leptons, only highest pair with highest pT selected
+  if( (electronsSignal.size() + muonsSignal.size()) > 2){
+    if ((electronsSignal.size() > 2) && (muonsSignal.size() == 0)) electronsSignal.erase(electronsSignal.begin()+2,electronsSignal.end());
+    else if ((muonsSignal.size() > 2) && (electronsSignal.size() == 0)) muonsSignal.erase(muonsSignal.begin()+2,muonsSignal.end());   
+    
+    else if ((electronsSignal.size() > 1) && (muonsSignal.size() == 1)){
+      if(electronsSignal[1]->PT > muonsSignal[0]->PT){
+	muonsSignal.erase(muonsSignal.begin(),muonsSignal.end());
+	electronsSignal.erase(electronsSignal.begin()+2,electronsSignal.end());
+      }
+      else {
+	electronsSignal.erase(electronsSignal.begin()+1,electronsSignal.end());
+      }
+    }
+    else if ((muonsSignal.size() > 1) && (electronsSignal.size() == 1)){
+      if(muonsSignal[1]->PT > electronsSignal[0]->PT){
+	electronsSignal.erase(electronsSignal.begin(),electronsSignal.end());
+	 muonsSignal.erase(muonsSignal.begin()+2,muonsSignal.end());
+      }
+      else {
+	muonsSignal.erase(muonsSignal.begin()+1,muonsSignal.end());
+      }
+    } 
+    else if ((electronsSignal.size() > 1) && (muonsSignal.size() > 1)){
+      if(electronsSignal[1]->PT > muonsSignal[0]->PT) {
+	muonsSignal.erase(muonsSignal.begin(),muonsSignal.end());
+	electronsSignal.erase(electronsSignal.begin()+2,electronsSignal.end());
+      }
+      else if(muonsSignal[1]->PT > electronsSignal[0]->PT){
+	electronsSignal.erase(electronsSignal.begin(),electronsSignal.end());
+	muonsSignal.erase(muonsSignal.begin()+2,muonsSignal.end()); 
+      }
+      else {
+	electronsSignal.erase(electronsSignal.begin()+1,electronsSignal.end());
+	muonsSignal.erase(muonsSignal.begin()+1,muonsSignal.end());
+      }
+    } 
+      
+  }
+
+  
   //Flags to allow testing of various cutflows
   bool lep_OSSF_cen = false;
   bool lep_OSSF_for = false;

@@ -17,7 +17,7 @@
   "jets_conedR": "0.4", 
   "jets_ptmin": "20.0", 
   "jets_second": "n", 
-  "jets_tautagging": "n", 
+  "jets_tautagging": "y", 
   "long_info": "['ATLAS 3-lepton, 8 TeV, 20.3 fb-1']", 
   "lumi": "20.3", 
   "muon_iso_absorrel": "['r', 'r']", 

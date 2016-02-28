@@ -1,5 +1,30 @@
 CheckMATE - Changelog
 
+Ver 1.1.14
+----------
+2014-12-16   Daniel Schmeier < daschm@th.physik.uni-bonn.de>
+
+    ~ Tau tags activated in detector card for atlas_1402_7029
+
+
+2014-12-10   Jamie Tattersall <tattersall@thphys.uni-heidelberg.de>
+
+    ~ Renamed mCTx -> mCTperp
+    ~ Added mCTparallel
+    ~ Generalised mT to include masses for final state particles
+
+2014-12-03   Jamie Tattersall <tattersall@thphys.uni-heidelberg.de>
+
+    ~ Fixed bugs in signal regions for atlas_1407_0583 (bcd_bulk and threeBody)
+	
+2014-11-25   Daniel Schmeier < daschm@th.physik.uni-bonn.de>
+    ~ Fixed bug in analysis which caused, under circumstanced, that wrong btags are
+	used from the Delphes tree.
+    ~ log_analysis.txt now always contains the internal parameters the analysis executable
+	was called with.
+	
+	
+	
 Ver 1.1.13
 ---------
 
