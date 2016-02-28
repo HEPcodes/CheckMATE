@@ -26,6 +26,7 @@ def get_information_from_file(pfile):
     # Set standard values
     flags['md5'] = False
     flags['fullcl'] = False
+    flags['likelihood'] = False
     flags['tempmode'] = False
     flags['quietmode'] = False
     flags['verbosemode'] = False
@@ -93,6 +94,8 @@ def get_information_from_file(pfile):
                 paths['results'] = Config.get("Optional Parameters", "outputdirectory")
             elif optional_parameter == "fullcl":
                 flags['fullcl'] = Config.getboolean("Optional Parameters", "fullcl")
+            elif optional_parameter == "likelihood":
+                flags['likelihood'] = Config.getboolean("Optional Parameters", "likelihood")
             elif optional_parameter == "randomseed":
                 flags['randomseed'] = Config.getint("Optional Parameters", "randomseed")
             elif optional_parameter == "controlregions":
@@ -106,7 +109,7 @@ def get_information_from_file(pfile):
     # Update files and paths with given parameters
     files.update(get_analysis_files(analyses))
     paths.update(get_output_paths(paths['results'], Config.get("Mandatory Parameters", "name")))
-    files.update(get_output_files(paths['results'], Config.get("Mandatory Parameters", "name"), analyses))
+    files.update(get_output_files(paths['results'], Config.get("Mandatory Parameters", "name"), analyses, flags))
     
     # Set up event information. Remaining sections consist of individual processes
     for process in sections:
@@ -160,6 +163,7 @@ def get_information_from_parameters():
     parser.add_argument('-xs', '--xsects', dest='xsects', required=True, type=str, help="Cross section, either one global for all events or for each event, separated by ;. Example format: 1.73 FB. ")
     parser.add_argument('-xse', '--xsecterrs', dest='xsecterrs', required=True, type=str, help="Cross section errors, either one global for all events or for each event, separated by ;. Example format: 0.01*FB or 10.4 %%. ")
     parser.add_argument('-cl', '--full-cl', dest='fullcl', action='store_true', help="Evaluate full CLs to the evaluated number of signal events (instead of just comparing to 95 percent limit).")
+    parser.add_argument('-likeli', '--likelihood', dest='likelihood', action='store_true', help="Evaluate likelihood for each signal region (and sum all signal regions).")
     parser.add_argument('-od', '--outdir', dest='odir', default=paths['results'], help='Directory where the results should be saved (default: '+paths['results']+').')
     parser.add_argument('-oe', '--output-exists', dest='output_exists', default="ask", type=str, help="What to do if output already exists. overwrite will delete existing output and overwrite it with the new results. add will add the current results to the old ones. In any other case, a prompt will ask you.")   
     parser.add_argument('-q', '--quiet', dest='quiet', action='store_true', help='Suppresses all output (sets --force automatially).')  
@@ -175,6 +179,7 @@ def get_information_from_parameters():
     args = parser.parse_args()
     
     flags['fullcl'] = False
+    flags['likelihood'] = False
     flags['tempmode'] = args.temp
     flags['skipparamcheck'] = args.force
     flags['randomseed'] = args.randomseed
@@ -198,6 +203,8 @@ def get_information_from_parameters():
       flags["outputexists"] = "add"
     if args.fullcl:
       flags["fullcl"] = True
+    if args.likelihood:
+      flags["likelihood"] = True
     if args.controlregions:
       flags["controlregions"] = True
       flags["skipevaluation"] = True
@@ -221,7 +228,7 @@ def get_information_from_parameters():
           analyses.append(line.split()[0])
     else:
       analyses = [a.lstrip().rstrip() for a in args.analysis.split(",")]
-    files.update(get_output_files(args.odir, args.name, analyses))
+    files.update(get_output_files(args.odir, args.name, analyses, flags))
     paths.update(get_output_paths(args.odir, args.name))
     files.update(get_analysis_files(analyses))
     
@@ -326,6 +333,8 @@ def prepare_run(analyses, events, files, flags, output, paths):
         output.cout("\t - No evaluation step")
     if flags['fullcl']:
         output.cout("\t - Confidence of signal estimate will be explicitly calculated")
+    if flags['likelihood']:
+        output.cout("\t - Likelihood will be calculated for each signal region")
     if flags["outputexists"] == "overwrite":
         output.cout("\t - Old results will be deleted")
     if flags["outputexists"] == "add":

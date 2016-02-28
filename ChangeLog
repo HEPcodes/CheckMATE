@@ -1,8 +1,19 @@
 CheckMATE - Changelog
 
+Ver 1.1.8
+-----------
+
+2014-08-13   Jamie Tattersall <tattersall@thphys.uni-heidelberg.de>
+
+        ~ Added likelihood calculator option
+
+2014-07-16   Jamie Tattersall <tattersall@thphys.uni-heidelberg.de>
+
+        ~ Add mT to list of functions in AnalysisBase
+
 
 Ver 1.1.7
----------
+-----------
 
 2014-07-11   Jamie Tattersall <tattersall@thphys.uni-heidelberg.de>
 

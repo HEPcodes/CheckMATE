@@ -1,19 +1,18 @@
-#include "cms_1301_4698_WW.h"
-#include <stdio.h>
+#include "cms_1306_1126_WW.h"
 
-void Cms_1301_4698_ww::initialize() {
-  setAnalysisName("cms_1301_4698_WW");          
+void Cms_1306_1126_ww::initialize() {
+  setAnalysisName("cms_1306_1126_WW");          
   setInformation(""
     "@#CMS\n"
-     "@#arXiv:1301.4698 (only WW measurement)\n"
+     "@#arXiv:1306.1126 (only WW measurement)\n"
      "@#WW standard model measurement\n"
-     "@#sqrt(s) = 8 TeV\n"
-     "@#int(L) = 3.5 fb^-1\n"
+     "@#sqrt(s) = 7 TeV\n"
+     "@#int(L) = 4.92 fb^-1\n"
   "");
     // H->WW added (40 events according to CMS)
   // cryptic isolation criteria, used track isolation from 7 TeV paper
   // paragraph on Drell-Yan was unclear to me (which requirements are for the same flavour and opposite flavour) and I followed 7 TeV paper
-  setLuminosity(3.5*units::INVFB);      
+  setLuminosity(4.92*units::INVFB);      
   ignore("towers"); // These won't read tower or track information from the
   ignore("tracks"); //  Delphes output branches to save computing time.
   bookSignalRegions("combined;");
@@ -23,19 +22,15 @@ void Cms_1301_4698_ww::initialize() {
   histo_ptmin = new TH1D("lep1pt", "pt of the trailing lepton", 14, 15 , 85);
   histo_ptll = new TH1D("ptll", "transverse momentum of ll", 17, 40 , 125);
   histo_mll = new TH1D("invll", "invariant mass of ll", 40, 0 , 200);
-  histo_etadiff = new TH1D("etadiff", "rapidity distance between leptons", 20, -1 , 1);
+  histo_etadiff = new TH1D("etadiff", "rapidity distance between leptons", 5, 0 , 1);
   histo_etadiff->SetMinimum(0.);
   histo_etasum = new TH1D("etasum", "rapidity sum of leptons", 5, 0 , 1);
   histo_etasum->SetMinimum(0.);
   histo_rap2D = new TH2D("etaeta", "rapidity lep1 v lep2", 20, -2.5 , 2.5, 20, -2.5, 2.5);
   histo_sqrtsmin = new TH1D("sqrtsmin", "sqrtsmin", 30, 0 , 300);
-  histo_dx = new TH1D("dx", "dx by Melia", 10, 0 , 0.1);
-  histo_dx->SetMinimum(0.);  
-  
-  asy1p = 0; asy1m = 0; asy2p = 0; asy2m = 0;
 }
 
-void Cms_1301_4698_ww::analyze() {
+void Cms_1306_1126_ww::analyze() {
     // Your eventwise analysis code goes here
   missingET->addMuons(muonsCombined);
   
@@ -51,7 +46,7 @@ void Cms_1301_4698_ww::analyze() {
   
   // Oppositely charged leptons with pT > 20 GeV (eta < 2.5 for electrons, eta < 2.4 for muons)
   // Veto events with b-tags (15-30GeV, eta <2.4)
-  // Veto events with jets > 30GeV (eta < 4.7)
+  // Veto events with jets > 30GeV (eta < 5.0)
   // Uses projected EtMiss (think same as ATLAS)
   // Projected EtMiss > 45 GeV for same flavour pairs
   // Projected EtMiss > 20 GeV for different flavour pairs
@@ -59,7 +54,7 @@ void Cms_1301_4698_ww::analyze() {
   // For same flavour pairs:
   // Angle between hardest jet and lepton system < 165 degrees
   // Reject events if mass +- 15 GeV of Z
-  // Reject events if mass < 12 GeV
+  // Reject events if mass < 20 GeV for ee/mumu or mass < 12 GeV for emu
   // Transverse momentum of pll > 45 GeV
   
   // Reject event if third lepton > 10 GeV
@@ -115,7 +110,7 @@ void Cms_1301_4698_ww::analyze() {
 
   if (!OSemu && jets.size() > 0 && fabs(jets[0]->P4().DeltaPhi(pll)) > 165./180.*3.14159265359 ) return;
   
-  if ( mll < 12. ) return;
+  if ( ( mll < 20. && ( OSmu + OSe ) != 0) || mll < ( 12. && OSemu == 1) ) return;
   countCutflowEvent("mll");
   
   if ( !OSemu && fabs(mll - 91.2) < 15.) return;
@@ -162,24 +157,15 @@ void Cms_1301_4698_ww::analyze() {
   
   double sqrtsmin = sqrt( (leading.E() + trailing.E())*(leading.E() + trailing.E()) - (leading.Pz() + trailing.Pz())*(leading.Pz() + trailing.Pz()) ) + missingET->P4().Et() ;
   histo_sqrtsmin->Fill( sqrtsmin );
+  if (sqrtsmin > 150. ) histo_etadiff->Fill( fabs(tanh(0.5*( leading.Eta() - trailing.Eta() ))) );
   
-  double etadiff = tanh(0.5*( leading.Eta() - trailing.Eta() ));
-  if (sqrtsmin > 150. ) {
-    histo_etadiff->Fill( (tanh(0.5*( leading.Eta() - trailing.Eta() ))) );
-    if ( fabs(etadiff) > 0.5 ) asy2p++; else asy2m++;
-  }
-  if ( fabs(etadiff) > 0.5 ) asy1p++; else asy1m++;
-  
-  double deltax = 2.*( leading.Pz() + trailing.Pz() )/8000.;
-  histo_dx->Fill( fabs(deltax) ) ;  
   
 }
   
-void Cms_1301_4698_ww::finalize() {
+void Cms_1306_1126_ww::finalize() {
   // Whatever should be done after the run goes here
-  
    
-  TFile f1("1301_4698.root","recreate");
+  TFile f1("1306_1126.root","recreate");
   histo_ptmax->Write();
   histo_ptmin->Write();
   histo_ptll->Write();
@@ -188,24 +174,5 @@ void Cms_1301_4698_ww::finalize() {
   histo_etasum->Write();
   histo_sqrtsmin->Write();
   histo_etadiff->Write();
-  histo_dx->Write();
   f1.Close();
-  
-  std::cout <<  "# Asymmetry \n";  
-  std::cout << "all: " << 1.*(asy1p - asy1m)/(asy1p + asy1m) << "   " <<  asy1p + asy1m << std::endl;
-  std::cout << "high: " << 1.*(asy2p - asy2m)/(asy2p + asy2m) << "   " <<  asy2p + asy2m << std::endl;
-  
-  outputHistFile(histo_ptmax);
-  outputHistFile(histo_ptmin);
-  outputHistFile(histo_ptll);
-  outputHistFile(histo_mll);  
 }       
-
-void Cms_1301_4698_ww::outputHistFile(TH1D* inHist) {
-    // Write standard information    
-    std::cout << "# " << inHist->GetTitle() << " \n";
-    std::cout << "#  Bin    MC_Events    (Error)    Normalised_Events    (Error)    Histogram_Normalised_Events    (Error)    Bin_Width    \n";
-    for ( int i=1; i<=inHist->GetNbinsX(); i++)
-      std::cout << inHist->GetName() << "_" << i << "   " << inHist->GetBinCenter(i) << "    " << inHist->GetBinContent(i) << "    " << inHist->GetBinError(i) << "    " << normalize(inHist->GetBinContent(i)) << "    " << normalize(inHist->GetBinError(i)) << "    " << (inHist->GetBinContent(i))/(inHist->Integral()) << "    " << (inHist->GetBinError(i))/(inHist->Integral()) << "    " << inHist->GetBinWidth(i) << std::endl;
-    
-}

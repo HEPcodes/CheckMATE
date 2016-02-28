@@ -27,32 +27,34 @@ void Atlas_1404_2500::analyze() {
 
   missingET->addMuons(muonsCombined);
   electronsMedium = filterPhaseSpace(electronsMedium, 10., -2.47, 2.47);
-  electronsTight = filterPhaseSpace(electronsTight, 10., -2.47, 2.47);
+  electronsTight = filterPhaseSpace(electronsTight, 15., -2.47, 2.47);
   muonsCombined = filterPhaseSpace(muonsCombined, 10., -2.5, 2.5);
   jets = filterPhaseSpace(jets, 20., -2.8, 2.8);
 
-  //different isolation criteria for PT < 60 GeV and PT > 60 GEV
-  if( electronsMedium.size() > 0 && electronsMedium[0]->PT < 60. )
-    electronsMedium = filterIsolation(electronsMedium,0);
-  if( electronsTight.size() > 0 && electronsTight[0]->PT < 60. )
-    electronsTight = filterIsolation(electronsTight,0);
-  if( muonsCombined.size() > 0 && muonsCombined[0]->PT < 60. )
-    muonsCombined = filterIsolation(muonsCombined,0);
-
-  if( electronsMedium.size() > 0 && electronsMedium[0]->PT >= 60. )
-    electronsMedium = filterIsolation(electronsMedium,1);
-  if( electronsTight.size() > 0 && electronsTight[0]->PT >= 60. )
-    electronsTight = filterIsolation(electronsTight,1);
-  if( muonsCombined.size() > 0 && muonsCombined[0]->PT >= 60. )
-    muonsCombined = filterIsolation(muonsCombined,1);
-
   //object removal
-  jets = overlapRemoval(jets, electronsTight, 0.2);
+  jets = overlapRemoval(jets, electronsMedium, 0.2);
   electronsMedium = overlapRemoval(electronsMedium, jets, 0.4);
   electronsTight = overlapRemoval(electronsTight, jets, 0.4);
   muonsCombined = overlapRemoval(muonsCombined, jets, 0.4);
   electronsMedium = overlapRemoval(electronsMedium, muonsCombined, 0.1);
   electronsTight = overlapRemoval(electronsTight, muonsCombined, 0.1);
+
+  electronsMedium = filterIsolation(electronsMedium,0);
+  electronsTight = filterIsolation(electronsTight,0);
+  muonsCombined = filterIsolation(muonsCombined,0);
+
+  electronsMedium = filterIsolation(electronsMedium,1);
+  electronsTight = filterIsolation(electronsTight,1);
+  muonsCombined = filterIsolation(muonsCombined,1);
+
+  electronsMedium = filterIsolation(electronsMedium,2);
+  electronsTight = filterIsolation(electronsTight,2);
+  muonsCombined = filterIsolation(muonsCombined,2);
+
+  electronsMedium = filterIsolation(electronsMedium,3);
+  electronsTight = filterIsolation(electronsTight,3);
+  muonsCombined = filterIsolation(muonsCombined,3);
+
   
   //number of bjets
 
@@ -73,22 +75,22 @@ void Atlas_1404_2500::analyze() {
 
   if( missingET->P4().Et() > trigger_ETmiss )
     trigger=true;
-  if( trigger == false && electronsMedium.size() > 0 && electronsMedium[0]->PT > trigger_single_el_pt )
+  if( electronsTight.size() > 0 && electronsTight[0]->PT > trigger_single_el_pt )
     trigger=true;
-  if( trigger == false && muonsCombined.size() > 0 && muonsCombined[0]->PT > trigger_single_mu_pt )
+  if( muonsCombined.size() > 0 && muonsCombined[0]->PT > trigger_single_mu_pt )
     trigger=true;
-  if( trigger == false && electronsMedium.size() > 1 && electronsMedium[0]->PT > trigger_di_el_pt && electronsMedium[1]->PT > trigger_di_el_pt )
+  if( electronsTight.size() > 1 && electronsTight[0]->PT > trigger_di_el_pt && electronsTight[1]->PT > trigger_di_el_pt )
     trigger=true;
-  if( trigger == false && muonsCombined.size() > 1 && muonsCombined[0]->PT > trigger_di_mu_pt && muonsCombined[1]->PT > trigger_di_mu_pt )
+  if( muonsCombined.size() > 1 && muonsCombined[0]->PT > trigger_di_mu_pt && muonsCombined[1]->PT > trigger_di_mu_pt )
     trigger=true;
-  if( trigger == false && electronsMedium.size() > 0 && muonsCombined.size() > 0 && electronsMedium[0]->PT > trigger_di_el_pt && muonsCombined[0]->PT > trigger_di_mu_pt )
+  if( electronsTight.size() > 0 && muonsCombined.size() > 0 && electronsTight[0]->PT > trigger_di_el_pt && muonsCombined[0]->PT > trigger_di_mu_pt )
     trigger=true;
   
 
   //create a vector of leptons
   leptons.clear();
-  for( int i=0; i< electronsMedium.size(); i++ )
-    leptons.push_back( electronsMedium[i]->P4() );
+  for( int i=0; i< electronsTight.size(); i++ )
+    leptons.push_back( electronsTight[i]->P4() );
   for( int i=0; i< muonsCombined.size(); i++ )
     leptons.push_back( muonsCombined[i]->P4() );
 
@@ -120,17 +122,18 @@ void Atlas_1404_2500::analyze() {
   if( leptons.size() > 1 && leptons[0].Pt() > 20. && leptons[1].Pt() > 15. ){
     if( leptons.size() > 2 && leptons[2].Pt() < 15. )
       two_signal_leptons=true;
-    else
+    else if ( leptons.size() > 2 && leptons[2].Pt() > 15. )
+      two_signal_leptons=false;
+    else if( leptons.size() < 3)
       two_signal_leptons=true;
   }
-  
-  
+
   bool three_signal_leptons=false;
   if( leptons.size() > 2 && leptons[0].Pt() > 20. && leptons[1].Pt() > 15. && leptons[2].Pt() > 15. ){
     three_signal_leptons=true;
   }
   
-  if( three_signal_leptons || two_signal_leptons ){
+  if( two_signal_leptons || three_signal_leptons ){
     countCutflowEvent("SR3b"+cf_index[1]);
     countCutflowEvent("SR1b"+cf_index[1]);
     countCutflowEvent("SR0b"+cf_index[1]);
@@ -153,17 +156,23 @@ void Atlas_1404_2500::analyze() {
   
   mll=0.;
   sign=0.;
+  double mlltemp;
+
   if( electronsTight.size() >= 2 ){
     mll=(electronsTight[0]->P4()+electronsTight[1]->P4()).M();
     sign=electronsTight[0]->Charge*electronsTight[1]->Charge;
   }
   else if( muonsCombined.size() >= 2 ){
-    mll=( muonsCombined[0]->P4()+muonsCombined[1]->P4() ).M();
+    mlltemp=( muonsCombined[0]->P4()+muonsCombined[1]->P4() ).M();
+    if( mlltemp > mll )
+      mll = mlltemp;
     sign=muonsCombined[0]->Charge*muonsCombined[1]->Charge;
   }
 
   else if( electronsTight.size() >= 1 && muonsCombined.size() >= 1){
-    mll = ( muonsCombined[0]->P4()+electronsTight[0]->P4() ).M();
+    mlltemp = ( muonsCombined[0]->P4()+electronsTight[0]->P4() ).M();
+    if( mlltemp > mll )
+      mll = mlltemp;
     sign=muonsCombined[0]->Charge*electronsTight[0]->Charge;
   }
 
@@ -180,10 +189,11 @@ void Atlas_1404_2500::analyze() {
 
 
 
-  if( mll_cut && electronsTight.size() + muonsCombined.size() >= 2 ){
+  //  if( two_signal_leptons && mll_cut && electronsTight.size() + muonsCombined.size() >= 2 ){
+  if( ( two_signal_leptons || three_signal_leptons ) && mll_cut ){
 
     bool SS_cut=false;
-    if( mll_cut && sign > 0 ){
+    if( ( mll_cut && sign > 0 ) || three_signal_leptons ){
       SS_cut=true;
       countCutflowEvent("SR3b"+cf_index[4]);
     }
@@ -221,7 +231,8 @@ void Atlas_1404_2500::analyze() {
     }
   }
 
-  if( mll_cut && electronsTight.size() + muonsCombined.size() == 2 ){
+  //  if( two_signal_leptons && mll_cut && electronsTight.size() + muonsCombined.size() == 2 ){
+  if( two_signal_leptons && mll_cut ){
 
     bool SS_cut=false;
     if( mll_cut && sign > 0 ){
@@ -284,7 +295,7 @@ void Atlas_1404_2500::analyze() {
 	
 	//SR0b
 	if( mT_cut && meff > 400. ){
-	  countCutflowEvent("S00b"+cf_index[9]);
+	  countCutflowEvent("SR0b"+cf_index[9]);
 	  countSignalEvent("SR0b");	  
 	}
 	
@@ -292,7 +303,11 @@ void Atlas_1404_2500::analyze() {
     }
     
   }
-  if( mll_cut && electronsTight.size() + muonsCombined.size() >= 3 ){
+
+  //  if( three_signal_leptons && mll_cut && electronsTight.size() + muonsCombined.size() >= 3 ){e
+
+  if( three_signal_leptons && mll_cut ){
+
     countCutflowEvent("SR3Llow"+cf_index[4]);
     countCutflowEvent("SR3Lhigh"+cf_index[4]);
 
@@ -325,7 +340,8 @@ void Atlas_1404_2500::analyze() {
        meff=meff+jets[i]->PT;
      }
 
-     if( met_cut && meff > 400. && ( jets.size() < 5 && nbjets < 3) ){
+     //     if( met_cut && meff > 400. && ( jets.size() < 5 && nbjets < 3) ){
+     if( met_cut && meff > 400.  ){
 	countCutflowEvent("SR3Llow"+cf_index[8]);
 	countSignalEvent("SR3Llow");
       }
@@ -336,7 +352,8 @@ void Atlas_1404_2500::analyze() {
 	countCutflowEvent("SR3Lhigh"+cf_index[6]);     
       }
 
-      if( met_cut && meff > 400. &&  ( jets.size() < 5 && nbjets < 3) ){
+      //      if( met_cut && meff > 400. &&  ( jets.size() < 5 && nbjets < 3) ){
+      if( met_cut && meff > 400.  ){
 	countCutflowEvent("SR3Lhigh"+cf_index[7]);
 	countSignalEvent("SR3Lhigh");
       }

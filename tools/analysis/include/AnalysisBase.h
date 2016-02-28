@@ -320,17 +320,20 @@ class AnalysisBase {
 	return x*xsect*luminosity/sumOfWeights;
     };
 
+    // Evaluates mT 
+    double mT(const TLorentzVector & vis, const TLorentzVector & invis);
+    
     // Evaluates mT2 (arXiv:0810.5178)
-    double mT2(TLorentzVector vis1, TLorentzVector vis2, double m_inv, TLorentzVector invis = TLorentzVector(0., 0., 0., 0.));
+    double mT2(const TLorentzVector & vis1, const TLorentzVector & vis2, double m_inv, const TLorentzVector & invis = TLorentzVector(0., 0., 0., 0.));
 
     // Evaluates 'normal' MCT (JHEP 0804:034,2008, arXiv:0802.2879 [hep-ph])
-    double mCT(const TLorentzVector v1, const TLorentzVector v2);
+    double mCT(const TLorentzVector & v1, const TLorentzVector & v2);
     
     // Evaluates boost corrected MCT (JHEP 0804:034,2008, arXiv:0802.2879 [hep-ph])
-    double mCTcorr(const TLorentzVector v1, const TLorentzVector v2, const TLorentzVector vds, const TLorentzVector invis, const double ecm = 8000.0, const double mxlo = 0.0);
+    double mCTcorr(const TLorentzVector & v1, const TLorentzVector & v2, const TLorentzVector & vds, const TLorentzVector & invis, const double ecm = 8000.0, const double mxlo = 0.0);
     
     // Evaluates mT2_bl (arXiv:1203.4813), Also known as asymmetric mT2 in atlas_conf_2013_037
-    double mT2_bl(TLorentzVector pl_in, TLorentzVector pb1_in, TLorentzVector pb2_in, TLorentzVector invis = TLorentzVector(0., 0., 0., 0.));    
+    double mT2_bl(const TLorentzVector & pl_in, const TLorentzVector & pb1_in, const TLorentzVector & pb2_in, const TLorentzVector & invis = TLorentzVector(0., 0., 0., 0.));    
 
 
     // For using ExRootAnalysis

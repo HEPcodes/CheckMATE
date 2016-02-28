@@ -319,7 +319,12 @@ void AnalysisBase::ignore(std::string ignore_what) {
     }
 }
 
-double AnalysisBase::mT2(TLorentzVector vis1, TLorentzVector vis2, double m_inv, TLorentzVector invis) {
+double AnalysisBase::mT(const TLorentzVector & vis, const TLorentzVector & invis) {
+    
+    return sqrt(2.*vis.Pt()*invis.Et()*(1.-cos(fabs(vis.DeltaPhi(invis)))));
+}
+
+double AnalysisBase::mT2(const TLorentzVector & vis1, const TLorentzVector & vis2, double m_inv, const TLorentzVector & invis) {
     // Setup mt2 evaluation object.
     mt2_bisect::mt2 mt2_event;
     TLorentzVector zeroVector = TLorentzVector(0. ,0. ,0. ,0.);
@@ -339,7 +344,7 @@ double AnalysisBase::mT2(TLorentzVector vis1, TLorentzVector vis2, double m_inv,
     return mt2_event.get_mt2();  
 }
 
-double AnalysisBase::mCT(const TLorentzVector v1,const TLorentzVector v2)
+double AnalysisBase::mCT(const TLorentzVector & v1,const TLorentzVector & v2)
 {
     mctlib::mct mct_event;
     double v1t[4] = {v1.E(),v1.Px(),v1.Py(),v1.Pz()};
@@ -347,7 +352,7 @@ double AnalysisBase::mCT(const TLorentzVector v1,const TLorentzVector v2)
     return mct_event.mctnorm(v1t,v2t);  //returns 'normal' mCT
 }
 
-double AnalysisBase::mCTcorr(const TLorentzVector v1,const TLorentzVector v2,const TLorentzVector vds,const TLorentzVector invis,const double ecm,const double mxlo)
+double AnalysisBase::mCTcorr(const TLorentzVector & v1, const TLorentzVector & v2,const TLorentzVector & vds,const TLorentzVector & invis,const double ecm,const double mxlo)
 {
     mctlib::mct mct_event;
     double v1t[4] = {v1.E(),v1.Px(),v1.Py(),v1.Pz()};
@@ -357,7 +362,7 @@ double AnalysisBase::mCTcorr(const TLorentzVector v1,const TLorentzVector v2,con
     return mct_event.mctcorr(v1t,v2t,vdst,ptmt,ecm,mxlo);
 }
 
-double AnalysisBase::mT2_bl(TLorentzVector pl_in, TLorentzVector pb1_in, TLorentzVector pb2_in, TLorentzVector invis) {
+double AnalysisBase::mT2_bl(const TLorentzVector & pl_in, const TLorentzVector & pb1_in, const TLorentzVector & pb2_in, const TLorentzVector & invis) {
     // Setup mt2_bl evaluation object.
     mt2bl_bisect::mt2bl mt2bl_event;
     TLorentzVector zeroVector = TLorentzVector(0. ,0. ,0. ,0.);

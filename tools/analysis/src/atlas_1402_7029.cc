@@ -110,7 +110,7 @@ void Atlas_1402_7029::analyze() {
   //--------------------------
   //------Signal Regions------
   //--------------------------
-  std::cerr <<  "elec: " << electronsTight.size() << ", muons: " << muonsCombined.size() << std::endl;
+  //std::cerr <<  "elec: " << electronsTight.size() << ", muons: " << muonsCombined.size() << std::endl;
   
     
   if( ( electronsTight.size() + muonsCombined.size() ) != 3 || !trigger )

@@ -200,7 +200,7 @@ void Atlas_1308_2631::analyze() {
     if(flagSRA == true){
 	
 	TLorentzVector vds;
-	vds =(0.0,0.0,0.0,0.0);
+	//vds =(0.0,0.0,0.0,0.0);
 /*	for(int i=0; i < towers.size(); i++){
 	    if( (fabs(towers[i]->Eta)) < 4.9){
 		TLorentzVector tower;
