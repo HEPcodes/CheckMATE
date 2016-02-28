@@ -219,13 +219,13 @@ def ask_for_signal_region_information(parameters):
                 bkg_err = 0
                 if "bkg_err" in parameters["reference_data"][sr]:
                     bkg_err = parameters["reference_data"][sr]["bkg_err"]
-                elif "bkg_errp" in reference_data[sr]:
+                elif "bkg_errp" in parameters["reference_data"][sr]:
                     # Asymmetric error: as a rough approximation, use the mean of the squares                                                                                                                                                                                                                                                    
                     bkg_err = str(myround(sqrt(float(parameters["reference_data"][sr]["bkg_errp"]) ** 2 + float(parameters["reference_data"][sr]["bkg_errm"]) ** 2) / sqrt(2.), parameters["reference_data"][sr]["bkg_errp"]))
-                elif "bkg_err_sys" in reference_data[sr]:
+                elif "bkg_err_sys" in parameters["reference_data"][sr]:
                     # Total error = independent quadratic sum of statistical and systematical component                                                                                                                                                                                                                                
                     bkg_err = str(myround(sqrt(float(parameters["reference_data"][sr]["bkg_err_stat"]) ** 2 + float(parameters["reference_data"][sr]["bkg_err_sys"]) ** 2), parameters["reference_data"][sr]["bkg_err_stat"]))
-                elif "bkg_err_sysp" in reference_data[sr]:
+                elif "bkg_err_sysp" in parameters["reference_data"][sr]:
                     bkg_err = str(myround(sqrt(float(parameters["reference_data"][sr]["bkg_err_stat"]) ** 2 + (float(parameters["reference_data"][sr]["bkg_err_sysp"]) ** 2) / 2. + (float(parameters["reference_data"][sr]["bkg_err_sysp"]) ** 2) / 2.), parameters["reference_data"][sr]["bkg_err_stat"]))
                 else:
                     exit("ERROR: Something went wrong while trying to calculate bkg_err. Aborting.")

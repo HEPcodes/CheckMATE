@@ -255,7 +255,7 @@ void Atlas_1407_0600::analyze() {
 	  countCutflowEvent("SR0l4jC"+cf_index[9]);
 	  if( meff4j > 1000. ){
 	    countCutflowEvent("SR0l4jC"+cf_index[10]);
-	    if( missingET->P4().Et() / HT4j > 16. ){
+      if( (missingET->P4().Et() / sqrt(HT4j)) > 16. ){
 	      countCutflowEvent("SR0l4jC"+cf_index[11]);
 	      countSignalEvent("SR0l4jC");
 	    }
@@ -273,15 +273,15 @@ void Atlas_1407_0600::analyze() {
   
   //lepton veto
 
-  if( nbjets_flag && electronsMedium.size() + muonsCombined.size() >= 1 ){
+  if( nbjets_flag && electronsTight.size() + muonsCombined.size() >= 1 ){
     
-    if( electronsMedium.size() == 0 &&  muonsCombined[0]->PT < 25.  ){
+    if( electronsTight.size() == 0 &&  muonsCombined[0]->PT < 25.  ){
       return;
     }
-    else if( muonsCombined.size() == 0 &&  electronsMedium[0]->PT < 25.  ){
+    else if( muonsCombined.size() == 0 &&  electronsTight[0]->PT < 25.  ){
       return;
     }    
-    else if(  muonsCombined[0]->PT < 25. && electronsMedium[0]->PT < 25.) { return;}
+    else if(  muonsCombined[0]->PT < 25. && electronsTight[0]->PT < 25.) { return;}
     
     countCutflowEvent("SR1l6jA"+cf_index[4]);
     countCutflowEvent("SR1l6jB"+cf_index[4]);
@@ -290,21 +290,20 @@ void Atlas_1407_0600::analyze() {
     
     if( nJets > 5 && jets[5]->PT > 30. ){
 
-    countCutflowEvent("SR1l6jA"+cf_index[5]);
-    countCutflowEvent("SR1l6jB"+cf_index[5]);
-    countCutflowEvent("SR1l6jC"+cf_index[5]);
+      countCutflowEvent("SR1l6jA"+cf_index[5]);
+      countCutflowEvent("SR1l6jB"+cf_index[5]);
+      countCutflowEvent("SR1l6jC"+cf_index[5]);
     
-
       //Signal regions
 
       double deltaphi;
-      if( electronsTight[0]->PT > muonsCombined[0]->PT ){
-	deltaphi = fabs( electronsTight[0]->P4().DeltaPhi(missingET->P4()) );
-	mT = sqrt( 2.*electronsTight[0]->P4().Pt()*missingET->P4().Et()*(1.-cos(deltaphi)) );
+      if( (electronsTight.size() > 0) && (electronsTight[0]->PT > muonsCombined[0]->PT )){
+        deltaphi = fabs( electronsTight[0]->P4().DeltaPhi(missingET->P4()) );
+        mT = sqrt( 2.*electronsTight[0]->P4().Pt()*missingET->P4().Et()*(1.-cos(deltaphi)) );
       }
       else{
-	deltaphi = fabs( muonsCombined[0]->P4().DeltaPhi(missingET->P4()) );
-	mT = sqrt( 2.*muonsCombined[0]->P4().Pt()*missingET->P4().Et()*(1.-cos(deltaphi)) );
+        deltaphi = fabs( muonsCombined[0]->P4().DeltaPhi(missingET->P4()) );
+        mT = sqrt( 2.*muonsCombined[0]->P4().Pt()*missingET->P4().Et()*(1.-cos(deltaphi)) );
       }
 	
       //SR-1l-6j-A
