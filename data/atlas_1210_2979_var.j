@@ -1,39 +1,119 @@
 {
-  "CURRLEVEL": "1", 
   "analysis": "atlas_1210_2979", 
-  "author": "user", 
+  "author": "CheckMATE", 
+  "authoremail": "checkmate@projects.hepforge.org", 
   "cr": "n", 
-  "electron_iso_absorrel": "['r', 'r', 'r']", 
-  "electron_iso_dR": "['0.2', '0.3', '0.3']", 
-  "electron_iso_ptmin": "['0.1', '1', '0.1']", 
-  "electron_iso_ptratiomax": "['0.2', '0.13', '0.14']", 
-  "electron_iso_source": "['c', 't', 'c']", 
-  "electron_niso": "3", 
+  "electron_iso_absorrel": [
+    "r", 
+    "r", 
+    "r"
+  ], 
+  "electron_iso_dR": [
+    "0.2", 
+    "0.3", 
+    "0.3"
+  ], 
+  "electron_iso_ptmin": [
+    "0.1", 
+    "1", 
+    "0.1"
+  ], 
+  "electron_iso_ptratiomax": [
+    "0.2", 
+    "0.13", 
+    "0.14"
+  ], 
+  "electron_iso_source": [
+    "c", 
+    "t", 
+    "c"
+  ], 
+  "electron_niso": 3, 
+  "expectation_known": "y", 
   "experiment": "A", 
-  "files": "{'analysis_makefile': '/home/jamie/Programs/CheckMATE/trunk/beta/tools/analysis/Makefile.am', 'analysis_header': {'atlas_1210_2979': '/home/jamie/Programs/CheckMATE/trunk/beta/tools/analysis/include/atlas_1210_2979.h'}, 'analysis_template_source': '/home/jamie/Programs/CheckMATE/trunk/beta/tools/analysis/src/template.cc.raw', 'list_of_analyses': '/home/jamie/Programs/CheckMATE/trunk/beta/data/list_of_analyses.txt', 'analysis_template_header': '/home/jamie/Programs/CheckMATE/trunk/beta/tools/analysis/include/template.h.raw', 'analysis_bin': '/home/jamie/Programs/CheckMATE/trunk/beta/tools/analysis/doAnalysis', 'analysis_CR_source': {'atlas_1210_2979': '/home/jamie/Programs/CheckMATE/trunk/beta/tools/analysis/src/atlas_1210_2979_CR.cc'}, 'analysis_source': {'atlas_1210_2979': '/home/jamie/Programs/CheckMATE/trunk/beta/tools/analysis/src/atlas_1210_2979.cc'}, 'evaluation_reference': {'atlas_1210_2979': '/home/jamie/Programs/CheckMATE/trunk/beta/data/atlas_1210_2979_ref.dat'}, 'delphes_config': {'atlas_1210_2979': '/home/jamie/Programs/CheckMATE/trunk/beta/tools/delphes/settings/atlas_1210_2979.tcl'}, 'analysis_settings': {'atlas_1210_2979': '/home/jamie/Programs/CheckMATE/trunk/beta/data/atlas_1210_2979_var.j'}, 'analysis_template_CR_source': '/home/jamie/Programs/CheckMATE/trunk/beta/tools/analysis/src/template_CR.cc.raw', 'analysis_main': '/home/jamie/Programs/CheckMATE/trunk/beta/tools/analysis/src/main.cc'}", 
-  "info_set": "['obs', 'bkg', 'bkg_err_stat', 'bkg_err_sys', 'S95_obs', 'S95_exp', 'S95_exp_errp', 'S95_exp_errm']", 
+  "info_set": [
+    "obs", 
+    "bkg", 
+    "bkg_err_stat", 
+    "bkg_err_sys", 
+    "S95_obs", 
+    "S95_exp", 
+    "S95_exp_errp", 
+    "S95_exp_errm"
+  ], 
   "jets_btagging": "y", 
-  "jets_btagging_eff": "['85']", 
-  "jets_btagging_n": "1", 
+  "jets_btagging_eff": [
+    "85."
+  ], 
+  "jets_btagging_n": 1, 
   "jets_conedR": "0.4", 
-  "jets_ptmin": "20", 
+  "jets_ptmin": "20.", 
   "jets_second": "n", 
   "jets_tautagging": "n", 
-  "long_info": "['WW production', '2 leptons', '7 TeV', '4.6 fb-1']", 
+  "long_info": [
+    "WW production", 
+    "2 leptons", 
+    "7 TeV", 
+    "4.6 fb-1"
+  ], 
   "lumi": "4.6", 
-  "muon_iso_absorrel": "['r', 'r', 'r']", 
-  "muon_iso_dR": "['0.05', '0.3', '0.3']", 
-  "muon_iso_ptmin": "['0.5', '1', '0.1']", 
-  "muon_iso_ptratiomax": "['0.2', '0.15', '0.14']", 
-  "muon_iso_source": "['t', 't', 'c']", 
-  "muon_niso": "3", 
-  "photon_iso_absorrel": "['r']", 
-  "photon_iso_dR": "['0.2']", 
-  "photon_iso_ptmin": "['0.1']", 
-  "photon_iso_ptratiomax": "['0.2']", 
-  "photon_iso_source": "['c']", 
-  "photon_niso": "1", 
-  "reference_data": "{'combined': {'bkg': '1219', 'bkg_err_stat': '31', 'S95_exp_errm': '53', 'S95_exp': '194', 'S95_exp_errp': '73', 'bkg_err_sys': '87', 'S95_obs': '273', 'obs': '1325'}}", 
+  "muon_iso_absorrel": [
+    "r", 
+    "r", 
+    "r"
+  ], 
+  "muon_iso_dR": [
+    "0.05", 
+    "0.3", 
+    "0.3"
+  ], 
+  "muon_iso_ptmin": [
+    "0.5", 
+    "1", 
+    "0.1"
+  ], 
+  "muon_iso_ptratiomax": [
+    "0.2", 
+    "0.15", 
+    "0.14"
+  ], 
+  "muon_iso_source": [
+    "t", 
+    "t", 
+    "c"
+  ], 
+  "muon_niso": 3, 
+  "photon_iso_absorrel": [
+    "r"
+  ], 
+  "photon_iso_dR": [
+    "0.2"
+  ], 
+  "photon_iso_ptmin": [
+    "0.1"
+  ], 
+  "photon_iso_ptratiomax": [
+    "0.2"
+  ], 
+  "photon_iso_source": [
+    "c"
+  ], 
+  "photon_niso": 1, 
+  "reference_data": {
+    "combined": {
+      "S95_exp": "194", 
+      "S95_exp_errm": "53", 
+      "S95_exp_errp": "73", 
+      "S95_obs": "273", 
+      "bkg": "1219", 
+      "bkg_err_stat": "31", 
+      "bkg_err_sys": "87", 
+      "obs": "1325"
+    }
+  }, 
   "short_info": "WW measurement with 2 leptons (7TeV)", 
-  "signal_regions": "['combined']"
+  "signal_regions": [
+    "combined"
+  ], 
+  "version": 2.0
 }

@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.63])
-AC_INIT(CheckMATE, 1.1.13, daschm@uni-bonn.de)
+AC_INIT(CheckMATE, 1.2.0, daschm@uni-bonn.de)
 AM_INIT_AUTOMAKE
 # Checks for programs.
 AC_PROG_CXX

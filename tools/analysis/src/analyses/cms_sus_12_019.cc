@@ -64,7 +64,6 @@ void Cms_sus_12_019::analyze() {
     return;
   countCutflowEvent("e_2lep_transition");
   
-  
   //If more than 2 leptons, only highest pair with highest pT selected
   if( (electronsSignal.size() + muonsSignal.size()) > 2){
     if ((electronsSignal.size() > 2) && (muonsSignal.size() == 0)) electronsSignal.erase(electronsSignal.begin()+2,electronsSignal.end());

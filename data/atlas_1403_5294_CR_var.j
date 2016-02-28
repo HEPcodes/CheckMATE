@@ -1,39 +1,119 @@
 {
-  "CURRLEVEL": "1", 
   "analysis": "atlas_1403_5294_CR", 
-  "author": "Krzysztof Rolbiecki", 
+  "author": "CheckMATE", 
+  "authoremail": "checkmate@projects.hepforge.org", 
   "cr": "n", 
-  "electron_iso_absorrel": "['r', 'r', 'r']", 
-  "electron_iso_dR": "['0.2', '0.3', '0.3']", 
-  "electron_iso_ptmin": "['0.1', '0.4', '0.1']", 
-  "electron_iso_ptratiomax": "['0.2', '0.16', '0.18']", 
-  "electron_iso_source": "['c', 't', 'c']", 
-  "electron_niso": "3", 
+  "electron_iso_absorrel": [
+    "r", 
+    "r", 
+    "r"
+  ], 
+  "electron_iso_dR": [
+    "0.2", 
+    "0.3", 
+    "0.3"
+  ], 
+  "electron_iso_ptmin": [
+    "0.1", 
+    "0.4", 
+    "0.1"
+  ], 
+  "electron_iso_ptratiomax": [
+    "0.2", 
+    "0.16", 
+    "0.18"
+  ], 
+  "electron_iso_source": [
+    "c", 
+    "t", 
+    "c"
+  ], 
+  "electron_niso": 3, 
+  "expectation_known": "y", 
   "experiment": "A", 
-  "files": "{'analysis_makefile': '/home/krolb/CheckMATE-1.1.3/tools/analysis/Makefile.am', 'analysis_header': {'atlas_1403_5294_CR': '/home/krolb/CheckMATE-1.1.3/tools/analysis/include/atlas_1403_5294_CR.h'}, 'analysis_template_source': '/home/krolb/CheckMATE-1.1.3/tools/analysis/src/template.cc.raw', 'list_of_analyses': '/home/krolb/CheckMATE-1.1.3/data/list_of_analyses.txt', 'analysis_template_header': '/home/krolb/CheckMATE-1.1.3/tools/analysis/include/template.h.raw', 'analysis_bin': '/home/krolb/CheckMATE-1.1.3/tools/analysis/doAnalysis', 'analysis_CR_source': {'atlas_1403_5294_CR': '/home/krolb/CheckMATE-1.1.3/tools/analysis/src/atlas_1403_5294_CR_CR.cc'}, 'analysis_source': {'atlas_1403_5294_CR': '/home/krolb/CheckMATE-1.1.3/tools/analysis/src/atlas_1403_5294_CR.cc'}, 'evaluation_reference': {'atlas_1403_5294_CR': '/home/krolb/CheckMATE-1.1.3/data/atlas_1403_5294_CR_ref.dat'}, 'delphes_config': {'atlas_1403_5294_CR': '/home/krolb/CheckMATE-1.1.3/tools/delphes/settings/atlas_1403_5294_CR.tcl'}, 'analysis_settings': {'atlas_1403_5294_CR': '/home/krolb/CheckMATE-1.1.3/data/atlas_1403_5294_CR_var.j'}, 'analysis_template_CR_source': '/home/krolb/CheckMATE-1.1.3/tools/analysis/src/template_CR.cc.raw', 'analysis_main': '/home/krolb/CheckMATE-1.1.3/tools/analysis/src/main.cc'}", 
-  "info_set": "['obs', 'bkg', 'bkg_err']", 
+  "info_set": [
+    "obs", 
+    "bkg", 
+    "bkg_err"
+  ], 
   "jets_btagging": "y", 
-  "jets_btagging_eff": "['80']", 
-  "jets_btagging_n": "1", 
+  "jets_btagging_eff": [
+    "80."
+  ], 
+  "jets_btagging_n": 1, 
   "jets_conedR": "0.4", 
-  "jets_ptmin": "15", 
+  "jets_ptmin": "15.", 
   "jets_second": "n", 
   "jets_tautagging": "n", 
-  "long_info": "['control regions for 1403.5294']", 
+  "long_info": [
+    "control regions for 1403.5294"
+  ], 
   "lumi": "20.3", 
-  "muon_iso_absorrel": "['r', 'r']", 
-  "muon_iso_dR": "['0.05', '0.3']", 
-  "muon_iso_ptmin": "['0.5', '0.4']", 
-  "muon_iso_ptratiomax": "['0.2', '0.16']", 
-  "muon_iso_source": "['t', 't']", 
-  "muon_niso": "2", 
-  "photon_iso_absorrel": "['r']", 
-  "photon_iso_dR": "['0.2']", 
-  "photon_iso_ptmin": "['0.1']", 
-  "photon_iso_ptratiomax": "['0.2']", 
-  "photon_iso_source": "['c']", 
-  "photon_niso": "1", 
-  "reference_data": "{'CRmT2_WW': {'bkg_err': '150', 'bkg': '947', 'obs': '1061'}, 'CRWWa_top': {'bkg_err': '23', 'bkg': '215', 'obs': '209'}, 'CRWWa_WW': {'bkg_err': '42', 'bkg': '385', 'obs': '472'}, 'CRmT2_top': {'bkg_err': '126', 'bkg': '789', 'obs': '804'}}", 
+  "muon_iso_absorrel": [
+    "r", 
+    "r"
+  ], 
+  "muon_iso_dR": [
+    "0.05", 
+    "0.3"
+  ], 
+  "muon_iso_ptmin": [
+    "0.5", 
+    "0.4"
+  ], 
+  "muon_iso_ptratiomax": [
+    "0.2", 
+    "0.16"
+  ], 
+  "muon_iso_source": [
+    "t", 
+    "t"
+  ], 
+  "muon_niso": 2, 
+  "photon_iso_absorrel": [
+    "r"
+  ], 
+  "photon_iso_dR": [
+    "0.2"
+  ], 
+  "photon_iso_ptmin": [
+    "0.1"
+  ], 
+  "photon_iso_ptratiomax": [
+    "0.2"
+  ], 
+  "photon_iso_source": [
+    "c"
+  ], 
+  "photon_niso": 1, 
+  "reference_data": {
+    "CRWWa_WW": {
+      "bkg": "385", 
+      "bkg_err": "42", 
+      "obs": "472"
+    }, 
+    "CRWWa_top": {
+      "bkg": "215", 
+      "bkg_err": "23", 
+      "obs": "209"
+    }, 
+    "CRmT2_WW": {
+      "bkg": "947", 
+      "bkg_err": "150", 
+      "obs": "1061"
+    }, 
+    "CRmT2_top": {
+      "bkg": "789", 
+      "bkg_err": "126", 
+      "obs": "804"
+    }
+  }, 
   "short_info": "control regions for 1403.5294", 
-  "signal_regions": "['CRmT2_top', 'CRWWa_top', 'CRmT2_WW', 'CRWWa_WW']"
+  "signal_regions": [
+    "CRmT2_top", 
+    "CRWWa_top", 
+    "CRmT2_WW", 
+    "CRWWa_WW"
+  ], 
+  "version": 2.0
 }

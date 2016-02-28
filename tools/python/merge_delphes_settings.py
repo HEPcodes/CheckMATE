@@ -78,7 +78,7 @@ def merge_settings(files, paths, flags):
     all_photon_isolation_lists[a] = list()
     for n in range(int(parameters[a]["photon_niso"])):
       # If this particular isolation has already been defined, use it, otherwise define new
-      isolation_set = (parameters[a]["experiment"], eval(parameters[a]["photon_iso_source"])[n], eval(parameters[a]["photon_iso_dR"])[n], eval(parameters[a]["photon_iso_ptmin"])[n], eval(parameters[a]["photon_iso_ptratiomax"])[n], eval(parameters[a]["photon_iso_absorrel"])[n])
+      isolation_set = (parameters[a]["experiment"], parameters[a]["photon_iso_source"][n], parameters[a]["photon_iso_dR"][n], parameters[a]["photon_iso_ptmin"][n], parameters[a]["photon_iso_ptratiomax"][n], parameters[a]["photon_iso_absorrel"][n])
       same_isolation_found = False
       for i in range(len(all_photon_isolation_sets)):
         if isolation_set == all_photon_isolation_sets[i]:
@@ -116,7 +116,7 @@ def merge_settings(files, paths, flags):
     all_electron_isolation_lists[a] = list()
     for n in range(int(parameters[a]["electron_niso"])):
       # If this particular isolation has already been defined, use it, otherwise define new
-      isolation_set = (parameters[a]["experiment"], eval(parameters[a]["electron_iso_source"])[n], eval(parameters[a]["electron_iso_dR"])[n], eval(parameters[a]["electron_iso_ptmin"])[n], eval(parameters[a]["electron_iso_ptratiomax"])[n], eval(parameters[a]["electron_iso_absorrel"])[n])
+      isolation_set = (parameters[a]["experiment"], parameters[a]["electron_iso_source"][n], parameters[a]["electron_iso_dR"][n], parameters[a]["electron_iso_ptmin"][n], parameters[a]["electron_iso_ptratiomax"][n], parameters[a]["electron_iso_absorrel"][n])
       same_isolation_found = False
       for i in range(len(all_electron_isolation_sets)):
         if isolation_set == all_electron_isolation_sets[i]:
@@ -154,7 +154,7 @@ def merge_settings(files, paths, flags):
     all_muon_isolation_lists[a] = list()
     for n in range(int(parameters[a]["muon_niso"])):
       # If this particular isolation has already been defined, use it, otherwise define new
-      isolation_set = (parameters[a]["experiment"], eval(parameters[a]["muon_iso_source"])[n], eval(parameters[a]["muon_iso_dR"])[n], eval(parameters[a]["muon_iso_ptmin"])[n], eval(parameters[a]["muon_iso_ptratiomax"])[n], eval(parameters[a]["muon_iso_absorrel"])[n])
+      isolation_set = (parameters[a]["experiment"], parameters[a]["muon_iso_source"][n], parameters[a]["muon_iso_dR"][n], parameters[a]["muon_iso_ptmin"][n], parameters[a]["muon_iso_ptratiomax"][n], parameters[a]["muon_iso_absorrel"][n])
       same_isolation_found = False
       for i in range(len(all_muon_isolation_sets)):
         if isolation_set == all_muon_isolation_sets[i]:
@@ -299,7 +299,7 @@ def merge_settings(files, paths, flags):
       jet_module_2 = all_secondary_fastjet_modules_per_analysis[a]
     
     if parameters[a]["jets_btagging"] == "y":
-      for b_eff in eval(parameters[a]["jets_btagging_eff"]):
+      for b_eff in parameters[a]["jets_btagging_eff"]:
         if ["b", b_eff, parameters[a]["experiment"]] not in tags_per_jet_module[jet_module]:
           tags_per_jet_module[jet_module].append(["b", b_eff, parameters[a]["experiment"]])
           
@@ -310,9 +310,10 @@ def merge_settings(files, paths, flags):
           if ["b", b_eff, parameters[a]["experiment"]] not in tags_per_jet_module[jet_module_2]:
             tags_per_jet_module[jet_module_2].append(["b", b_eff, parameters[a]["experiment"]])
           all_jet2_btagging_lists[a].append(tags_per_jet_module[jet_module_2].index(["b", b_eff, parameters[a]["experiment"]]))
-          
-        
-    
+  
+  # Do the taus separately to not mess up the counting of indices
+  for a in analyses:
+    jet_module = all_fastjet_modules_per_analysis[a]
     if parameters[a]["jets_tautagging"] == "y" and ["t", parameters[a]["experiment"]] not in tags_per_jet_module[jet_module]:
       tags_per_jet_module[jet_module].append(["t" , parameters[a]["experiment"]])
       

@@ -10,7 +10,6 @@ AnalysisBase::AnalysisBase(std::string inFile, std::string outFol, std::string o
     luminosity = 0;
     ignoreElectrons = ignoreElectrons_LooseIsolation = ignoreElectrons_MediumEfficiency = ignoreElectrons_TightEfficiency = ignoreMuons = ignoreMuons_LooseIsolation = ignoreMuons_CombinedPlusEfficiency = ignoreMuons_CombinedEfficiency = ignorePhotons = ignorePhotons_LooseIsolation = ignoreTracks  = ignoreTowers = false;
 
-
     // Reading the Delphes Tree
     chain = new TChain("Delphes");
     chain->Add(inFile.c_str());
@@ -45,7 +44,10 @@ AnalysisBase::~AnalysisBase() {
     delete chain;
     delete treeReader;  
     delete result;
-  
+    for (int i = 0; i < finalStateObjects.size(); i++)
+	delete finalStateObjects[i];
+    finalStateObjects.clear();
+
     for (int i = 0; i < fStreams.size(); i++) {
 	fStreams[i]->close();
 	delete fStreams[i];
@@ -230,21 +232,22 @@ void AnalysisBase::loopOverEvents() {
     }
 }               
 
-
-int AnalysisBase::bookFile(std::string name) {
+int AnalysisBase::bookFile(std::string name, bool noheader) {
     // Assemble absolute filename
     std::string filename = outputFolder+"/"+outputPrefix+"_"+name;
     // Open stream
     std::ofstream* file = new ofstream(filename.c_str());
     // Write standard information
-    *file << information << "\n";
-    *file << "@Inputfile:       " << inputFile << "\n";
-    *file << "@XSect:           " << xsect << " fb\n";
-    *file << "@ Error:          " << xsecterr << " fb\n";
-    *file << "@MCEvents:        " << nEvents << "\n";
-    *file << "@ SumOfWeights:   " << sumOfWeights << "\n";
-    *file << "@ SumOfWeights2:  " << sumOfWeights2 << "\n";
-    *file << "@ NormEvents:     " << normalize(sumOfWeights) << "\n\n";
+    if (!noheader) {
+      *file << information << "\n";
+      *file << "@Inputfile:       " << inputFile << "\n";
+      *file << "@XSect:           " << xsect << " fb\n";
+      *file << "@ Error:          " << xsecterr << " fb\n";
+      *file << "@MCEvents:        " << nEvents << "\n";
+      *file << "@ SumOfWeights:   " << sumOfWeights << "\n";
+      *file << "@ SumOfWeights2:  " << sumOfWeights2 << "\n";
+      *file << "@ NormEvents:     " << normalize(sumOfWeights) << "\n\n";
+    }
     fStreams.push_back(file);
     fNames.push_back(filename);
     // The returned number denotes the corresponding index for the fStreams vector

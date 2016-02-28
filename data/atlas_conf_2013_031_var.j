@@ -1,39 +1,112 @@
 {
-  "CURRLEVEL": "1", 
   "analysis": "atlas_conf_2013_031", 
-  "author": "Krzysztof Rolbiecki", 
+  "author": "CheckMATE", 
+  "authoremail": "checkmate@projects.hepforge.org", 
   "cr": "n", 
-  "electron_iso_absorrel": "['r', 'r', 'r']", 
-  "electron_iso_dR": "['0.2', '0.3', '0.3']", 
-  "electron_iso_ptmin": "['0.1', '0.4', '0.1']", 
-  "electron_iso_ptratiomax": "['0.2', '0.15', '0.15']", 
-  "electron_iso_source": "['c', 't', 'c']", 
-  "electron_niso": "3", 
+  "electron_iso_absorrel": [
+    "r", 
+    "r", 
+    "r"
+  ], 
+  "electron_iso_dR": [
+    "0.2", 
+    "0.3", 
+    "0.3"
+  ], 
+  "electron_iso_ptmin": [
+    "0.1", 
+    "0.4", 
+    "0.1"
+  ], 
+  "electron_iso_ptratiomax": [
+    "0.2", 
+    "0.15", 
+    "0.15"
+  ], 
+  "electron_iso_source": [
+    "c", 
+    "t", 
+    "c"
+  ], 
+  "electron_niso": 3, 
+  "expectation_known": "y", 
   "experiment": "A", 
-  "files": "{'analysis_makefile': '/home/krolb/CheckMATE-1.1.3/tools/analysis/Makefile.am', 'analysis_header': {'atlas_conf_2013_031': '/home/krolb/CheckMATE-1.1.3/tools/analysis/include/atlas_conf_2013_031.h'}, 'analysis_template_source': '/home/krolb/CheckMATE-1.1.3/tools/analysis/src/template.cc.raw', 'list_of_analyses': '/home/krolb/CheckMATE-1.1.3/data/list_of_analyses.txt', 'analysis_template_header': '/home/krolb/CheckMATE-1.1.3/tools/analysis/include/template.h.raw', 'analysis_bin': '/home/krolb/CheckMATE-1.1.3/tools/analysis/doAnalysis', 'analysis_CR_source': {'atlas_conf_2013_031': '/home/krolb/CheckMATE-1.1.3/tools/analysis/src/atlas_conf_2013_031_CR.cc'}, 'analysis_source': {'atlas_conf_2013_031': '/home/krolb/CheckMATE-1.1.3/tools/analysis/src/atlas_conf_2013_031.cc'}, 'evaluation_reference': {'atlas_conf_2013_031': '/home/krolb/CheckMATE-1.1.3/data/atlas_conf_2013_031_ref.dat'}, 'delphes_config': {'atlas_conf_2013_031': '/home/krolb/CheckMATE-1.1.3/tools/delphes/settings/atlas_conf_2013_031.tcl'}, 'analysis_settings': {'atlas_conf_2013_031': '/home/krolb/CheckMATE-1.1.3/data/atlas_conf_2013_031_var.j'}, 'analysis_template_CR_source': '/home/krolb/CheckMATE-1.1.3/tools/analysis/src/template_CR.cc.raw', 'analysis_main': '/home/krolb/CheckMATE-1.1.3/tools/analysis/src/main.cc'}", 
-  "info_set": "['obs', 'bkg', 'bkg_err']", 
+  "info_set": [
+    "obs", 
+    "bkg", 
+    "bkg_err"
+  ], 
   "jets_btagging": "y", 
-  "jets_btagging_eff": "['85']", 
-  "jets_btagging_n": "1", 
+  "jets_btagging_eff": [
+    "85."
+  ], 
+  "jets_btagging_n": 1, 
   "jets_conedR": "0.4", 
-  "jets_ptmin": "10", 
+  "jets_ptmin": "10.", 
   "jets_second": "n", 
   "jets_tautagging": "n", 
-  "long_info": "['Higgs spin, 8 TeV']", 
+  "long_info": [
+    "Higgs spin, 8 TeV"
+  ], 
   "lumi": "20.7", 
-  "muon_iso_absorrel": "['r', 'r', 'r']", 
-  "muon_iso_dR": "['0.05', '0.3', '0.3']", 
-  "muon_iso_ptmin": "['0.5', '0.4', '0.1']", 
-  "muon_iso_ptratiomax": "['0.2', '0.15', '0.15']", 
-  "muon_iso_source": "['t', 't', 'c']", 
-  "muon_niso": "3", 
-  "photon_iso_absorrel": "['r']", 
-  "photon_iso_dR": "['0.2']", 
-  "photon_iso_ptmin": "['0.1']", 
-  "photon_iso_ptratiomax": "['0.2']", 
-  "photon_iso_source": "['c']", 
-  "photon_niso": "1", 
-  "reference_data": "{'WWCR': {'bkg_err': '160', 'bkg': '3110', 'obs': '3297'}, 'Higgs': {'bkg_err': '180', 'bkg': '3450', 'obs': '3615'}}", 
+  "muon_iso_absorrel": [
+    "r", 
+    "r", 
+    "r"
+  ], 
+  "muon_iso_dR": [
+    "0.05", 
+    "0.3", 
+    "0.3"
+  ], 
+  "muon_iso_ptmin": [
+    "0.5", 
+    "0.4", 
+    "0.1"
+  ], 
+  "muon_iso_ptratiomax": [
+    "0.2", 
+    "0.15", 
+    "0.15"
+  ], 
+  "muon_iso_source": [
+    "t", 
+    "t", 
+    "c"
+  ], 
+  "muon_niso": 3, 
+  "photon_iso_absorrel": [
+    "r"
+  ], 
+  "photon_iso_dR": [
+    "0.2"
+  ], 
+  "photon_iso_ptmin": [
+    "0.1"
+  ], 
+  "photon_iso_ptratiomax": [
+    "0.2"
+  ], 
+  "photon_iso_source": [
+    "c"
+  ], 
+  "photon_niso": 1, 
+  "reference_data": {
+    "Higgs": {
+      "bkg": "3450", 
+      "bkg_err": "180", 
+      "obs": "3615"
+    }, 
+    "WWCR": {
+      "bkg": "3110", 
+      "bkg_err": "160", 
+      "obs": "3297"
+    }
+  }, 
   "short_info": "Higgs spin, 8 TeV", 
-  "signal_regions": "['Higgs', 'WWCR']"
+  "signal_regions": [
+    "Higgs", 
+    "WWCR"
+  ], 
+  "version": 2.0
 }

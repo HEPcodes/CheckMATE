@@ -5,8 +5,9 @@
 #include <stdio.h>
 #include <vector>
 
-#include "AnalysisBase.h"
+#include "Units.h"
 
+#include "atlas_1502_01518.h" 
 //@@extraheader@@
 #include "atlas_1210_2979.h" 
 #include "atlas_1308_2631.h" 
@@ -303,6 +304,11 @@ int main(int argc, char* argv[]) {
       Cms_sus_13_016 a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
       a.loopOverEvents();
     }
+
+        else if(analysis == "atlas_1502_01518") {
+            Atlas_1502_01518 a(inputFile, outputFolder, outputPrefix, xsect, xsecterr, branches, flags);
+            a.loopOverEvents();
+        }
 //@@extracode@@
 //      
     else {

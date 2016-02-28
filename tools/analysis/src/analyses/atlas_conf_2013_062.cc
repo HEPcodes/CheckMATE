@@ -674,7 +674,7 @@ void Atlas_conf_2013_062::analyze() {
     if(flagLep==1){
 	if(flagHardLepJ3 == true) countSignalEvent("HardMuonJ3Inclu");
 	if(flagHardLepJ3Ortho == true) countSignalEvent("HardMuonJ3Ortho");
-	if(flagHardLepJ5 == true) countSignalEvent("HardMuonJ3Inclu");
+	if(flagHardLepJ5 == true) countSignalEvent("HardMuonJ5Inclu");
 	if(flagHardLepJ5Ortho == true) countSignalEvent("HardMuonJ5Ortho");
 	if(flagHardLepJ6 == true)countSignalEvent("HardMuonJ6Inclu");
 	if(flagHardLepJ6Ortho == true)countSignalEvent("HardMuonJ6Ortho");

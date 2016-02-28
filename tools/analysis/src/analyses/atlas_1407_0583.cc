@@ -551,7 +551,7 @@ void Atlas_1407_0583::analyze() {
   else bCc_diag = false;
   
   if( (jetsNorm[2]->PT > 40) && ( (tN_diag == true) || (tN_med == true) || (tN_high == true) || (bCb_med2 == true) || (bCd_bulk == true) || (bCd_high1 == true) || (bCd_high2 == true))){
-    countCutflowEvent("tN_diag_"+lep[lepNormFlag]+"_02_jet3"); countCutflowEvent("tN_med_"+lep[lepNormFlag]+"_02_jet3"); countCutflowEvent("bCb_med2_"+lep[lepNormFlag]+"_02_jet3"); countCutflowEvent("bCd_bulk_"+lep[lepNormFlag]+"_02_jet3"); countCutflowEvent("bCd_high1_"+lep[lepNormFlag]+"_02_jet3"); countCutflowEvent("bCd_high2_"+lep[lepNormFlag]+"_02_jet3");
+    countCutflowEvent("tN_diag_"+lep[lepNormFlag]+"_02_jet3"); countCutflowEvent("tN_med_"+lep[lepNormFlag]+"_02_jet3"); countCutflowEvent("tN_high_"+lep[lepNormFlag]+"_02_jet3"); countCutflowEvent("bCb_med2_"+lep[lepNormFlag]+"_02_jet3"); countCutflowEvent("bCd_bulk_"+lep[lepNormFlag]+"_02_jet3"); countCutflowEvent("bCd_high1_"+lep[lepNormFlag]+"_02_jet3"); countCutflowEvent("bCd_high2_"+lep[lepNormFlag]+"_02_jet3");
   }
   else{
     tN_diag = false; tN_med = false; tN_high = false; bCb_med2 = false; bCd_bulk = false; bCd_high1 = false; bCd_high2 = false; 

@@ -1,6 +1,7 @@
 import hashlib
 import os
 import sys
+import json
 
 from organize_paths_and_files import *
 
@@ -51,20 +52,18 @@ def remove_extra_spaces(text):
   return text
 
 
-def get_analysis_info(analysis):
-    """Exits if analysis is nonexisting, otherwise it will return the corresponding information saved in the global info file"""
-    files = get_standard_files()
-    f = open(files['list_of_analyses'])
-    for line in f:
-        line = remove_extra_spaces(line)
-        # Split line into tokens; tokens[0] is name.
-        tokens = line.split("  ") 
-        if "CR" in analysis and tokens[0]+"_CR" == analysis and tokens[4] == "yes":             
-            return tokens[2].rstrip("\n")
-        if tokens[0] == analysis:
-            return tokens[2].rstrip("\n")
-    pr = AdvPrint()
-    pr.cerr_exit("Analysis '"+analysis+"' is unknown.");
+def read_analysis_parameters(analysis):    
+    """ Reads in the _var.j file of a given analysis and returns the parameters
+            as a dictionary """
+    files = get_analysis_files([analysis])    
+    if not os.path.isfile(files['analysis_settings'][analysis]):
+        pr = AdvPrint()
+        pr.cerr_exit("Analysis '"+analysis+"' is unknown.");
+        exit("ERROR: Parameters for " + str(analysis) + " do not seem to exist! Aborting.")
+    jfile = open(files['analysis_settings'][analysis], "rb")
+    parameters = json.loads(jfile.read())
+    jfile.close()
+    return parameters
     
 def md5_checksum(f):
     """Returns the md5 checksum of file f"""

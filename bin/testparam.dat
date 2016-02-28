@@ -9,9 +9,4 @@ Analyses: atlas_conf_2013_047
 [gluinogluino]
 XSect: 3.53*FB
 XSectErr: 1e-5*PB
-<<<<<<< .working
 Events: testfile.hep
-
-=======
-Events: testfile.hep
->>>>>>> .merge-right.r298

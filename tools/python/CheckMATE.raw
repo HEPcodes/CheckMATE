@@ -55,7 +55,7 @@ output.cout("")
 
 if len(events['raw']) != 0:
     output.cout("************************************")
-    output.cout("*******  DELPHES + ANALYSIS  *******")
+    output.cout("*******  DELPHES + ANALYSES  *******")
     output.cout("************************************")
 
     run_delphes_and_analyze(analyses, events, files, flags, output, paths)
