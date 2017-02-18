@@ -1,0 +1,3 @@
+[submodule "vendor/delphes"]
+	path = vendor/delphes
+	url = git://github.com/delphes/delphes.git

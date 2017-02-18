@@ -93,7 +93,7 @@ def qMu(n, nuTil_b):
     if lam_hat != 0 or lam_hat_hat != 0:
       exit("ERROR: In S95 calculation, profile likelihood asked for impossible maximisation parameteres!")
     # In that case, the result is only the likelihood w.r.t the nuisance parameters
-    result = -2.*(reduced_logp(nuTil_b, nu_hat_b) - reduced_logp(nuTil_b, nu_hat_b))
+    result = -2.*(reduced_logp(nuTil_b, nu_b_mu_hat) - reduced_logp(nuTil_b, nu_b_hat))
   else:
     # Otherwise, return the normal likelihood    
     result = -2.*(n*log(lam_hat/lam_hat_hat) - (lam_hat-lam_hat_hat) + reduced_logp(nuTil_b, nu_b_mu_hat) - reduced_logp(nuTil_b, nu_b_hat))

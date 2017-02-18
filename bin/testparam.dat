@@ -1,12 +1,8 @@
-## General Options
-[Mandatory Parameters]
+# This is a minimal working example
+[Parameters]
 Name: My_New_Run
-Analyses: atlas_1405_7875
 
-[Optional Parameters]
+[testprocess]
+XSect: 1 FB
+Events:  example_run_cards/auxiliary/testfile.hep
 
-## Process Information (Each new process 'X' must start with [X])
-[gluinogluino]
-XSect: 3.53*FB
-XSectErr: 1e-5*PB
-Events: testfile.hep

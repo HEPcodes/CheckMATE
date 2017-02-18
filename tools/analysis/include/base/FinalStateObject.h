@@ -37,6 +37,9 @@ class FinalStateObject {
         
     public:    
         static bool sortByPT(FinalStateObject *i, FinalStateObject *j);
+        inline bool operator==( const FinalStateObject& rhs){
+        	return this->PT == rhs.PT && this->Eta == rhs.Eta && this->Phi == rhs.Phi && this->Charge == rhs.Charge && this->Type == rhs.Type;
+        }
 };
 
 #endif

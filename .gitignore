@@ -1,15 +1,22 @@
 /Makefile
 /config.log
 /config.status
+/libtool
+/autom4te.cache
 /bin/CheckMATE
 
-/tools/analysis/cMSSM.slha
-/tools/analysis/doAnalysis
-/tools/python/calculate_cls.py
+/results
 
-/tools/analysis/**/.deps
+/tools/**/.deps
+/tools/**/.libs
 /tools/analysis/Makefile
-/tools/delphes/Delphes-*/Makefile
+/tools/analysis/lib/
+/tools/analysis/libanalyses.la
+/tools/fritz/Makefile
+/tools/fritz/bin
+/tools/fritz/fritz
+/tools/python/calculate_zsig.py
 *.pyc
 *.o
+*.lo
 .dirstamp

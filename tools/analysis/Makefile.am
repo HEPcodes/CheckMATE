@@ -1,72 +1,114 @@
 AUTOMAKE_OPTIONS = subdir-objects
 
-bin_PROGRAMS = doAnalysis
+AM_CXXFLAGS = @ROOTCFLAGS@ @DELPHESCFLAGS@ -Iinclude/base -Iinclude/kinematics -Iinclude/kinematics/mctlib \
+             -Iinclude/kinematics/mt2family -Iinclude/kinematics/topness -Iinclude/global \
+             -Iinclude/analyses/ATLAS_7TeV -Iinclude/analyses/ATLAS_8TeV -Iinclude/analyses/ATLAS_13TeV -Iinclude/analyses/ATLAS_14TeV_HighLumi \
+             -Iinclude/analyses/CMS_7TeV -Iinclude/analyses/CMS_8TeV -Iinclude/analyses/CMS_13TeV -Iinclude/analyses/CMS_14TeV_HighLumi
 
-doAnalysis_SOURCES = src/main.cc \
+# the library names to build
+mylibdir = $(abs_top_builddir)/tools/analysis/lib
+mylib_LTLIBRARIES = libanalyses.la
+libanalyses_la_SOURCES =	\
+             src/global/Global.cc src/include/Global.h \
              src/base/AnalysisBase.cc include/base/AnalysisBase.h \
              src/base/ETMiss.cc include/base/ETMiss.h \
              src/base/FinalStateObject.cc include/base/FinalStateObject.h \
              src/base/Units.cc include/base/Units.h \
-             src/kinematics/mt2_bisect.cc include/kinematics/mt2_bisect.h \
-             src/kinematics/mctlib.cc include/kinematics/mctlib.h \
-             src/kinematics/mt2bl_bisect.cc include/kinematics/mt2bl_bisect.h \
-             src/kinematics/mt2w_bisect.cc include/kinematics/mt2w_bisect.h
+             src/kinematics/mt2family/mt2_bisect.cc include/kinematics/mt2family/mt2_bisect.h \
+             src/kinematics/mctlib/mctlib.cc include/kinematics/mctlib/mctlib.h \
+             src/kinematics/mt2family/mt2bl_bisect.cc include/kinematics/mt2family/mt2bl_bisect.h \
+             src/kinematics/mt2family/mt2w_bisect.cc include/kinematics/mt2family/mt2w_bisect.h \
+             src/kinematics/topness/simplex.cc include/kinematics/topness/simplex.h \
+             src/kinematics/topness/Wrappertopness.cc include/kinematics/topness/Wrappertopness.h \
+             src/kinematics/topness/topness_struct.cc include/kinematics/topness/topness_struct.h
 
-doAnalysis_SOURCES += src/analyses/atlas_1210_2979.cc include/analyses/atlas_1210_2979.h \
-src/analyses/atlas_1308_1841.cc include/analyses/atlas_1308_1841.h \
-src/analyses/atlas_1308_2631_CR.cc src/analyses/atlas_1308_2631.cc include/analyses/atlas_1308_2631.h \
-src/analyses/atlas_1402_7029.cc include/analyses/atlas_1402_7029.h \
-src/analyses/atlas_1403_4853.cc include/analyses/atlas_1403_4853.h \
-src/analyses/atlas_1403_5222.cc include/analyses/atlas_1403_5222.h \
-src/analyses/atlas_1403_5294.cc src/analyses/atlas_1403_5294_CR.cc include/analyses/atlas_1403_5294.h \
-src/analyses/atlas_1404_2500.cc include/analyses/atlas_1404_2500.h \
-src/analyses/atlas_1405_7875.cc include/analyses/atlas_1405_7875.h \
-src/analyses/atlas_1407_0583.cc include/analyses/atlas_1407_0583.h \
-src/analyses/atlas_1407_0600.cc include/analyses/atlas_1407_0600.h \
-src/analyses/atlas_1407_0608.cc include/analyses/atlas_1407_0608.h \
-src/analyses/atlas_1411_1559.cc include/analyses/atlas_1411_1559.h \
-src/analyses/atlas_1502_01518.cc include/analyses/atlas_1502_01518.h \
-src/analyses/atlas_1503_03290.cc include/analyses/atlas_1503_03290.h \
-src/analyses/atlas_1506_08616.cc include/analyses/atlas_1506_08616.h \
-src/analyses/atlas_conf_2012_104_CR.cc src/analyses/atlas_conf_2012_104.cc include/analyses/atlas_conf_2012_104.h \
-src/analyses/atlas_conf_2012_147_CR.cc src/analyses/atlas_conf_2012_147.cc include/analyses/atlas_conf_2012_147.h \
-src/analyses/atlas_conf_2013_021.cc include/analyses/atlas_conf_2013_021.h \
-src/analyses/atlas_conf_2013_024_CR.cc src/analyses/atlas_conf_2013_024.cc include/analyses/atlas_conf_2013_024.h \
-src/analyses/atlas_conf_2013_031.cc include/analyses/atlas_conf_2013_031.h \
-src/analyses/atlas_conf_2013_035.cc include/analyses/atlas_conf_2013_035.h \
-src/analyses/atlas_conf_2013_036.cc include/analyses/atlas_conf_2013_036.h \
-src/analyses/atlas_conf_2013_037.cc include/analyses/atlas_conf_2013_037.h \
-src/analyses/atlas_conf_2013_047_CR.cc src/analyses/atlas_conf_2013_047.cc include/analyses/atlas_conf_2013_047.h \
-src/analyses/atlas_conf_2013_048.cc include/analyses/atlas_conf_2013_048.h \
-src/analyses/atlas_conf_2013_049_CR.cc src/analyses/atlas_conf_2013_049.cc include/analyses/atlas_conf_2013_049.h \
-src/analyses/atlas_conf_2014_056.cc include/analyses/atlas_conf_2014_056.h \
-src/analyses/atlas_conf_2013_061_CR.cc src/analyses/atlas_conf_2013_061.cc include/analyses/atlas_conf_2013_061.h \
-src/analyses/atlas_conf_2013_062.cc include/analyses/atlas_conf_2013_062.h \
-src/analyses/atlas_conf_2013_089_CR.cc src/analyses/atlas_conf_2013_089.cc include/analyses/atlas_conf_2013_089.h \
-src/analyses/atlas_conf_2014_014.cc include/analyses/atlas_conf_2014_014.h \
-src/analyses/atlas_conf_2014_033.cc include/analyses/atlas_conf_2014_033.h \
-src/analyses/atlas_conf_2015_004.cc include/analyses/atlas_conf_2015_004.h \
-src/analyses/cms_1301_4698_WW.cc include/analyses/cms_1301_4698_WW.h \
-src/analyses/cms_1303_2985_CR.cc src/analyses/cms_1303_2985.cc include/analyses/cms_1303_2985.h \
-src/analyses/cms_1306_1126_WW.cc include/analyses/cms_1306_1126_WW.h \
-src/analyses/cms_1405_7570.cc include/analyses/cms_1405_7570.h \
-src/analyses/cms_1408_3583.cc include/analyses/cms_1408_3583.h \
-src/analyses/cms_1502_06031.cc include/analyses/cms_1502_06031.h \
-src/analyses/cms_1504_03198.cc include/analyses/cms_1504_03198.h \
-src/analyses/cms_smp_12_006.cc include/analyses/cms_smp_12_006.h \
-src/analyses/cms_sus_12_019.cc include/analyses/cms_sus_12_019.h \
-src/analyses/cms_sus_13_016.cc include/analyses/cms_sus_13_016.h \
-src/analyses/atlas_phys_pub_2013_011.cc include/analyses/atlas_phys_pub_2013_011.h \
-src/analyses/atlas_phys_2014_010_sq_HL.cc include/analyses/atlas_phys_2014_010_sq_HL.h \
-src/analyses/atlas_phys_2014_010_300.cc include/analyses/atlas_phys_2014_010_300.h
+# ATLAS_7TeV
+libanalyses_la_SOURCES +=	\
+             include/analyses/ATLAS_7TeV/atlas_1210_2979.h src/analyses/ATLAS_7TeV/atlas_1210_2979.cc
+# ATLAS_8TeV
+libanalyses_la_SOURCES +=	\
+             include/analyses/ATLAS_8TeV/atlas_1308_1841.h src/analyses/ATLAS_8TeV/atlas_1308_1841.cc \
+             include/analyses/ATLAS_8TeV/atlas_1308_2631.h src/analyses/ATLAS_8TeV/atlas_1308_2631.cc src/analyses/ATLAS_8TeV/atlas_1308_2631_CR.cc \
+             include/analyses/ATLAS_8TeV/atlas_1402_7029.h src/analyses/ATLAS_8TeV/atlas_1402_7029.cc \
+             include/analyses/ATLAS_8TeV/atlas_1403_4853.h src/analyses/ATLAS_8TeV/atlas_1403_4853.cc \
+             include/analyses/ATLAS_8TeV/atlas_1403_5222.h src/analyses/ATLAS_8TeV/atlas_1403_5222.cc \
+             include/analyses/ATLAS_8TeV/atlas_1403_5294.h src/analyses/ATLAS_8TeV/atlas_1403_5294.cc src/analyses/ATLAS_8TeV/atlas_1403_5294_CR.cc \
+             include/analyses/ATLAS_8TeV/atlas_1404_2500.h src/analyses/ATLAS_8TeV/atlas_1404_2500.cc \
+             include/analyses/ATLAS_8TeV/atlas_1405_7875.h src/analyses/ATLAS_8TeV/atlas_1405_7875.cc \
+             include/analyses/ATLAS_8TeV/atlas_1407_0583.h src/analyses/ATLAS_8TeV/atlas_1407_0583.cc \
+             include/analyses/ATLAS_8TeV/atlas_1407_0600.h src/analyses/ATLAS_8TeV/atlas_1407_0600.cc \
+             include/analyses/ATLAS_8TeV/atlas_1407_0608.h src/analyses/ATLAS_8TeV/atlas_1407_0608.cc \
+             include/analyses/ATLAS_8TeV/atlas_1411_1559.h src/analyses/ATLAS_8TeV/atlas_1411_1559.cc \
+             include/analyses/ATLAS_8TeV/atlas_1501_07110.h src/analyses/ATLAS_8TeV/atlas_1501_07110.cc \
+             include/analyses/ATLAS_8TeV/atlas_1502_01518.h src/analyses/ATLAS_8TeV/atlas_1502_01518.cc \
+             include/analyses/ATLAS_8TeV/atlas_1503_03290.h src/analyses/ATLAS_8TeV/atlas_1503_03290.cc \
+             include/analyses/ATLAS_8TeV/atlas_1506_08616.h src/analyses/ATLAS_8TeV/atlas_1506_08616.cc \
+             include/analyses/ATLAS_8TeV/atlas_conf_2012_104.h src/analyses/ATLAS_8TeV/atlas_conf_2012_104.cc src/analyses/ATLAS_8TeV/atlas_conf_2012_104_CR.cc \
+             include/analyses/ATLAS_8TeV/atlas_conf_2012_147.h src/analyses/ATLAS_8TeV/atlas_conf_2012_147.cc src/analyses/ATLAS_8TeV/atlas_conf_2012_147_CR.cc \
+             include/analyses/ATLAS_8TeV/atlas_conf_2013_021.h src/analyses/ATLAS_8TeV/atlas_conf_2013_021.cc \
+             include/analyses/ATLAS_8TeV/atlas_conf_2013_024.h src/analyses/ATLAS_8TeV/atlas_conf_2013_024.cc src/analyses/ATLAS_8TeV/atlas_conf_2013_024_CR.cc \
+             include/analyses/ATLAS_8TeV/atlas_conf_2013_031.h src/analyses/ATLAS_8TeV/atlas_conf_2013_031.cc \
+             include/analyses/ATLAS_8TeV/atlas_conf_2013_035.h src/analyses/ATLAS_8TeV/atlas_conf_2013_035.cc \
+             include/analyses/ATLAS_8TeV/atlas_conf_2013_036.h src/analyses/ATLAS_8TeV/atlas_conf_2013_036.cc src/analyses/ATLAS_8TeV/atlas_conf_2013_036_CR.cc \
+             include/analyses/ATLAS_8TeV/atlas_conf_2013_037.h src/analyses/ATLAS_8TeV/atlas_conf_2013_037.cc \
+             include/analyses/ATLAS_8TeV/atlas_conf_2013_047.h src/analyses/ATLAS_8TeV/atlas_conf_2013_047.cc src/analyses/ATLAS_8TeV/atlas_conf_2013_047_CR.cc \
+             include/analyses/ATLAS_8TeV/atlas_conf_2013_048.h src/analyses/ATLAS_8TeV/atlas_conf_2013_048.cc \
+             include/analyses/ATLAS_8TeV/atlas_conf_2013_049.h src/analyses/ATLAS_8TeV/atlas_conf_2013_049.cc src/analyses/ATLAS_8TeV/atlas_conf_2013_049_CR.cc \
+             include/analyses/ATLAS_8TeV/atlas_conf_2013_061.h src/analyses/ATLAS_8TeV/atlas_conf_2013_061.cc src/analyses/ATLAS_8TeV/atlas_conf_2013_061_CR.cc \
+             include/analyses/ATLAS_8TeV/atlas_conf_2013_062.h src/analyses/ATLAS_8TeV/atlas_conf_2013_062.cc \
+             include/analyses/ATLAS_8TeV/atlas_conf_2013_089.h src/analyses/ATLAS_8TeV/atlas_conf_2013_089.cc src/analyses/ATLAS_8TeV/atlas_conf_2013_089_CR.cc \
+             include/analyses/ATLAS_8TeV/atlas_conf_2014_014.h src/analyses/ATLAS_8TeV/atlas_conf_2014_014.cc \
+             include/analyses/ATLAS_8TeV/atlas_conf_2014_033.h src/analyses/ATLAS_8TeV/atlas_conf_2014_033.cc \
+             include/analyses/ATLAS_8TeV/atlas_conf_2014_056.h src/analyses/ATLAS_8TeV/atlas_conf_2014_056.cc \
+             include/analyses/ATLAS_8TeV/atlas_conf_2015_004.h src/analyses/ATLAS_8TeV/atlas_conf_2015_004.cc
+# ATLAS_13TeV
+libanalyses_la_SOURCES +=	\
+             include/analyses/ATLAS_13TeV/atlas_1602_09058.h src/analyses/ATLAS_13TeV/atlas_1602_09058.cc \
+             include/analyses/ATLAS_13TeV/atlas_1604_07773.h src/analyses/ATLAS_13TeV/atlas_1604_07773.cc \
+             include/analyses/ATLAS_13TeV/atlas_1604_01306.h src/analyses/ATLAS_13TeV/atlas_1604_01306.cc \
+             include/analyses/ATLAS_13TeV/atlas_1605_03814.h src/analyses/ATLAS_13TeV/atlas_1605_03814.cc \
+             include/analyses/ATLAS_13TeV/atlas_1605_04285.h src/analyses/ATLAS_13TeV/atlas_1605_04285.cc \
+             include/analyses/ATLAS_13TeV/atlas_1605_09318.h src/analyses/ATLAS_13TeV/atlas_1605_09318.cc \
+             include/analyses/ATLAS_13TeV/atlas_1606_03903.h src/analyses/ATLAS_13TeV/atlas_1606_03903.cc \
+             include/analyses/ATLAS_13TeV/atlas_conf_2015_082.h src/analyses/ATLAS_13TeV/atlas_conf_2015_082.cc \
+             include/analyses/ATLAS_13TeV/atlas_conf_2016_013.h src/analyses/ATLAS_13TeV/atlas_conf_2016_013.cc \
+             include/analyses/ATLAS_13TeV/atlas_conf_2016_050.h src/analyses/ATLAS_13TeV/atlas_conf_2016_050.cc \
+             include/analyses/ATLAS_13TeV/atlas_conf_2016_076.h src/analyses/ATLAS_13TeV/atlas_conf_2016_076.cc 
+# ATLAS_14TeV_HighLumi
+libanalyses_la_SOURCES +=	\
+             include/analyses/ATLAS_14TeV_HighLumi/atl_phys_pub_2014_010_sbottom.h src/analyses/ATLAS_14TeV_HighLumi/atl_phys_pub_2014_010_sbottom.cc \
+             include/analyses/ATLAS_14TeV_HighLumi/atlas_2014_010_hl_3l.h src/analyses/ATLAS_14TeV_HighLumi/atlas_2014_010_hl_3l.cc \
+             include/analyses/ATLAS_14TeV_HighLumi/atlas_phys_2014_010_300.h src/analyses/ATLAS_14TeV_HighLumi/atlas_phys_2014_010_300.cc \
+             include/analyses/ATLAS_14TeV_HighLumi/atlas_phys_2014_010_sq_hl.h src/analyses/ATLAS_14TeV_HighLumi/atlas_phys_2014_010_sq_hl.cc \
+             include/analyses/ATLAS_14TeV_HighLumi/atlas_phys_pub_2013_011.h src/analyses/ATLAS_14TeV_HighLumi/atlas_phys_pub_2013_011.cc \
+             include/analyses/ATLAS_14TeV_HighLumi/dilepton_hl.h src/analyses/ATLAS_14TeV_HighLumi/dilepton_hl.cc
+# CMS_7TeV
+libanalyses_la_SOURCES +=	\
+             include/analyses/CMS_7TeV/cms_1306_1126_WW.h src/analyses/CMS_7TeV/cms_1306_1126_WW.cc
+# CMS_8TeV
+libanalyses_la_SOURCES +=	\
+             include/analyses/CMS_8TeV/cms_1301_4698_WW.h src/analyses/CMS_8TeV/cms_1301_4698_WW.cc \
+             include/analyses/CMS_8TeV/cms_1303_2985.h src/analyses/CMS_8TeV/cms_1303_2985.cc src/analyses/CMS_8TeV/cms_1303_2985_CR.cc \
+             include/analyses/CMS_8TeV/cms_1405_7570.h src/analyses/CMS_8TeV/cms_1405_7570.cc \
+             include/analyses/CMS_8TeV/cms_1408_3583.h src/analyses/CMS_8TeV/cms_1408_3583.cc \
+             include/analyses/CMS_8TeV/cms_1502_06031.h src/analyses/CMS_8TeV/cms_1502_06031.cc \
+             include/analyses/CMS_8TeV/cms_1504_03198.h src/analyses/CMS_8TeV/cms_1504_03198.cc \
+             include/analyses/CMS_8TeV/cms_smp_12_006.h src/analyses/CMS_8TeV/cms_smp_12_006.cc \
+             include/analyses/CMS_8TeV/cms_sus_12_019.h src/analyses/CMS_8TeV/cms_sus_12_019.cc \
+             include/analyses/CMS_8TeV/cms_sus_13_016.h src/analyses/CMS_8TeV/cms_sus_13_016.cc
+# CMS_13TeV
+libanalyses_la_SOURCES +=	\
+             include/analyses/CMS_13TeV/cms_pas_sus_15_011.h src/analyses/CMS_13TeV/cms_pas_sus_15_011.cc
+# CMS_14TeV_HighLumi
+libanalyses_la_SOURCES +=
 
+#@@extraanalysis@@
 
-#commented by liang at 10/6/2015
-#doAnalysis_CXXFLAGS =  @ROOTCFLAGS@ -Iinclude/base -Iinclude/kinematics -Iinclude/analyses -I$(abs_top_builddir)/tools/delphes/Delphes-3.0.10X
-#codes by liang at 10/6/2015
-doAnalysis_CXXFLAGS =  @ROOTCFLAGS@ -Iinclude/base -Iinclude/kinematics -Iinclude/analyses -I$(abs_top_builddir)/tools/delphes/Delphes-3.0.10X -I$(abs_top_builddir)/tools/delphes/Delphes-3.0.10X/external
+libanalyses_la_LDFLAGS = -avoid-version -shared
+#-module 
+libanalyses_la_LIBADD =  -L@ROOTLIBDIR@ @ROOTGLIBS@ @ROOTLIBS@ -L@DELPHESLIBDIR@ @DELPHESLIBS@
+	
 
-doAnalysis_LDADD =  -L@ROOTLIBDIR@ @ROOTGLIBS@ @ROOTLIBS@ -L$(abs_top_builddir)/tools/delphes/Delphes-3.0.10X -lEG -lDelphes
+ROOTSYS = @ROOTSYSTEM@:
+LD_RUN_PATH = @ROOTLIBDIR@:@DELPHESLIBDIR@
 
-LD_RUN_PATH = @ROOTLIBDIR@:$(abs_top_builddir)/tools/delphes/Delphes-3.0.10X
-ROOTSYS = @ROOTSYSTEM@

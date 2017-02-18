@@ -1,12 +1,12 @@
-#ifndef _@@ANALYSIS@@
-#define _@@ANALYSIS@@
+#ifndef @@ANALYSIS@@_H_
+#define @@ANALYSIS@@_H_
 // AUTHOR: @@author@@
 //  EMAIL: @@authoremail@@
 #include "AnalysisBase.h"
 
 class @@Analysis@@ : public AnalysisBase {
   public:
-    @@Analysis@@(std::string inFile, std::string outFol, std::string outPre, double xs, double xserr,  std::map<std::string, std::string> branches, std::map<std::string, std::vector<int> > flags) : AnalysisBase(inFile, outFol, outPre, xs, xserr, branches, flags)  {}               
+    @@Analysis@@() : AnalysisBase()  {}               
     ~@@Analysis@@() {}
   
     void initialize();
@@ -16,17 +16,4 @@ class @@Analysis@@ : public AnalysisBase {
   private:
 };
 
-@@BEGINCR@@
-class @@Analysis@@_CR : public AnalysisBase {
-  public:
-    @@Analysis@@_CR(std::string inFile, std::string outFol, std::string outPre, double xs, double xserr, std::map<std::string, std::string> branches, std::map<std::string, std::vector<int> > flags) : AnalysisBase(inFile, outFol, outPre, xs, xserr, branches, flags)  {}               
-    ~@@Analysis@@_CR() {}
-    
-    void initialize();
-    void analyze();        
-    void finalize();
-
-  private:
-};
-@@ENDCR@@
 #endif

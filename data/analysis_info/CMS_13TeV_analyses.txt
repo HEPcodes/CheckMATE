@@ -1,0 +1,2 @@
+#Name                          NSR  Description                                                      Lumi    CR?  
+cms_pas_sus_15_011             47   CMS, 13 TeV, 2 leptons + jets + MET                              2.2     no   

@@ -25,6 +25,12 @@ class ETMiss {
     *  by adding a vector with random magnitude Gauss(m=20 GeV, s = 1 GeV)
     *  [chosen empirically] and uniformly random direction.
     */
+    ETMiss(ETMiss* x) {
+        PT = x->PT;
+        Eta = x->Eta;
+        Phi = x->Phi;
+        content = x->content;
+    }
     ETMiss(MissingET* met) {
         double missingET_ET = met->MET;
         double missingET_Phi = met->Phi;

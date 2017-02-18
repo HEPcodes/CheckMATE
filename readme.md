@@ -16,3 +16,20 @@
     - CLs prescription
     - mT2 family
     - mCT family
+
+### Compile
+
+```
+git submodule init
+git submodule update
+
+cd vendor/delphes
+./configure
+make
+cd ../..
+
+./configure --with-delphes=`pwd`/vendor/delphes
+make
+```
+
+Note: on macos, you may want to execute `install_name_tool -add_rpath $ROOTSYS/lib tools/fritz/bin/fritz` to avoid "dyld: Library not loaded: @rpath/libGui.so" errors.

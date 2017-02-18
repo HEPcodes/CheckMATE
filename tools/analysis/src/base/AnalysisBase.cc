@@ -1,57 +1,94 @@
 #include "AnalysisBase.h"
 
-AnalysisBase::AnalysisBase(std::string inFile, std::string outFol, std::string outPre, double xs, double xserr, std::map<std::string, std::string> branches, std::map<std::string, std::vector<int> > flags) {
-    // Setting internal parameters
-    outputFolder = outFol;
-    outputPrefix = outPre;
-    inputFile = inFile;
-    xsect = xs;
-    xsecterr = xserr;    
+AnalysisBase::AnalysisBase() {
+    outputFolder = "";
+    outputPrefix = "";
+    analysis = "";
+    information = "";
+    nEvents = 0;
+    sumOfWeights = 0;
+    sumOfWeights2 = 0;
+    xsect = 0;
+    xsecterr = 0;
     luminosity = 0;
-    ignoreElectrons = ignoreElectrons_LooseIsolation = ignoreElectrons_MediumEfficiency = ignoreElectrons_TightEfficiency = ignoreMuons = ignoreMuons_LooseIsolation = ignoreMuons_CombinedPlusEfficiency = ignoreMuons_CombinedEfficiency = ignorePhotons = ignorePhotons_LooseIsolation = ignoreTracks  = ignoreTowers = false;
-
-    // Reading the Delphes Tree
-    chain = new TChain("Delphes");
-    chain->Add(inFile.c_str());
-    treeReader = new ExRootTreeReader(chain);
-    result = new ExRootResult();  
-    branchEvent = treeReader->UseBranch(branches["Event"].c_str());
-    branchTrack = treeReader->UseBranch(branches["Track"].c_str());
-    branchTower = treeReader->UseBranch(branches["Tower"].c_str());
-    branchJet = treeReader->UseBranch(branches["Jet"].c_str());
-    branchJet2 = treeReader->UseBranch(branches["Jet2"].c_str());
-    branchElectron = treeReader->UseBranch(branches["Electron"].c_str());
-    branchPhoton = treeReader->UseBranch(branches["Photon"].c_str());
-    branchMuon = treeReader->UseBranch(branches["Muon"].c_str());
-    branchMissingET = treeReader->UseBranch(branches["MissingET"].c_str());
-  
-    // Saving which flagvalues correspond to this analysis (given by CheckMATE)
-    electronIsolationFlags = flags["electron_isolation"];
-    muonIsolationFlags = flags["muon_isolation"];
-    photonIsolationFlags = flags["photon_isolation"];
-    jetBTagFlags = flags["jet_btags"];
-    jet2BTagFlags = flags["jet2_btags"];
-   
-    // Setting the random number generator
-    if (!flags["randomseed"].empty())
-       srand(flags["randomseed"][0]);
-    else      
-       srand(time(0));    
+    weight = 0;
+    missingET = NULL;
+    result = NULL;
 }
 
 AnalysisBase::~AnalysisBase() {
-    // Free all pointers
-    delete chain;
-    delete treeReader;  
-    delete result;
-    for (int i = 0; i < finalStateObjects.size(); i++)
-	delete finalStateObjects[i];
-    finalStateObjects.clear();
-
     for (int i = 0; i < fStreams.size(); i++) {
-	fStreams[i]->close();
-	delete fStreams[i];
+        fStreams[i]->close();
+        delete fStreams[i];
     }
+}
+
+
+void AnalysisBase::setup(std::map<std::string, std::vector<int> > whichTagsIn, std::map<std::string, std::string> eventParameters) {
+    // parameters MUST include
+    // - outdir, prefix
+    std::map<std::string, std::string>::iterator searchIterator;
+
+    searchIterator = eventParameters.find("outputFolder");
+    if(searchIterator != eventParameters.end())
+        outputFolder = searchIterator->second;
+    else
+        Global::abort("AnalysisHandler", "Tried to setup analysis without a proper output folder!");
+
+    searchIterator = eventParameters.find("outputPrefix");
+    if(searchIterator != eventParameters.end())
+        outputPrefix = searchIterator->second;
+    else
+        Global::abort("AnalysisHandler", "Tried to setup analysis without a proper output prefix!");
+
+    // CAN include xsect and xsecterr (can also be given at the end of run during finish()
+    searchIterator = eventParameters.find("xsect");
+    if(searchIterator != eventParameters.end())
+        xsect = Global::strToDouble(searchIterator->second);
+
+    searchIterator = eventParameters.find("xsectErr");
+    if(searchIterator != eventParameters.end())
+        xsecterr = Global::strToDouble(searchIterator->second);
+
+    whichTags = whichTagsIn;
+    initialize(); // specified by derived analysis classes
+}
+
+void AnalysisBase::processEvent(int iEvent) {
+    sumOfWeights += weight;
+    sumOfWeights2 += weight*weight;
+    nEvents++;
+    analyze(); // specified by derived analysis classes
+    
+    // deletes pointers created by final state objects
+    for (int i = 0; i < finalStateObjects.size(); i++)
+      delete finalStateObjects[i];
+    finalStateObjects.clear(); 
+}
+
+void AnalysisBase::finish() {
+    finalize(); // specified by derived analysis classes
+    if(!cutflowRegions.empty()) {
+      int cutflowOutput = bookFile(analysis+"_cutflow.dat");
+      *fStreams[cutflowOutput] << "Cut  Sum_W  Sum_W2  Acc  N_Norm\n";
+      for(std::map<std::string, double>::iterator cutflow_iter=cutflowRegions.begin(); cutflow_iter!=cutflowRegions.end(); ++cutflow_iter)
+        *fStreams[cutflowOutput] << cutflow_iter->first << "  " << cutflow_iter->second << "  " << cutflowRegions2[cutflow_iter->first] << "  " << cutflow_iter->second/sumOfWeights << "  " << normalize(cutflow_iter->second) << "\n";
+    }
+    if(!signalRegions.empty()) {
+      int signalOutput = bookFile(analysis+"_signal.dat");
+      *fStreams[signalOutput] << "SR  Sum_W  Sum_W2  Acc  N_Norm\n";
+      for(std::map<std::string, double>::iterator signal_iter=signalRegions.begin(); signal_iter!=signalRegions.end(); ++signal_iter)
+        *fStreams[signalOutput] << signal_iter->first << "  " << signal_iter->second << "  " << signalRegions2[signal_iter->first] << "  " << signal_iter->second/sumOfWeights << "  " << normalize(signal_iter->second) << "\n";
+    }
+    if(!controlRegions.empty()) {
+      int controlOutput = bookFile(analysis+"_control.dat");
+      *fStreams[controlOutput] << "CR  Sum_W  Sum_W2  Acc  N_Norm\n";
+      for(std::map<std::string, double>::iterator control_iter=controlRegions.begin(); control_iter!=controlRegions.end(); ++control_iter)
+        *fStreams[controlOutput] << control_iter->first << "  " << control_iter->second << "  " << controlRegions2[control_iter->first] << "  " << control_iter->second/sumOfWeights << "  " << normalize(control_iter->second) << "\n";
+    }
+
+    for (int i = 0; i < fStreams.size(); i++)
+        fStreams[i]->close();
 }
 
 void AnalysisBase::bookSignalRegions(std::string listOfRegions) {
@@ -87,6 +124,7 @@ void AnalysisBase::bookControlRegions(std::string listOfRegions) {
   if(currKey != "")
       controlRegions[currKey] = controlRegions2[currKey] = 0.0;
 }
+
 void AnalysisBase::bookCutflowRegions(std::string listOfRegions) {
   std::string currKey = "";
   // Sum letter by letter and define map-key as soon as ; is reached
@@ -104,134 +142,6 @@ void AnalysisBase::bookCutflowRegions(std::string listOfRegions) {
       cutflowRegions[currKey] = cutflowRegions2[currKey] = 0.0;
 }
     
-    
-void AnalysisBase::loopOverEvents() {
-    // These const vectors are needed for efficiency/isolation filters
-    std::vector<int> looseIsolationFlags;
-    looseIsolationFlags.push_back(0);
-    std::vector<int> mediumEfficiencyFlags;
-    mediumEfficiencyFlags.push_back(0);
-    std::vector<int> tightEfficiencyFlags;
-    tightEfficiencyFlags.push_back(1);
-  
-    initialize();
-    sumOfWeights = 0;            
-    nEvents = treeReader->GetEntries();
-    double missingET_ET = 0, missingET_Phi = 0, missingET_Ex = 0, missingET_Ey = 0;
-    for(Int_t entry = 0; entry < nEvents; ++entry) {
-	treeReader->ReadEntry(entry);
-	weight = ((LHEFEvent*)branchEvent->At(0))->Weight;
-        // If the events do not have any weights / the wrong weight branch is used, Delphes will save NAN in the corresponding branch
-	if (weight != weight) {
-	    weight = ((HepMCEvent*)branchEvent->At(0))->Weight;
-   	    if (weight != weight) 
-	       weight=1.;
-	}
-
-
-	sumOfWeights += weight;
-	sumOfWeights2 += weight*weight;
-    
-	if(!ignoreElectrons) {
-	    electrons.clear();
-	    if(branchElectron) {
-		for(int i = 0; i < branchElectron->GetEntries(); i++)
-		    electrons.push_back((Electron*)branchElectron->At(i));
-	    }
-	    // All electrons need to fulfill minimum isolation criteria 
-	    // (Note that this flag is not accessible by the user from within the analyses!)
-	    if(!ignoreElectrons_LooseIsolation) {
-		electronsLoose = filterFlags(electrons, "isolation", looseIsolationFlags);    
-		if(!ignoreElectrons_MediumEfficiency) {
-		    electronsMedium = filterFlags(electronsLoose, "efficiency", mediumEfficiencyFlags);
-		    if(!ignoreElectrons_TightEfficiency)
-			electronsTight = filterFlags(electronsMedium, "efficiency", tightEfficiencyFlags);
-		}
-	    }
-	}
-    
-	if(!ignoreMuons) {
-	    muons.clear();
-	    if(branchMuon) {
-		for(int i = 0; i < branchMuon->GetEntries(); i++) 
-		    muons.push_back((Muon*)branchMuon->At(i));
-	    }
-	    // All muons need to fulfill minimum isolation criteria
-	    if(!ignoreMuons_LooseIsolation) {
-		muons = filterFlags(muons, "isolation", looseIsolationFlags);
-    
-		if(!ignoreMuons_CombinedPlusEfficiency) {
-		    muonsCombinedPlus = filterFlags(muons, "efficiency", mediumEfficiencyFlags);
-		    if(!ignoreMuons_CombinedEfficiency) 
-			muonsCombined = filterFlags(muonsCombinedPlus, "efficiency", tightEfficiencyFlags);
-		}
-	    }
-	}
-
-	jets.clear();
-	for(int i = 0; i < branchJet->GetEntries(); i++) 
-	    jets.push_back((Jet*)branchJet->At(i));
-    
-	jets2.clear();
-	if(branchJet2) {
-	    for(int i = 0; i < branchJet2->GetEntries(); i++) 
-		jets2.push_back((Jet*)branchJet2->At(i));
-	}
-    
-	if(!ignorePhotons) {
-	    photons.clear();
-	    if(branchPhoton) {
-		for(int i = 0; i < branchPhoton->GetEntries(); i++) 
-		    photons.push_back((Photon*)branchPhoton->At(i));
-	    }
-	    // All photons need to fulfill minimum isolation criteria
-	    if(!ignorePhotons_LooseIsolation)
-		photons = filterFlags(photons, "isolation", looseIsolationFlags);
-	}
-
-	if(!ignoreTracks) {
-	    tracks.clear();
-	    if(branchTrack) {
-		for(int i = 0; i < branchTrack->GetEntries(); i++) 
-		    tracks.push_back((Track*)branchTrack->At(i));
-	    }
-	}
-
-	if(!ignoreTowers) {
-	    towers.clear();
-	    if(branchTower) {
-		for(int i = 0; i < branchTower->GetEntries(); i++) 
-		    towers.push_back((Tower*)branchTower->At(i));
-	    }
-	}
-    
-	missingET = new ETMiss((MissingET*)branchMissingET->At(0));
-    
-	analyze();
-    }
-    finalize();
-    
-    // Save results of signal-, control- and/or cutflow-regions in specific files
-    if(!cutflowRegions.empty()) {        
-      int cutflowOutput = bookFile(analysis+"_cutflow.dat");      
-      *fStreams[cutflowOutput] << "Cut  Sum_W  Sum_W2  Acc  N_Norm\n";
-      for(std::map<std::string, double>::iterator cutflow_iter=cutflowRegions.begin(); cutflow_iter!=cutflowRegions.end(); ++cutflow_iter)
-        *fStreams[cutflowOutput] << cutflow_iter->first << "  " << cutflow_iter->second << "  " << cutflowRegions2[cutflow_iter->first] << "  " << cutflow_iter->second/sumOfWeights << "  " << normalize(cutflow_iter->second) << "\n";
-    }
-    if(!signalRegions.empty()) {        
-      int signalOutput = bookFile(analysis+"_signal.dat");
-      *fStreams[signalOutput] << "SR  Sum_W  Sum_W2  Acc  N_Norm\n";
-      for(std::map<std::string, double>::iterator signal_iter=signalRegions.begin(); signal_iter!=signalRegions.end(); ++signal_iter)
-        *fStreams[signalOutput] << signal_iter->first << "  " << signal_iter->second << "  " << signalRegions2[signal_iter->first] << "  " << signal_iter->second/sumOfWeights << "  " << normalize(signal_iter->second) << "\n";
-    }
-    if(!controlRegions.empty()) {        
-      int controlOutput = bookFile(analysis+"_control.dat");
-      *fStreams[controlOutput] << "CR  Sum_W  Sum_W2  Acc  N_Norm\n";
-      for(std::map<std::string, double>::iterator control_iter=controlRegions.begin(); control_iter!=controlRegions.end(); ++control_iter)
-        *fStreams[controlOutput] << control_iter->first << "  " << control_iter->second << "  " << controlRegions2[control_iter->first] << "  " << control_iter->second/sumOfWeights << "  " << normalize(control_iter->second) << "\n";
-    }
-}               
-
 int AnalysisBase::bookFile(std::string name, bool noheader) {
     // Assemble absolute filename
     std::string filename = outputFolder+"/"+outputPrefix+"_"+name;
@@ -239,8 +149,9 @@ int AnalysisBase::bookFile(std::string name, bool noheader) {
     std::ofstream* file = new ofstream(filename.c_str());
     // Write standard information
     if (!noheader) {
+      //FIXME Most of it is not known at the beginning!
       *file << information << "\n";
-      *file << "@Inputfile:       " << inputFile << "\n";
+      *file << "@Inputfile:       " << "\n"; //FIXME what to put here?
       *file << "@XSect:           " << xsect << " fb\n";
       *file << "@ Error:          " << xsecterr << " fb\n";
       *file << "@MCEvents:        " << nEvents << "\n";
@@ -254,75 +165,104 @@ int AnalysisBase::bookFile(std::string name, bool noheader) {
     return fStreams.size()-1;
 }
 
+std::vector<Photon*> AnalysisBase::filterIsolation(std::vector<Photon*> unfiltered, int relative_tag) {
+    if(relative_tag < 0)
+        Global::abort("AnalysisHandler", "You cannot ask for a photon isolation tag with index smaller than 0! ("+analysis+")");
+    std::vector<int> analysisSpecificFlags = whichTags["PhotonIsolation"];
+    if (relative_tag+2 > analysisSpecificFlags.size())
+        Global::abort("AnalysisHandler", "You cannot ask for a photon isolation tag with index larger than "+Global::intToStr((int)analysisSpecificFlags.size()-2)+" in "+analysis);
+    std::vector<Photon*> isolatedPhotons;
+    for (int p = 0; p < unfiltered.size(); p++) {
+        if (photonIsolationTags[unfiltered[p]][analysisSpecificFlags[relative_tag+1]]) // note that the 0th condition is reserved for the internal superloose condition
+            isolatedPhotons.push_back(unfiltered[p]);
+    }
+    return isolatedPhotons;
+}
+
+std::vector<Photon*> AnalysisBase::filterIsolation(std::vector<Photon*> unfiltered, std::vector<int> relative_tags) {
+    std::vector<Photon*> isolatedPhotons = unfiltered;
+    // run filterIsolation on all reltags in the vector
+    for(int t = 0; t < relative_tags.size(); t++)
+        isolatedPhotons = filterIsolation(isolatedPhotons, relative_tags[t]);
+    // If no flags are given then all should be checked
+    if (relative_tags.size() == 0) {
+        for(int reltag = 0; reltag+2 <= whichTags["PhotonIsolation"].size(); reltag++)
+            isolatedPhotons = filterIsolation(isolatedPhotons, reltag);
+    }
+    return isolatedPhotons;
+}
+
+std::vector<Muon*> AnalysisBase::filterIsolation(std::vector<Muon*> unfiltered, int relative_tag) {
+    if(relative_tag < 0)
+        Global::abort("AnalysisHandler", "You cannot ask for a muon isolation tag with index than 0! ("+analysis+")");
+    std::vector<int> analysisSpecificFlags = whichTags["MuonIsolation"];
+    if (relative_tag+2 > analysisSpecificFlags.size())
+        Global::abort("AnalysisHandler", "You cannot ask for a muon isolation tag with index larger than "+Global::intToStr((int)analysisSpecificFlags.size()-2)+" in "+analysis);
+    std::vector<Muon*> isolatedMuons;
+    for (int p = 0; p < unfiltered.size(); p++) {
+        if (muonIsolationTags[unfiltered[p]][analysisSpecificFlags[relative_tag+1]]) // note that the 0th condition is reserved for the internal superloose condition
+            isolatedMuons.push_back(unfiltered[p]);
+    }
+    return isolatedMuons;
+}
+
+std::vector<Muon*> AnalysisBase::filterIsolation(std::vector<Muon*> unfiltered, std::vector<int> relative_tags) {
+    std::vector<Muon*> isolatedMuons = unfiltered;
+    // run filterIsolation on all reltags in the vector
+    for(int t = 0; t < relative_tags.size(); t++)
+        isolatedMuons = filterIsolation(isolatedMuons, relative_tags[t]);
+    // If no flags are given then all should be checked
+    if (relative_tags.size() == 0) {
+        for(int reltag = 0; reltag+2 <= whichTags["MuonIsolation"].size(); reltag++)
+            isolatedMuons = filterIsolation(isolatedMuons, reltag);
+    }
+    return isolatedMuons;
+}
+
+std::vector<Electron*> AnalysisBase::filterIsolation(std::vector<Electron*> unfiltered, int relative_tag) {
+    if(relative_tag < 0)
+        Global::abort("AnalysisHandler", "You cannot ask for an electron isolation tag with index smaller than 0! ("+analysis+")");
+    std::vector<int> analysisSpecificFlags = whichTags["ElectronIsolation"];
+    if (relative_tag+2 > analysisSpecificFlags.size())
+        Global::abort("AnalysisHandler", "You cannot ask for an electron isolation tag with index larger than "+Global::intToStr((int)analysisSpecificFlags.size()-2)+" in "+analysis);
+    std::vector<Electron*> isolatedElectrons;
+    for (int p = 0; p < unfiltered.size(); p++) {
+        if (electronIsolationTags[unfiltered[p]][analysisSpecificFlags[relative_tag+1]]) // note that the 0th condition is reserved for the internal superloose condition
+            isolatedElectrons.push_back(unfiltered[p]);
+    }
+    return isolatedElectrons;
+}
+
+std::vector<Electron*> AnalysisBase::filterIsolation(std::vector<Electron*> unfiltered, std::vector<int> relative_tags) {
+    std::vector<Electron*> isolatedElectrons = unfiltered;
+    // run filterIsolation on all reltags in the vector
+    for(int t = 0; t < relative_tags.size(); t++)
+        isolatedElectrons = filterIsolation(isolatedElectrons, relative_tags[t]);
+    // If no flags are given then all should be checked
+    if (relative_tags.size() == 0) {
+        for(int reltag = 0; reltag+2 <= whichTags["ElectronIsolation"].size(); reltag++)
+            isolatedElectrons = filterIsolation(isolatedElectrons, reltag);
+    }
+    return isolatedElectrons;
+}
 
 bool AnalysisBase::checkTauTag(Jet* candidate, std::string efficiency) {
-    if ((efficiency == "loose") && (candidate->TauFlags >= 1))
+    if (efficiency == "loose" && jetTauTags[candidate][0])
         return true;
-    else if ((efficiency == "medium") && (candidate->TauFlags >= 2))
+    else if (efficiency == "medium" && jetTauTags[candidate][1])
         return true;
-    else if ((efficiency == "tight") && (candidate->TauFlags == 3))
+    else if (efficiency == "tight" && jetTauTags[candidate][2])
         return true;
     return false;
 }
 
-
-bool AnalysisBase::checkBTag(Jet* candidate, int relative_flag, std::string option) {
-    // First, decode the member's isoflag into a vector of valid flags    
-    int absolute_flag = 0;
-    if(option == "secondJet") {
-        if (relative_flag >= jet2BTagFlags.size()) {
-            std::cerr << "Error: There is no second jet b tag " << relative_flag << std::endl;
-            std::cerr << "Exiting... "<< std::endl;
-            exit(1);
-        }      
-        absolute_flag = jet2BTagFlags[relative_flag];
-    }
-    else {
-        if (relative_flag >= jetBTagFlags.size()) {
-            std::cerr << "Error: There is no b tag " << relative_flag << std::endl;
-            std::cerr << "Exiting... "<< std::endl;
-            exit(1);
-        }      
-        absolute_flag = jetBTagFlags[relative_flag];
-    }      
- 
-    int code = candidate->BFlags;
-    std::vector<int> candidate_flags = code_to_flags(code);
-    // Return bool whether the flag is in the candidate's flags
-    bool result = (std::find(candidate_flags.begin(), candidate_flags.end(), absolute_flag) != candidate_flags.end());
-    return result;
-}
- 
-void AnalysisBase::ignore(std::string ignore_what) {
-    if(ignore_what == "electrons")
-        ignoreElectrons = true;
-    else if(ignore_what == "electrons_looseIsolation")
-        ignoreElectrons_LooseIsolation = true;
-    else if(ignore_what == "electronsMedium")
-        ignoreElectrons_MediumEfficiency = true;
-    else if(ignore_what == "electronsTight")
-        ignoreElectrons_TightEfficiency = true;
-    else if(ignore_what == "muons")
-        ignoreMuons = true;
-    else if(ignore_what == "muons_looseIsolation")
-        ignoreMuons_LooseIsolation = true;
-    else if(ignore_what == "muonsCombinedPlus")
-        ignoreMuons_CombinedPlusEfficiency = true;
-    else if(ignore_what == "muonsCombined")
-        ignoreMuons_CombinedEfficiency = true;
-    else if(ignore_what == "photons")
-        ignorePhotons = true;
-    else if(ignore_what == "photons_looseIsolation")
-        ignorePhotons_LooseIsolation = true;
-    else if(ignore_what == "tracks")
-        ignoreTracks = true;
-    else if(ignore_what == "towers")
-        ignoreTowers = true;
-    else {
-        std::cerr << "Cannot ignore " << ignore_what << std::endl;
-        std::cerr << "Exiting." << std::endl;
-        exit(1);
-    }
+bool AnalysisBase::checkBTag(Jet* candidate, int relative_tag) {
+    if(relative_tag < 0)
+        Global::abort("AnalysisHandler", "You cannot ask for a btag with index smaller than 0! ("+analysis+")");
+    std::vector<int> analysisSpecificFlags = whichTags["BJetTagging"];
+    if (relative_tag+1 > analysisSpecificFlags.size())
+        Global::abort("AnalysisHandler", "You cannot ask for a btag with index larger than "+Global::intToStr((int)analysisSpecificFlags.size()-1)+" in "+analysis);
+    return (jetBTags.find(candidate)->second)[analysisSpecificFlags[relative_tag]];
 }
 
 double AnalysisBase::mT(const TLorentzVector & vis, const TLorentzVector & invis, const double m_invis) {
@@ -531,5 +471,138 @@ std::vector<double> AnalysisBase::razor(const std::vector<TLorentzVector> & fina
     razor.push_back(R);
    
     return razor;
+}
+
+bool AnalysisBase::sortByPT(const FinalStateObject *lhs, const FinalStateObject *rhs) {
+     return lhs->PT > rhs->PT;
+}
+
+double AnalysisBase::topness(const TLorentzVector & pl_in, const TLorentzVector & pb1_in, const TLorentzVector & pb2_in, const TLorentzVector & invis, const double & sigmat, const double & sigmaW, const double & sigmas){
+  
+    double pl[4] = {pl_in.Px(), pl_in.Py(), pl_in.Pz(), pl_in.E()};      // plx, ply, plz, El     (visible lepton)
+    double pb1[4] = {pb1_in.Px(), pb1_in.Py(), pb1_in.Pz(), pb1_in.E() };  // pb1x, pb1y, pb1z, Eb1  (bottom on the same side as the visible lepton)
+    double pb2[4] = {pb2_in.Px(), pb2_in.Py(), pb2_in.Pz(), pb2_in.E()};
+    double MET[4] = {invis.Px(), invis.Py(), 0.0, 0.0 };
+  
+    double xbest[4];
+    double topness = log(topnesscompute(pb1, pb2, pl, MET, sigmat, sigmaW, sigmas, xbest));      
+    
+    return topness;
+}
+
+std::vector<double> AnalysisBase::superRazor(TLorentzVector l0, TLorentzVector l1, const TLorentzVector & met) {
+  
+    // ==========================================================================
+    // Variable Name in ATLAS-CONF-2016-076    <=> Mapping to the variables below
+    // ==========================================================================
+    // R_{PT}                                  <=> pT_CM/(pT_CM+SHATR/4)
+    // 1/gamma_{R+1}                           <=> 1/gamma_R 
+    // M_{#Deta}^{R}                           <=> MDELTAR
+    // #delta#phi_{#beta}^{R}                  <=> dphi_LL_vBETA_T
+    //
+    //      Authors:
+    //            Alaettin Serhan Mete, alaettin.serhan.mete@cern.ch;
+    //            Tommaso Lari, Tommaso.Lari@mi.infn.it; 
+    //            Federico Meloni, federico.meloni@cern.ch; 
+    //            Iacopo Vivarelli, iacopo.vivarelli@cern.ch; 
+    //            Daniel Antrim, daniel.joseph.antrim@cern.ch;
+    //
+    //      Thanks to Matthew R. Buckley, mbuckley@physics.rutgers.edu
+    //
+    // Details given in paper (http://arxiv.org/abs/1310.4827) written by
+    // Matthew R. Buckley, Joseph D. Lykken, Christopher Rogan, Maria Spiropulu
+
+    //auxiliary variables
+    TVector3 vBETA_z;
+    TVector3 pT_CM;
+    TVector3 vBETA_T_CMtoR;
+    TVector3 vBETA_R;
+    double SHATR;
+    double dphi_LL_vBETA_T;
+    double dphi_L1_L2;
+    double gamma_R;
+    double dphi_vBETA_R_vBETA_T;
+    double MDELTAR;
+    double costhetaRp1;
+
+    //
+    // Lab frame
+    //
+    //Longitudinal boost
+    vBETA_z = (1. / (l0.E() + l1.E()))*(l0 + l1).Vect();
+    vBETA_z.SetX(0.0);
+    vBETA_z.SetY(0.0);
+
+    l0.Boost(-vBETA_z);
+    l1.Boost(-vBETA_z);
+
+    //pT of CM frame
+    pT_CM = (l0 + l1).Vect() + met.Vect();
+    pT_CM.SetZ(0.0);
+
+    TLorentzVector ll = l0 + l1;
+    //invariant mass of the total event
+    SHATR = sqrt(2.*(ll.E()*ll.E() - ll.Vect().Dot(pT_CM)
+             + ll.E()*sqrt(ll.E()*ll.E() + pT_CM.Mag2() - 2.*ll.Vect().Dot(pT_CM))));
+
+    vBETA_T_CMtoR = (1. / sqrt(pT_CM.Mag2() + SHATR*SHATR))*pT_CM;
+
+    l0.Boost(-vBETA_T_CMtoR);
+    l1.Boost(-vBETA_T_CMtoR);
+    ll.Boost(-vBETA_T_CMtoR);
+
+    //
+    //R-frame
+    //
+    dphi_LL_vBETA_T = fabs((ll.Vect()).DeltaPhi(vBETA_T_CMtoR));
+
+    dphi_L1_L2 = fabs(l0.Vect().DeltaPhi(l1.Vect()));
+
+    vBETA_R = (1. / (l0.E() + l1.E()))*(l0.Vect() - l1.Vect());
+
+    gamma_R = 1. / sqrt(1. - vBETA_R.Mag2());
+
+    dphi_vBETA_R_vBETA_T = fabs(vBETA_R.DeltaPhi(vBETA_T_CMtoR));
+
+    l0.Boost(-vBETA_R);
+    l1.Boost(vBETA_R);
+
+    //
+    //R+1 frame
+    //
+    MDELTAR = 2.*l0.E();
+    costhetaRp1 = l0.Vect().Dot(vBETA_R) / (l0.Vect().Mag()*vBETA_R.Mag());
+
+    double R_p_T = pT_CM.Mag()/(pT_CM.Mag()+SHATR/4.);
+    double inv_r = 1./gamma_R;
+    double dphi = dphi_LL_vBETA_T;
+
+    std::vector<double> srazor;
+    srazor.push_back(R_p_T);
+    srazor.push_back(inv_r);
+    srazor.push_back(dphi);
+    srazor.push_back(MDELTAR);
+
+    return srazor;
+}
+
+double AnalysisBase::aplanarity(const std::vector<Jet*> input_jets) {
+  
+  TMatrixD MomentumMatrix(3,3);
+  double PAbs=0.;
+  for (int i = 0; i < jets.size(); i++) PAbs+=jets[i]->P4().Vect().Mag2();
+
+  for (int i=0;i<3;i++) {
+    for(int j=0;j<3;j++) {
+      double PSum = 0.;
+      for(int k=0;k<jets.size();k++) PSum+=jets[k]->P4().Vect()[i]*jets[k]->P4().Vect()[j]/PAbs;
+      MomentumMatrix[i][j] = PSum;
+    }
+  }
+  
+  TMatrixDEigen Eval(MomentumMatrix);
+  TVectorD Eigenval = Eval.GetEigenValuesRe();
+  return 1.5*Eigenval.Min();
+  
 }
 

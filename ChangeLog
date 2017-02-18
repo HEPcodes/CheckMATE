@@ -1,28 +1,11 @@
 CheckMATE - Changelog
 
-Ver 1.2.2
+Ver 2.0.0
 ---------
 
-2015-12-29   Jamie Tattersall <tattersall@physik.rwth-aachen.de>
+2016-12-01   Daniel Dercks <daniel.dercks@desy.de>
 
-    ~ Bugfix for 'bCb_med2' signal region of atlas_1407_0583, missing m_bb and mT cuts (thanks to Krzysztof Rolbiecki).
-
-2015-12-02   Jamie Tattersall <tattersall@physik.rwth-aachen.de>
-
-    ~ Added 'mT2_w' variable (code courtesy of Yang Bai, Hsin-Chia Cheng, Jason Gallicchio, Jiayin Gu)
-
-2015-11-18   Jamie Tattersall <tattersall@physik.rwth-aachen.de>
-
-    ~ Bugfix in AnalysisManager when total error is not provided by user  (thanks to Liangliang Shang)
-
-2015-11-02   Jamie Tattersall <tattersall@physik.rwth-aachen.de>
-
-    ~ Various bugfixes for atlas_1407_0583 (thanks to Liangliang Shang)
-
-2015-10-11   Jamie Tattersall <tattersall@physik.rwth-aachen.de>
-
-    ~ Added atlas_1506_08616 (thanks to Krzysztof Rolbiecki)
-    ~ Added atlas_1403_5222 (thanks to Krzysztof Rolbiecki)
+    ~ Uploaded Version 2.0.0 with many things changed, fixed and updated
 
 
 Ver 1.2.1
@@ -34,7 +17,11 @@ Ver 1.2.1
 
 2015-09-07   Jamie Tattersall <tattersall@physik.rwth-aachen.de>
 
-    ~ Fixed bug in calorimeter.cc
+    ~ Corrected bug in missingET_rel calculation (thanks to Liangliang Shang)
+
+2015-07-30   Jamie Tattersall <tattersall@physik.rwth-aachen.de>
+
+    ~ Added Gravitinos as MET (thanks to Oscar Vives)
 
 2015-07-03   Jamie Tattersall <tattersall@thphys.uni-heidelberg.de>
 
@@ -71,9 +58,6 @@ Ver 1.2.0
 2015-03-17   Jamie Tattersall <tattersall@thphys.uni-heidelberg.de>
 
     ~ New compiling instructions for new analyses
-
-2015-03-04   Daniel Schmeier <daschm@th.physik.uni-bonn.de>
-    ~ Alpha version contains all current beta analyses but only validated ones can be used in CheckMATE
 
 2015-02-26   Jamie Tattersall <tattersall@thphys.uni-heidelberg.de>
 
@@ -141,21 +125,21 @@ Ver 1.1.14
 2014-12-03   Jamie Tattersall <tattersall@thphys.uni-heidelberg.de>
 
     ~ Fixed bugs in signal regions for atlas_1407_0583 (bcd_bulk and threeBody)
-	
+    
 2014-11-25   Daniel Schmeier < daschm@th.physik.uni-bonn.de>
     ~ Fixed bug in analysis which caused, under circumstanced, that wrong btags are
-	used from the Delphes tree.
+    used from the Delphes tree.
     ~ log_analysis.txt now always contains the internal parameters the analysis executable
-	was called with.
-	
-	
-	
+    was called with.
+    
+    
+    
 Ver 1.1.13
 ---------
 
 2014-11-10   Daniel Schmeier < daschm@th.physik.uni-bonn.de>
     ~ Updated atlas_1402_7029 with 1tau and 2tau signal regions
-	
+    
 2014-10-28   Daniel Schmeier <daschm@th.physik.uni-bonn.de>
 
     ~ Fixed bug in tauid module as soon as the signal contains more than 2 taus.
@@ -190,7 +174,7 @@ Ver 1.1.10
 2014-09-09   Jamie Tattersall <tattersall@thphys.uni-heidelberg.de>
 
     ~ cms_sus_13_016 added and validated
-	~ atlas_1308_2631 validated
+    ~ atlas_1308_2631 validated
 
 
 
@@ -199,13 +183,12 @@ Ver 1.1.9
 
 2014-09-09   Daniel Schmeier <daschm@th.physik.uni-bonn.de>
 
-        ~ Author + Email is now asked for in the analysis manager and printed into the analyses
-	~ Spaces in run name are replaced by underscores to prevent problems with filenames
-	~ Errors during the delphes analysis chain are properly caught and lead to a well defined error message
-	~ Giving units in lowercase does not produce problems anymore
+    ~ Author + Email is now asked for in the analysis manager and printed into the analyses
+    ~ Spaces in run name are replaced by underscores to prevent problems with filenames
+    ~ Errors during the delphes analysis chain are properly caught and lead to a well defined error message
+    ~ Giving units in lowercase does not produce problems anymore
 
-	
-
+    
 Ver 1.1.8
 ---------
 
@@ -219,7 +202,7 @@ Ver 1.1.8
 
 
 Ver 1.1.7
------------
+---------
 
 2014-07-11   Jamie Tattersall <tattersall@thphys.uni-heidelberg.de>
 
@@ -259,10 +242,10 @@ Ver 1.1.5
 2014-04-09   Jamie Tattersall <tattersall@thphys.uni-heidelberg.de>
 
         ~ Added mctlib JHEP 0804:034,2008 (arXiv:0802.2879 [hep-ph]). 
-	  The algorithm is described in detail in arXiv:0910.0174 [hep-ph].
-	  No current analyses use this variable (tba)
-	~ Added mt2bl_bisect (arXiv:1203.4813 [hep-ph])
-	  No current analyses use this variable (tba)
+      The algorithm is described in detail in arXiv:0910.0174 [hep-ph].
+      No current analyses use this variable (tba)
+    ~ Added mt2bl_bisect (arXiv:1203.4813 [hep-ph])
+      No current analyses use this variable (tba)
 
 Ver 1.1.4 
 ---------

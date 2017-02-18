@@ -58,7 +58,7 @@ EOF
 esac
 
 # A tabulation character.
-tab='	'
+tab='    '
 # A newline character.
 nl='
 '
@@ -369,11 +369,11 @@ hp2)
     sed -e "s,^.*\.[a-z]*:,$object:," "$tmpdepfile" > "$depfile"
     # Add 'dependent.h:' lines.
     sed -ne '2,${
-	       s/^ *//
-	       s/ \\*$//
-	       s/$/:/
-	       p
-	     }' "$tmpdepfile" >> "$depfile"
+           s/^ *//
+           s/ \\*$//
+           s/$/:/
+           p
+         }' "$tmpdepfile" >> "$depfile"
   else
     echo "#dummy" > "$depfile"
   fi
@@ -657,15 +657,15 @@ msvisualcpp)
       shift
       ;;
     "-Gm"|"/Gm"|"-Gi"|"/Gi"|"-ZI"|"/ZI")
-	set fnord "$@"
-	shift
-	shift
-	;;
+    set fnord "$@"
+    shift
+    shift
+    ;;
     *)
-	set fnord "$@" "$arg"
-	shift
-	shift
-	;;
+    set fnord "$@" "$arg"
+    shift
+    shift
+    ;;
     esac
   done
   "$@" -E 2>/dev/null |

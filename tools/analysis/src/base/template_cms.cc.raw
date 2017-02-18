@@ -10,7 +10,7 @@ void @@Analysis@@::initialize() {
   ignore("towers"); // These won't read tower or track information from the
   ignore("tracks"); //  Delphes output branches to save computing time.
   bookSignalRegions("@@signalregions@@");
-  // You can also book cutflow regions with bookCutFlowRegions("CR1;CR2;..."). Note that the regions are
+  // You can also book cutflow regions with bookCutflowRegions("CR1;CR2;..."). Note that the regions are
   //  always ordered alphabetically in the cutflow output files.
 
   // You should initialize any declared variables here
