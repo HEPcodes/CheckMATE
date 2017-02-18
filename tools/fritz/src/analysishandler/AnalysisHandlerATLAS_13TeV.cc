@@ -56,8 +56,16 @@ void AnalysisHandlerATLAS_13TeV::bookAnalysis(std::string analysisName,
         a = new Atlas_conf_2016_013();
     else if(analysisName == "atlas_conf_2016_050")
         a = new Atlas_conf_2016_050();
+    else if(analysisName == "atlas_conf_2016_054")
+        a = new Atlas_conf_2016_054();
     else if(analysisName == "atlas_conf_2016_076")
         a = new Atlas_conf_2016_076();
+    else if(analysisName == "atlas_conf_2016_078")
+        a = new Atlas_conf_2016_078();
+    else if(analysisName == "atlas_conf_2016_096")
+        a = new Atlas_conf_2016_096();
+    else if(analysisName == "atlas_conf_2016_078")
+        a = new Atlas_conf_2016_078();
     else //@@extracode@@
         Global::abort(name,
                       "Cannot load analysis "+analysisName+

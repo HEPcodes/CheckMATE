@@ -122,7 +122,10 @@ am_libanalyses_la_OBJECTS = src/global/Global.lo \
 	src/analyses/ATLAS_13TeV/atlas_conf_2015_082.lo \
 	src/analyses/ATLAS_13TeV/atlas_conf_2016_013.lo \
 	src/analyses/ATLAS_13TeV/atlas_conf_2016_050.lo \
+	src/analyses/ATLAS_13TeV/atlas_conf_2016_054.lo \
 	src/analyses/ATLAS_13TeV/atlas_conf_2016_076.lo \
+	src/analyses/ATLAS_13TeV/atlas_conf_2016_078.lo \
+	src/analyses/ATLAS_13TeV/atlas_conf_2016_096.lo \
 	src/analyses/ATLAS_14TeV_HighLumi/atl_phys_pub_2014_010_sbottom.lo \
 	src/analyses/ATLAS_14TeV_HighLumi/atlas_2014_010_hl_3l.lo \
 	src/analyses/ATLAS_14TeV_HighLumi/atlas_phys_2014_010_300.lo \
@@ -467,8 +470,14 @@ libanalyses_la_SOURCES = src/global/Global.cc src/include/Global.h \
 	src/analyses/ATLAS_13TeV/atlas_conf_2016_013.cc \
 	include/analyses/ATLAS_13TeV/atlas_conf_2016_050.h \
 	src/analyses/ATLAS_13TeV/atlas_conf_2016_050.cc \
+	include/analyses/ATLAS_13TeV/atlas_conf_2016_054.h \
+	src/analyses/ATLAS_13TeV/atlas_conf_2016_054.cc \
 	include/analyses/ATLAS_13TeV/atlas_conf_2016_076.h \
 	src/analyses/ATLAS_13TeV/atlas_conf_2016_076.cc \
+	include/analyses/ATLAS_13TeV/atlas_conf_2016_078.h \
+	src/analyses/ATLAS_13TeV/atlas_conf_2016_078.cc \
+	include/analyses/ATLAS_13TeV/atlas_conf_2016_076.h \
+	src/analyses/ATLAS_13TeV/atlas_conf_2016_096.cc \
 	include/analyses/ATLAS_14TeV_HighLumi/atl_phys_pub_2014_010_sbottom.h \
 	src/analyses/ATLAS_14TeV_HighLumi/atl_phys_pub_2014_010_sbottom.cc \
 	include/analyses/ATLAS_14TeV_HighLumi/atlas_2014_010_hl_3l.h \
@@ -813,7 +822,16 @@ src/analyses/ATLAS_13TeV/atlas_conf_2016_013.lo:  \
 src/analyses/ATLAS_13TeV/atlas_conf_2016_050.lo:  \
 	src/analyses/ATLAS_13TeV/$(am__dirstamp) \
 	src/analyses/ATLAS_13TeV/$(DEPDIR)/$(am__dirstamp)
+src/analyses/ATLAS_13TeV/atlas_conf_2016_054.lo:  \
+	src/analyses/ATLAS_13TeV/$(am__dirstamp) \
+	src/analyses/ATLAS_13TeV/$(DEPDIR)/$(am__dirstamp)
 src/analyses/ATLAS_13TeV/atlas_conf_2016_076.lo:  \
+	src/analyses/ATLAS_13TeV/$(am__dirstamp) \
+	src/analyses/ATLAS_13TeV/$(DEPDIR)/$(am__dirstamp)
+src/analyses/ATLAS_13TeV/atlas_conf_2016_078.lo:  \
+	src/analyses/ATLAS_13TeV/$(am__dirstamp) \
+	src/analyses/ATLAS_13TeV/$(DEPDIR)/$(am__dirstamp)
+src/analyses/ATLAS_13TeV/atlas_conf_2016_096.lo:  \
 	src/analyses/ATLAS_13TeV/$(am__dirstamp) \
 	src/analyses/ATLAS_13TeV/$(DEPDIR)/$(am__dirstamp)
 src/analyses/ATLAS_14TeV_HighLumi/$(am__dirstamp):
@@ -919,8 +937,14 @@ mostlyclean-compile:
 	-rm -f src/analyses/ATLAS_13TeV/atlas_conf_2016_013.lo
 	-rm -f src/analyses/ATLAS_13TeV/atlas_conf_2016_050.$(OBJEXT)
 	-rm -f src/analyses/ATLAS_13TeV/atlas_conf_2016_050.lo
+	-rm -f src/analyses/ATLAS_13TeV/atlas_conf_2016_054.$(OBJEXT)
+	-rm -f src/analyses/ATLAS_13TeV/atlas_conf_2016_054.lo
 	-rm -f src/analyses/ATLAS_13TeV/atlas_conf_2016_076.$(OBJEXT)
 	-rm -f src/analyses/ATLAS_13TeV/atlas_conf_2016_076.lo
+	-rm -f src/analyses/ATLAS_13TeV/atlas_conf_2016_078.$(OBJEXT)
+	-rm -f src/analyses/ATLAS_13TeV/atlas_conf_2016_078.lo
+	-rm -f src/analyses/ATLAS_13TeV/atlas_conf_2016_096.$(OBJEXT)
+	-rm -f src/analyses/ATLAS_13TeV/atlas_conf_2016_096.lo
 	-rm -f src/analyses/ATLAS_14TeV_HighLumi/atl_phys_pub_2014_010_sbottom.$(OBJEXT)
 	-rm -f src/analyses/ATLAS_14TeV_HighLumi/atl_phys_pub_2014_010_sbottom.lo
 	-rm -f src/analyses/ATLAS_14TeV_HighLumi/atlas_2014_010_hl_3l.$(OBJEXT)
@@ -1085,7 +1109,10 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/analyses/ATLAS_13TeV/$(DEPDIR)/atlas_conf_2015_082.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/analyses/ATLAS_13TeV/$(DEPDIR)/atlas_conf_2016_013.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/analyses/ATLAS_13TeV/$(DEPDIR)/atlas_conf_2016_050.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/analyses/ATLAS_13TeV/$(DEPDIR)/atlas_conf_2016_054.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/analyses/ATLAS_13TeV/$(DEPDIR)/atlas_conf_2016_076.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/analyses/ATLAS_13TeV/$(DEPDIR)/atlas_conf_2016_078.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/analyses/ATLAS_13TeV/$(DEPDIR)/atlas_conf_2016_096.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/analyses/ATLAS_14TeV_HighLumi/$(DEPDIR)/atl_phys_pub_2014_010_sbottom.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/analyses/ATLAS_14TeV_HighLumi/$(DEPDIR)/atlas_2014_010_hl_3l.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/analyses/ATLAS_14TeV_HighLumi/$(DEPDIR)/atlas_phys_2014_010_300.Plo@am__quote@

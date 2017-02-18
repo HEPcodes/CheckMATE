@@ -214,9 +214,19 @@ module Calorimeter Calorimeter {
   set TowerOutputArray towers
   set PhotonOutputArray photons
 
-  set EFlowTrackOutputArray eflowTracks
-  set EFlowTowerOutputArray eflowTowers
 
+    set EFlowTrackOutputArray eflowTracks
+    set EFlowPhotonOutputArray eflowPhotons
+    set EFlowNeutralHadronOutputArray eflowNeutralHadrons
+
+    set ECalEnergyMin 0.5
+    set HCalEnergyMin 1.0
+
+    set ECalEnergySignificanceMin 1.0
+    set HCalEnergySignificanceMin 1.0
+
+    set SmearTowerCenter true
+    
   #set EFlowPhotonOutputArray eflowPhotons
   #set EFlowNeutralHadronOutputArray eflowNeutralHadrons
 
@@ -271,7 +281,8 @@ module Calorimeter Calorimeter {
 module Merger EFlowMerger {
 # add InputArray InputArray
   add InputArray Calorimeter/eflowTracks
-  add InputArray Calorimeter/eflowTowers
+  add InputArray Calorimeter/eflowPhotons
+  add InputArray Calorimeter/eflowNeutralHadrons
   set OutputArray eflow
 }
 

@@ -169,7 +169,7 @@ void AnalysisHandlerCMS_13TeV::tagBJets() {
               }
           }
           // If no b and no c overlap, use light jet Rej
-          if (fabs(cand->P4().Eta()) < ETAMAX_B_TRUTH && eff_function == NULL)
+          if (eff_function == NULL)
               eff_function = &AnalysisHandlerCMS_13TeV::bBkgLJetEff;
 
           // Now that we know the right function to use, lets tag

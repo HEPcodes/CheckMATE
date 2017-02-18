@@ -18,22 +18,24 @@ AC_DEFUN([CHECK_PYTHIA],
     PYTHIAXMLDIR="\"$with_pythia/xmldir\""
 #    PYTHIAGZIPLIB="-DGZIPSUPPORT -I/usr/include/ -L/lib/x86_64-linux-gnu -Wl,-rpath,/lib/x86_64-linux-gnu -lz"
   fi
+  AC_MSG_CHECKING([for gzip include (optional)])
   AC_ARG_WITH(gzipinc,     
   AC_HELP_STRING([--with-gzipinc=DIR],[Location of gzip include]),
     [],
     [with_gzipinc=no])
   if test "x$with_gzipinc" = "xno"; then
-    AC_MSG_RESULT("not found") 
+    AC_MSG_RESULT(not found) 
   else
     AC_MSG_RESULT([$with_gzipinc])
     GZIPINC="-DGZIPSUPPORT -I$with_gzipinc"
-  fi  
+  fi 
+  AC_MSG_CHECKING([for gzip library (optional)]) 
   AC_ARG_WITH(gziplib,     
   AC_HELP_STRING([--with-gziplib=DIR],[Location of gzip library]),
     [],
     [with_gziplib=no])
   if test "x$with_gziplib" = "xno"; then
-    AC_MSG_RESULT("not found") 
+    AC_MSG_RESULT(not found) 
   else
     AC_MSG_RESULT([$with_gziplib])
     GZIPLIB="-L$with_gziplib -Wl,-rpath,$with_gziplib -lz"

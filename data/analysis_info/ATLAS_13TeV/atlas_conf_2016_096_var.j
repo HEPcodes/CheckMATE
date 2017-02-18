@@ -3,7 +3,7 @@
   "author": "Ferdinand Eiteneuer", 
   "authoremail": "ferdinand.eiteneuer@rwth-aachen.de", 
   "cr": "n", 
-  "ecm": "13.0", 
+  "ecm": 13.0, 
   "electron_iso_absorrel": [
     "r"
   ], 
@@ -133,7 +133,7 @@
       "obs": "2"
     }
   }, 
-  "short_info": "2-3 leptons + ptmiss + etmiss", 
+  "short_info": "2-3 leptons + etmiss (electroweakino)", 
   "signal_regions": [
     "2LASF", 
     "2LADF", 
@@ -146,7 +146,6 @@
   ], 
   "tags": [
     "leptons", 
-    "ptmiss", 
     "etmiss", 
     "LSP"
   ]

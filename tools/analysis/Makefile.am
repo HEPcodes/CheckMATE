@@ -73,7 +73,10 @@ libanalyses_la_SOURCES +=	\
              include/analyses/ATLAS_13TeV/atlas_conf_2015_082.h src/analyses/ATLAS_13TeV/atlas_conf_2015_082.cc \
              include/analyses/ATLAS_13TeV/atlas_conf_2016_013.h src/analyses/ATLAS_13TeV/atlas_conf_2016_013.cc \
              include/analyses/ATLAS_13TeV/atlas_conf_2016_050.h src/analyses/ATLAS_13TeV/atlas_conf_2016_050.cc \
-             include/analyses/ATLAS_13TeV/atlas_conf_2016_076.h src/analyses/ATLAS_13TeV/atlas_conf_2016_076.cc 
+             include/analyses/ATLAS_13TeV/atlas_conf_2016_054.h src/analyses/ATLAS_13TeV/atlas_conf_2016_054.cc \
+             include/analyses/ATLAS_13TeV/atlas_conf_2016_076.h src/analyses/ATLAS_13TeV/atlas_conf_2016_076.cc \
+             include/analyses/ATLAS_13TeV/atlas_conf_2016_078.h src/analyses/ATLAS_13TeV/atlas_conf_2016_078.cc \
+             include/analyses/ATLAS_13TeV/atlas_conf_2016_076.h src/analyses/ATLAS_13TeV/atlas_conf_2016_096.cc
 # ATLAS_14TeV_HighLumi
 libanalyses_la_SOURCES +=	\
              include/analyses/ATLAS_14TeV_HighLumi/atl_phys_pub_2014_010_sbottom.h src/analyses/ATLAS_14TeV_HighLumi/atl_phys_pub_2014_010_sbottom.cc \
@@ -100,7 +103,7 @@ libanalyses_la_SOURCES +=	\
 libanalyses_la_SOURCES +=	\
              include/analyses/CMS_13TeV/cms_pas_sus_15_011.h src/analyses/CMS_13TeV/cms_pas_sus_15_011.cc
 # CMS_14TeV_HighLumi
-libanalyses_la_SOURCES +=
+libanalyses_la_SOURCES +=	
 
 #@@extraanalysis@@
 

@@ -16470,6 +16470,8 @@ $as_echo "$with_pythia" >&6; }
     PYTHIAXMLDIR="\"$with_pythia/xmldir\""
 #    PYTHIAGZIPLIB="-DGZIPSUPPORT -I/usr/include/ -L/lib/x86_64-linux-gnu -Wl,-rpath,/lib/x86_64-linux-gnu -lz"
   fi
+  { $as_echo "$as_me:$LINENO: checking for gzip include (optional)" >&5
+$as_echo_n "checking for gzip include (optional)... " >&6; }
 
 # Check whether --with-gzipinc was given.
 if test "${with_gzipinc+set}" = set; then
@@ -16479,13 +16481,15 @@ else
 fi
 
   if test "x$with_gzipinc" = "xno"; then
-    { $as_echo "$as_me:$LINENO: result: \"not found\"" >&5
-$as_echo "\"not found\"" >&6; }
+    { $as_echo "$as_me:$LINENO: result: not found" >&5
+$as_echo "not found" >&6; }
   else
     { $as_echo "$as_me:$LINENO: result: $with_gzipinc" >&5
 $as_echo "$with_gzipinc" >&6; }
     GZIPINC="-DGZIPSUPPORT -I$with_gzipinc"
   fi
+  { $as_echo "$as_me:$LINENO: checking for gzip library (optional)" >&5
+$as_echo_n "checking for gzip library (optional)... " >&6; }
 
 # Check whether --with-gziplib was given.
 if test "${with_gziplib+set}" = set; then
@@ -16495,8 +16499,8 @@ else
 fi
 
   if test "x$with_gziplib" = "xno"; then
-    { $as_echo "$as_me:$LINENO: result: \"not found\"" >&5
-$as_echo "\"not found\"" >&6; }
+    { $as_echo "$as_me:$LINENO: result: not found" >&5
+$as_echo "not found" >&6; }
   else
     { $as_echo "$as_me:$LINENO: result: $with_gziplib" >&5
 $as_echo "$with_gziplib" >&6; }

@@ -1,23 +1,52 @@
 CheckMATE - Changelog
 
+
+Ver 2.0.3
+---------
+2017-01-16   Jong Soo Kim <jongsoo.kim@tu-dortmund.de>
+
+2017-02-09   Jamie Tattersall <tattersall@physik.rwth-aachen.de>
+
+    ~ More informative comments added when not linking gzip
+
+2017-01-24   Jamie Tattersall <tattersall@physik.rwth-aachen.de>
+
+    ~ Updated 14TeV calorimeter to new delphes specification (same as 13TeV)
+
+2017-01-23   Jamie Tattersall <tattersall@physik.rwth-aachen.de>
+
+    ~ Fixed formatting of ecm in atlas_conf_2016_054_var.j, 078_var.j, 096_var.j
+
+2017-01-20   Jamie Tattersall <tattersall@physik.rwth-aachen.de>
+
+    ~ Typos fixed in data for atlas_1605_03814
+    ~ Lepton seg fault fix for atlas_conf_2013_021
+    ~ CheckMATE now compiles with atlas_conf_2016_096
+
+
 Ver 2.0.2
 ---------
+
 2017-01-16   Ferdinand Eiteneuer <ferdinand.eiteneuer@rwth-aachen.de>
 
-    ~ Added atlas_conf_2019_096
+    ~ Added atlas_conf_2016_096
 
 
 Ver 2.0.1
 ---------
 
+2017-01-16   Jong Soo Kim <jongsoo.kim@tu-dortmund.de>
+
+    ~ Added atlas_conf_2016_078 based on atlas_1605_03814
+
+2017-01-16   Jong Soo Kim <jongsoo.kim@tu-dortmund.de>
+
+    ~ Added atlas_conf_2016_054 based on atlas_1605_04282
+	
 2016-12-30   Jamie Tattersall <tattersall@physik.rwth-aachen.de>
 
     ~ If pythia8 is compiled with gzip, CheckMATE must be too
     ~ Configuration now possible with --with-gzipinc and --with-gziplib that should point to gzip header and gzip library (.so) directories respectively that were used to compile pythia 8.
-
-
-Ver 2.0.1
----------
 
 2016-12-30   Jamie Tattersall <tattersall@physik.rwth-aachen.de>
 

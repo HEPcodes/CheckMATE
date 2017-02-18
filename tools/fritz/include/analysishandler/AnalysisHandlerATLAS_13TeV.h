@@ -20,11 +20,12 @@
 #include "atlas_conf_2015_082.h"
 #include "atlas_conf_2016_013.h"
 #include "atlas_conf_2016_050.h"
+#include "atlas_conf_2016_054.h"
 #include "atlas_conf_2016_076.h"
-
-
-
-
+#include "atlas_conf_2016_078.h"
+#include "atlas_conf_2016_096.h"
+#include "atlas_conf_2016_054.h"
+#include "atlas_conf_2016_078.h"
 //@extraheader@
 #include "AnalysisBase.h"
 

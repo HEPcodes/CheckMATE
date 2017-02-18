@@ -133,6 +133,8 @@ void Atlas_conf_2013_021::analyze() {
     
     isoMuons = filterIsolation(isoMuons,2);
     
+    if (isoMuons.size() != 1) return;
+    
     double mTW2 = 2.*isoMuons[0]->P4().Et()*missingET->P4().Et() - 2.*isoMuons[0]->P4().X()*missingET->P4().X() - 2.*isoMuons[0]->P4().Y()*missingET->P4().Y();
     if (sqrt(mTW2) < 20.) return;    
     
@@ -148,6 +150,8 @@ void Atlas_conf_2013_021::analyze() {
     isoElecs = filterIsolation(isoElecs,3);
     isoElecs = filterIsolation(isoElecs,4);
  
+    if (isoElecs.size() != 1) return;
+    
     double mTW2 = 2.*isoElecs[0]->P4().Et()*missingET->P4().Et() - 2.*isoElecs[0]->P4().X()*missingET->P4().X() - 2.*isoElecs[0]->P4().Y()*missingET->P4().Y();
     if (sqrt(mTW2) < 20.) return;    
     
