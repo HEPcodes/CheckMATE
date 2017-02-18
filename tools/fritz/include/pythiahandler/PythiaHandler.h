@@ -102,6 +102,7 @@ private:
     bool useMG5;
     std::string mgProcCard; //!< path to file with generate commands
     std::string mgRunCard; //!< path to run card, not mandatory
+    std::string mgConfigCard; //!< path to config card, not mandatory
     std::string mgParamCard; //!< path to param card 
     std::string mgRunPath; //!< path to param card 
     std::string mgSourcePath; //!< path to MadGraph source directory

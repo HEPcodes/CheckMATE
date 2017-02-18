@@ -21,6 +21,7 @@ static const std::string keyUseMG5 = "usemg5";
 static const std::string keyMGproc = "mgproccard";
 static const std::string keyMGparam = "mgparamcard";
 static const std::string keyMGrun = "mgruncard";
+static const std::string keyMGconfig = "mgconfigcard";
 static const std::string keyMGrunpath = "mgrunpath";
 static const std::string keyMGsourcepath = "mgsourcepath";
 
@@ -66,6 +67,7 @@ static void unknownKeys(Properties props) {
     knownKeys.push_back(keyMGproc);
     knownKeys.push_back(keyMGparam);
     knownKeys.push_back(keyMGrun);
+    knownKeys.push_back(keyMGconfig);
     knownKeys.push_back(keyMGrunpath);
     knownKeys.push_back(keyMGsourcepath);
     warnUnknownKeys(props, knownKeys, props["name"], "Unknown key for PythiaHandler section");
@@ -194,9 +196,16 @@ void PythiaHandler::setup(Properties props) {
 				 ""
 				 );
 
+    mgConfigCard =  lookupOrDefault(
+				 props,
+				 keyMGconfig,
+				 ""
+				 );
+	
     Global::print(name, "read mgProcCard ="+ mgProcCard);
     Global::print(name, "read mgParamCard ="+ mgParamCard);
     Global::print(name, "read mgRunCard ="+ mgRunCard);
+    Global::print(name, "read mgConfigCard ="+ mgConfigCard);
     
   }  
     
@@ -223,6 +232,7 @@ void PythiaHandler::setup(Properties props) {
     madgraph->setSeed(Global::randomSeed);
     if(mgParamCard != "") madgraph->addCard(mgParamCard,"param_card.dat");
     if(mgRunCard != "") madgraph->addCard(mgRunCard,"run_card.dat");
+    if(mgConfigCard != "") madgraph->addCard(mgConfigCard,"me5_configuration.txt");
     mainPythia->setLHAupPtr(madgraph);
     
     // Set LHE file by hand

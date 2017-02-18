@@ -37,11 +37,13 @@ mybin_PROGRAMS = fritz$(EXEEXT)
 @HAVE_PYTHIA_TRUE@am__append_2 = @PYTHIALIBS@
 @HAVE_PYTHIA_TRUE@am__append_3 = @PYTHIAINCLUDE@ -Iinclude/pythiahandler -DHAVE_PYTHIA=1
 @HAVE_PYTHIA_TRUE@am__append_4 = -R@PYTHIALIBDIR@ 
-@HAVE_PYTHIA_TRUE@am__append_5 = :@PYTHIALIBDIR@  
-@HAVE_HEPMC_TRUE@@HAVE_PYTHIA_TRUE@am__append_6 = @HEPMCLIBS@    
-@HAVE_HEPMC_TRUE@@HAVE_PYTHIA_TRUE@am__append_7 = -R@HEPMCLIBDIR@
-@HAVE_HEPMC_TRUE@@HAVE_PYTHIA_TRUE@am__append_8 = -DHAVE_HEPMC=1
-@HAVE_HEPMC_TRUE@@HAVE_PYTHIA_TRUE@am__append_9 = :@HEPMCLIBDIR@ 
+@HAVE_PYTHIA_TRUE@am__append_5 = :@PYTHIALIBDIR@    
+@HAVE_GZIPINC_TRUE@@HAVE_PYTHIA_TRUE@am__append_6 = @GZIPINC@  
+@HAVE_GZIPINC_TRUE@@HAVE_GZIPLIB_TRUE@@HAVE_PYTHIA_TRUE@am__append_7 = @GZIPLIB@
+@HAVE_HEPMC_TRUE@@HAVE_PYTHIA_TRUE@am__append_8 = @HEPMCLIBS@    
+@HAVE_HEPMC_TRUE@@HAVE_PYTHIA_TRUE@am__append_9 = -R@HEPMCLIBDIR@
+@HAVE_HEPMC_TRUE@@HAVE_PYTHIA_TRUE@am__append_10 = -DHAVE_HEPMC=1
+@HAVE_HEPMC_TRUE@@HAVE_PYTHIA_TRUE@am__append_11 = :@HEPMCLIBDIR@ 
 subdir = tools/fritz
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -187,6 +189,8 @@ EGREP = @EGREP@
 EXEEXT = @EXEEXT@
 FGREP = @FGREP@
 GREP = @GREP@
+GZIPINC = @GZIPINC@
+GZIPLIB = @GZIPLIB@
 HEPMCINCLUDE = @HEPMCINCLUDE@
 HEPMCLIBDIR = @HEPMCLIBDIR@
 HEPMCLIBS = @HEPMCLIBS@
@@ -198,7 +202,7 @@ INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
 LD = @LD@
 LDFLAGS = @LDFLAGS@
 LD_LIBRARY_PATH = @LD_LIBRARY_PATH@
-LD_RUN_PATH = @LD_RUN_PATH@ $(am__append_5) $(am__append_9)
+LD_RUN_PATH = @LD_RUN_PATH@ $(am__append_5) $(am__append_11)
 LIBOBJS = @LIBOBJS@
 LIBS = @LIBS@
 LIBTOOL = @LIBTOOL@
@@ -350,7 +354,7 @@ fritz_SOURCES = src/main.cc src/global/Global.cc \
 	$(am__append_1)
 fritz_LDADD = -L@ROOTLIBDIR@ @ROOTGLIBS@ @ROOTLIBS@ -L@DELPHESLIBDIR@ \
 	@DELPHESLIBS@ -L$(abs_top_builddir)/tools/analysis -lanalyses \
-	$(am__append_2) $(am__append_6)
+	$(am__append_2) $(am__append_8)
 fritz_CXXFLAGS = @ROOTCFLAGS@ @DELPHESCFLAGS@ -Iinclude/global \
 	-Iinclude/fritz -Iinclude/delpheshandler \
 	-Iinclude/analysishandler \
@@ -367,10 +371,11 @@ fritz_CXXFLAGS = @ROOTCFLAGS@ @DELPHESCFLAGS@ -Iinclude/global \
 	-I$(abs_top_builddir)/tools/analysis/include/analyses/CMS_8TeV \
 	-I$(abs_top_builddir)/tools/analysis/include/analyses/CMS_13TeV \
 	-I$(abs_top_builddir)/tools/analysis/include/analyses/CMS_14TeV_HighLumi \
-	$(am__append_3) $(am__append_8)
+	$(am__append_3) $(am__append_6) $(am__append_7) \
+	$(am__append_10)
 fritz_LDFLAGS = -R@ROOTLIBDIR@ -R@DELPHESLIBDIR@ \
 	-R$(abs_top_builddir)/tools/analysis $(am__append_4) \
-	$(am__append_7)
+	$(am__append_9)
 all: all-am
 
 .SUFFIXES:

@@ -6,6 +6,7 @@
 /bin/CheckMATE
 
 /results
+/data/cards/mg5_default_me5_configuration.txt
 
 /tools/**/.deps
 /tools/**/.libs

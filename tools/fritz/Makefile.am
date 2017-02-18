@@ -47,7 +47,13 @@ if HAVE_PYTHIA
    fritz_LDADD +=  @PYTHIALIBS@
    fritz_CXXFLAGS += @PYTHIAINCLUDE@ -Iinclude/pythiahandler -DHAVE_PYTHIA=1
    fritz_LDFLAGS +=  -R@PYTHIALIBDIR@ 
-   LD_RUN_PATH += :@PYTHIALIBDIR@  
+   LD_RUN_PATH += :@PYTHIALIBDIR@    
+if HAVE_GZIPINC
+   fritz_CXXFLAGS += @GZIPINC@  
+if HAVE_GZIPLIB   
+   fritz_CXXFLAGS += @GZIPLIB@
+endif   
+endif   
 if HAVE_HEPMC
    fritz_LDADD += @HEPMCLIBS@    
    fritz_LDFLAGS +=  -R@HEPMCLIBDIR@
@@ -55,5 +61,4 @@ if HAVE_HEPMC
    LD_RUN_PATH += :@HEPMCLIBDIR@ 
 endif
 endif
-
 ROOTSYS = @ROOTSYSTEM@:

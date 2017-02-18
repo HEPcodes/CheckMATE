@@ -36,6 +36,7 @@ install-exec-local:
 	@sed 's,\#!.*,\#!@PYTHON@,;/sys.path.append/s,ROOT_LIB_DIR,@ROOTLIBDIR@,' tools/python/CheckMATE.raw | \
 	sed "s,config_paths\['mg5_source_path'\]='MADGRAPH_DIR',config_paths\['mg5_source_path'\]='@MADGRAPHDIR@'," | \
 	sed "s,config_paths\['pythia8_lib_path'\]='PYTHIA_DIR',config_paths\['pythia8_lib_path'\]='@PYTHIALIBDIR@',"  > bin/CheckMATE;
+	@sed "s,mg5_path = 'MADGRAPH_DIR',mg5_path = @MADGRAPHDIR@," data/cards/mg5_default_me5_configuration.txt.raw > data/cards/mg5_default_me5_configuration.txt;
 	@if [ "@MADGRAPHDIR@" != "" ]; then echo "- setup link to MG5_aMC@NLO "; fi;
 	@if [ "@PYTHIALIBDIR@" != "" ]; then echo "- setup link to Pythia "; fi;
 	@chmod +x bin/CheckMATE;

@@ -1,5 +1,31 @@
 CheckMATE - Changelog
 
+Ver 2.0.2
+---------
+2017-01-16   Ferdinand Eiteneuer <ferdinand.eiteneuer@rwth-aachen.de>
+
+    ~ Added atlas_conf_2019_096
+
+
+Ver 2.0.1
+---------
+
+2016-12-30   Jamie Tattersall <tattersall@physik.rwth-aachen.de>
+
+    ~ If pythia8 is compiled with gzip, CheckMATE must be too
+    ~ Configuration now possible with --with-gzipinc and --with-gziplib that should point to gzip header and gzip library (.so) directories respectively that were used to compile pythia 8.
+
+
+Ver 2.0.1
+---------
+
+2016-12-30   Jamie Tattersall <tattersall@physik.rwth-aachen.de>
+
+    ~ added possibility to use own mg5 configuration file
+    ~ set as default mg5 to not open browser
+    ~ set as default mg5 to not plot distributions
+
+
 Ver 2.0.0
 ---------
 

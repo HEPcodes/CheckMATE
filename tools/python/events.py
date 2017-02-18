@@ -438,7 +438,7 @@ class LHEEvents(Pythia8Events):
             
             
 class MG5Events(Pythia8Events):
-    mg5_cards = {'run': "", 'param': "", 'proc': ""}
+    mg5_cards = {'run': "", 'param': "", 'proc': "", 'config': ""}
     commandstring = "" # optional: can contain what is inside the proc card
     
     have_xsth = False # cross section provided by user?
@@ -447,7 +447,7 @@ class MG5Events(Pythia8Events):
     
     def __init__(self, name):
         Pythia8Events.__init__(self, name)
-        self.mg5_cards = {'run': "", 'param': "", 'proc': ""}
+        self.mg5_cards = {'run': "", 'param': "", 'proc': "", 'config': ""}
         self.commandstring = ""        
         self.have_xsth = False 
         self.xsth = 0.0 
@@ -461,6 +461,9 @@ class MG5Events(Pythia8Events):
         
     def set_proccard(self, proccard):
         self.mg5_cards["proc"] = proccard
+
+    def set_configcard(self, configcard):
+        self.mg5_cards["config"] = configcard
         
     def set_commandstring(self, commandstring):
         self.commandstring = commandstring
@@ -504,6 +507,13 @@ class MG5Events(Pythia8Events):
                         seed = str(Info.parameters["randomseed"])
                         line = line.replace("@ecmhalf@", ecmhalf).replace("@nevents@", nevents).replace("@seed@", seed)
                         f_out.write(line)
+        if self.mg5_cards["config"] == "":
+            # copy template and fill rlevant information
+            self.mg5_cards["config"] = os.path.join(Info.paths["output_mg5"], self.identifier+"_me5_configuration.txt")
+            with open(self.mg5_cards["config"], "w") as f:
+                with open(Info.files["me5_configuration_template"], "r") as g:
+                    for line in g:
+                        f.write(line)
         
     def printInfo(self):
         AdvPrint.cout("\t\tMG5_aMC@NLO Events")
@@ -517,6 +527,9 @@ class MG5Events(Pythia8Events):
             
         if self.mg5_cards["run"] != "":
             AdvPrint.cout("\t\t\t - run_card: "+self.mg5_cards["run"])
+
+        if self.mg5_cards["config"] != "":
+            AdvPrint.cout("\t\t\t - config_card: "+self.mg5_cards["config"])
             
         if self.mg5_cards["param"] != "":
             AdvPrint.cout("\t\t\t - param_card: "+self.mg5_cards["param"])
@@ -542,6 +555,8 @@ class MG5Events(Pythia8Events):
             fritzconfig.set(secname, "mgRunCard",self.mg5_cards["run"])
         if self.mg5_cards["param"] != "" :
             fritzconfig.set(secname, "mgParamCard",self.mg5_cards["param"])
+        if self.mg5_cards["config"] != "" :
+            fritzconfig.set(secname, "mgConfigCard",self.mg5_cards["config"])
         fritzconfig.set(secname, "mgRunPath",os.path.join(Info.paths['output_mg5'], self.identifier))
         fritzconfig.set(secname, "mgSourcePath",Info.paths['mg5_source_path'])
         if self.have_xsth:

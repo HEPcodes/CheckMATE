@@ -824,9 +824,15 @@ PYTHON_EXEC_PREFIX
 PYTHON_PREFIX
 PYTHON_VERSION
 PYTHON
+GZIPLIB
+GZIPINC
 PYTHIALIBDIR
 PYTHIALIBS
 PYTHIAINCLUDE
+HAVE_GZIPLIB_FALSE
+HAVE_GZIPLIB_TRUE
+HAVE_GZIPINC_FALSE
+HAVE_GZIPINC_TRUE
 HAVE_PYTHIA_FALSE
 HAVE_PYTHIA_TRUE
 LOAD_HEPMC
@@ -959,6 +965,8 @@ with_gnu_ld
 enable_libtool_lock
 with_hepmc
 with_pythia
+with_gzipinc
+with_gziplib
 with_python
 with_rootsys
 with_delphes
@@ -1623,6 +1631,8 @@ Optional Packages:
   --with-gnu-ld           assume the C compiler uses GNU ld [default=no]
   --with-hepmc=DIR        Location of HepMC installation [default=system libs]
   --with-pythia=DIR       Location of Pythia8 installation
+  --with-gzipinc=DIR      Location of gzip include
+  --with-gziplib=DIR      Location of gzip library
   --with-python=EXE       EXE=full path to python executable
   --with-rootsys=DIR      DIR=top dir of the ROOT installation directory
   --with-delphes=DIR      Location of Delphes installation
@@ -4868,13 +4878,13 @@ if test "${lt_cv_nm_interface+set}" = set; then
 else
   lt_cv_nm_interface="BSD nm"
   echo "int some_variable = 0;" > conftest.$ac_ext
-  (eval echo "\"\$as_me:4871: $ac_compile\"" >&5)
+  (eval echo "\"\$as_me:4881: $ac_compile\"" >&5)
   (eval "$ac_compile" 2>conftest.err)
   cat conftest.err >&5
-  (eval echo "\"\$as_me:4874: $NM \\\"conftest.$ac_objext\\\"\"" >&5)
+  (eval echo "\"\$as_me:4884: $NM \\\"conftest.$ac_objext\\\"\"" >&5)
   (eval "$NM \"conftest.$ac_objext\"" 2>conftest.err > conftest.out)
   cat conftest.err >&5
-  (eval echo "\"\$as_me:4877: output\"" >&5)
+  (eval echo "\"\$as_me:4887: output\"" >&5)
   cat conftest.out >&5
   if $GREP 'External.*some_variable' conftest.out > /dev/null; then
     lt_cv_nm_interface="MS dumpbin"
@@ -6080,7 +6090,7 @@ ia64-*-hpux*)
   ;;
 *-*-irix6*)
   # Find out which ABI we are using.
-  echo '#line 6083 "configure"' > conftest.$ac_ext
+  echo '#line 6093 "configure"' > conftest.$ac_ext
   if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
@@ -8656,11 +8666,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:8659: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:8669: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:8663: \$? = $ac_status" >&5
+   echo "$as_me:8673: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -8995,11 +9005,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:8998: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:9008: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:9002: \$? = $ac_status" >&5
+   echo "$as_me:9012: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -9100,11 +9110,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:9103: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:9113: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:9107: \$? = $ac_status" >&5
+   echo "$as_me:9117: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -9155,11 +9165,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:9158: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:9168: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:9162: \$? = $ac_status" >&5
+   echo "$as_me:9172: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -11955,7 +11965,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<_LT_EOF
-#line 11958 "configure"
+#line 11968 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -12051,7 +12061,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<_LT_EOF
-#line 12054 "configure"
+#line 12064 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -14071,11 +14081,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:14074: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:14084: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:14078: \$? = $ac_status" >&5
+   echo "$as_me:14088: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -14170,11 +14180,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:14173: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:14183: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:14177: \$? = $ac_status" >&5
+   echo "$as_me:14187: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -14222,11 +14232,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:14225: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:14235: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:14229: \$? = $ac_status" >&5
+   echo "$as_me:14239: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -16458,6 +16468,39 @@ $as_echo "$with_pythia" >&6; }
     PYTHIALIBS="-L$with_pythia/lib -lpythia8 -ldl -lm -lz"
     PYTHIALIBDIR="$with_pythia/lib"
     PYTHIAXMLDIR="\"$with_pythia/xmldir\""
+#    PYTHIAGZIPLIB="-DGZIPSUPPORT -I/usr/include/ -L/lib/x86_64-linux-gnu -Wl,-rpath,/lib/x86_64-linux-gnu -lz"
+  fi
+
+# Check whether --with-gzipinc was given.
+if test "${with_gzipinc+set}" = set; then
+  withval=$with_gzipinc;
+else
+  with_gzipinc=no
+fi
+
+  if test "x$with_gzipinc" = "xno"; then
+    { $as_echo "$as_me:$LINENO: result: \"not found\"" >&5
+$as_echo "\"not found\"" >&6; }
+  else
+    { $as_echo "$as_me:$LINENO: result: $with_gzipinc" >&5
+$as_echo "$with_gzipinc" >&6; }
+    GZIPINC="-DGZIPSUPPORT -I$with_gzipinc"
+  fi
+
+# Check whether --with-gziplib was given.
+if test "${with_gziplib+set}" = set; then
+  withval=$with_gziplib;
+else
+  with_gziplib=no
+fi
+
+  if test "x$with_gziplib" = "xno"; then
+    { $as_echo "$as_me:$LINENO: result: \"not found\"" >&5
+$as_echo "\"not found\"" >&6; }
+  else
+    { $as_echo "$as_me:$LINENO: result: $with_gziplib" >&5
+$as_echo "$with_gziplib" >&6; }
+    GZIPLIB="-L$with_gziplib -Wl,-rpath,$with_gziplib -lz"
   fi
   if test "x$with_pythia" != "xno"; then
   # Now lets see if the libraries work properly
@@ -16795,6 +16838,24 @@ else
   HAVE_PYTHIA_TRUE='#'
   HAVE_PYTHIA_FALSE=
 fi
+
+   if test "x$with_gzipinc" != "xno"; then
+  HAVE_GZIPINC_TRUE=
+  HAVE_GZIPINC_FALSE='#'
+else
+  HAVE_GZIPINC_TRUE='#'
+  HAVE_GZIPINC_FALSE=
+fi
+
+   if test "x$with_gziplib" != "xno"; then
+  HAVE_GZIPLIB_TRUE=
+  HAVE_GZIPLIB_FALSE='#'
+else
+  HAVE_GZIPLIB_TRUE='#'
+  HAVE_GZIPLIB_FALSE=
+fi
+
+
 
 
 
@@ -17637,6 +17698,20 @@ if test -z "${HAVE_PYTHIA_TRUE}" && test -z "${HAVE_PYTHIA_FALSE}"; then
   { { $as_echo "$as_me:$LINENO: error: conditional \"HAVE_PYTHIA\" was never defined.
 Usually this means the macro was only invoked conditionally." >&5
 $as_echo "$as_me: error: conditional \"HAVE_PYTHIA\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
+if test -z "${HAVE_GZIPINC_TRUE}" && test -z "${HAVE_GZIPINC_FALSE}"; then
+  { { $as_echo "$as_me:$LINENO: error: conditional \"HAVE_GZIPINC\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+$as_echo "$as_me: error: conditional \"HAVE_GZIPINC\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
+if test -z "${HAVE_GZIPLIB_TRUE}" && test -z "${HAVE_GZIPLIB_FALSE}"; then
+  { { $as_echo "$as_me:$LINENO: error: conditional \"HAVE_GZIPLIB\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+$as_echo "$as_me: error: conditional \"HAVE_GZIPLIB\" was never defined.
 Usually this means the macro was only invoked conditionally." >&2;}
    { (exit 1); exit 1; }; }
 fi
