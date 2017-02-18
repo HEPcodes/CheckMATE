@@ -23,7 +23,7 @@ class Process:
 
     have_kfac = False # K factor provided by user?
     kfac = 0.0  # k-factor (to be used when using internal Pythia or Madgraph processes)
-    
+
     eventsList = list()
     
     result_output_file = ""

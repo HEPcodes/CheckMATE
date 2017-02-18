@@ -1,164 +1,19 @@
             / ___| |__   ___  ___| | _|  \/  |  / \|_   _| ____|
            | |   | '_ \ / _ \/ __| |/ / |\/| | / _ \ | | |  _|  
            | |___| | | |  __/ (__|   <| |  | |/ ___ \| | | |___ 
-            \____|_| |_|\___|\___|_|\_\_|  |_/_/   \_\_| |_____|
+            \____|_| |_|\___|\___|_|\_\_|  |_/_/   \_\_| |_____| 2.0
 
                                              *** Getting Started
 
-This README guides the user through the installation of Checkmate and outlines how 
-to check and possibly install updated versions of all the necessary prerequisites. 
-The program has been tested and will run on both Linux and MacOS. 
-You can find an easier-to-read online version of this tutorial under
-  https://checkmate.hepforge.org/tutorial/start.php
-  
 
-** INSTALLATION **
+Congratulations! If you are able to read this file, you apparently managed to download and extract the CheckMATE tarball! Now there is only a couple of steps which need to be done in order to install CheckMATE.
 
-CheckMATE requires Python 2.7 on your system. Most systems already come with a 
-Python installation, which you can easily check by typing 
+CheckMATE uses the standard ./configure + make + make install chain. For the configuration step, you must not provide --prefix (it will screw up the installation) but you have to provide the following parameters:
+--with-rootsys=(ROOTDIR)
+--with-delphes=(DELPHESDIR)
 
-> python -V
+If desired, event generation can be enabled by furthermore providing the following optional parameters
+--with-madgraph=(MG5MCNLODIR)
+--with-pythia=(PYTHIADIR)
 
-and hitting `enter' in a terminal. If Python is installed, it should start and 
-immediately tell you the version number. If the installation is too old, too new 
-(CheckMATE won't work with Python 3) or if there is no Python at all, please install
-it either manually from http://www.python.org/download/ or using the software 
-management of your system.
-
-
-* Setting up Root *
-
-CheckMATE uses ROOT for a variety of tasks, therefore it is inevitable that 
-every user has a fully working ROOT installation available on their system. 
-Furthermore, CheckMATE uses some ROOT packages which are not installed automatically
-and which may need to be added. Due to the large size of the ROOT source code, we 
-refrained from including it in our package and only provide a step-by-step tutorial
-for how to install it from scratch or add potentially missing obligatory packages 
-to an existing installation. Running 
-
->which root
-
-inside the terminal tells you if there already exists an installation on your system
-and determines how to continue with the installation:
-
-
-* Case 1: There is no ROOT installed yet *
-
-You must download the source and install ROOT from scratch. (Please do not use the 
-ROOT precompiled binaries but follow the following instructions, since we encountered 
-internal linking problems with the binary version of ROOT). Start by downloading the
-latest version from http://root.cern.ch/drupal/content/downloading-root by hand or via
-
-> wget ftp://root.cern.ch/root/root_xyz.source.tar.gz
-
-and decompress the tarball as follows:
-
-> gzip -dc root_xyz.source.tar.gz | tar -xf -
-> cd root
-
-After downloading ROOT you can choose where you would like the installation located.
-If you don't want to do a system-wide installation in /usr/bin (e.g. because you do
-not have root privileges), you have to use --prefix and --etcdir to declare the 
-installation folder. Should you use a local Python installation (i.e. if the Python
-binary is not located in /usr/bin), you have to give the positions of both /include
-and /lib by adding --with-python-incdir=[path_to_python]/include and
---with-python-libdir=[path_to_python]/lib using:
- 
-> ./configure --enable-python {--with-python-incdir=[path_to_python]/include \ 
-                               --with-python-libdir=[path_to_python]/lib} \ 
-              --enable-roofit --enable-minuit2 {--prefix=[desired_root_path]}
-> make
-ROOT is large, so go and have a (big) cup coffee in the meanwhile. 
-After a successful completion, please hit (if you are the administrator, put "sudo"
- in front):
-
-> make install
-
-* Case 2: There is already a ROOT installation on the system. *
-If you already have ROOT on your system, let us first check if it includes all 
-necessary packages. In the \textsc{Root} base directory, please run the following
-commands:
-
-> ./bin/root-config --has-minuit2
-> ./bin/root-config --has-roofit
-> ./bin/root-config --has-python
-
-If all three commands return `yes', your ROOT installation includes everything 
-CheckMATE needs and you can safely skip to the `Setting up CheckMATE' section. 
-If not, you have to recompile the code and add the missing packages. Follow the 
-instructions mentioned for `Case 1', but make sure that
- - you download the same ROOT version the system has, for which you can use 
-   
-   > ./root-config --version 
-   
- - you install into the same root-directory by choosing --prefix accordingly. 
-  
-Alternatively, you can always download and install a second root version locally
-according to step 1. Make sure that you setup CheckMATE with this local ROOT
-version explicitely.
-
-In case you are using the standalone ROOT binaries, beware that we sometimes 
-encountered problems during the compilation of CheckMATE. Should you find the same
-problems, i.e. that all the aforementioned checks were positive but still there are
-ROOT linking errors occuring, please consider using a proper installation from 
-source code as explained above.
-
-
-* Setting up CheckMATE *
-
-Contrary to many other tools, CheckMATE does not have a separate `make install'
-routine and will set itself up in the directory you put it. You should therefore 
-begin the following procedure from within the folder you want CheckMATE to be 
-located.
-
-Start by downloading the tarball either by hand or from within the terminal
-
->   wget http://www.hepforge.org/archive/checkmate/CheckMATE-Current.tar.gz
-
-Extract the tarball and have a look at the CheckMATE folder:
-
->   tar -xvf CheckMATE-X.Y.Z.tar.gz
->   cd CheckMATE-X.Y.Z
->   ls
- aclocal.m4      bin        configure.ac  depcomp     m4           missing  tools
- AUTHORS         ChangeLog  COPYING       INSTALL     Makefile.am  NEWS     VERSION
- autom4te.cache  configure  data          install-sh  Makefile.in  README
- 
-In order to run CheckMATE we have to compile the code, connect the Python scripts 
-to the ROOT libraries and create the binary.  The configuration step will make sure 
-that you followed the aforementioned sections to properly setup ROOT and have a 
-valid Python interpreter. The easiest way to proceed is to run 
-
->    ./configure {--with-rootsys=[path_to_root]} {--with-python=[path_to_python_binary]}
-
-and follow the instructions in case of an error. After succesful configuration, type 
-
-> make
-
-Depending upon your system the make command can generate various warning messages. 
-These can be safely ignored unless the final output is an error message 
-(e.g. `make: *** [all-recursive] Error 1') in which case the installation will 
-have failed. If you are unable to understand the cause of the problem, please check
-the installation FAQ on the CheckMATE website or contact the authors.
-The compilation will create a Checkmate binary in bin/:
-
-Note for experienced ROOT users: CheckMATE should work even if you haven't set up 
-$ROOTSYS (and similar) environmental variables since it takes all information from
-the --with-rootsys parameter. However in case of any unexpected errors, run 
-
-> source thisroot.(c)sh
-
-inside the ROOT binary directory and retry. 
-
-To test the installation, run the test parameter file in the bin directory.
-
->    cd bin
->    ./CheckMATE testparam.dat
-
-The program will ask if the automatically chosen output directory is correct. After 
-answering 'y' the program should run and finish with the statement that the 
-input is allowed. If it doesn't, check whether your configuration and compilation 
-produced any errors or warnings. Otherwise, you finished setting up CheckMATE. 
-
-Have fun!
-
+If you are not an expert on this subject, we highly recommend to go to the 'Installation Tutorial' on our website, http://checkmate.hepforge.org . There we will go through the above configuration step in all detail and most importantly explain to you how to find and install missing libraries. 

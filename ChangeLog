@@ -3,6 +3,14 @@ CheckMATE - Changelog
 Ver 2.0.0
 ---------
 
+2016-12-09   Daniel Dercks <daniel.dercks@desy.de>
+
+    ~ added parameter -xsth/--xsectthreshold/"XSectThreshold: " used for internal event generation with MG5 + Pythia8: If the unshowered cross section determined by MG5 is below the given threshold, the events are not further processed and all results of that event are automatically set to 0 (to save time and not analysing processes with tiny physical importance)
+
+
+Ver 2.0.0
+---------
+
 2016-12-01   Daniel Dercks <daniel.dercks@desy.de>
 
     ~ Uploaded Version 2.0.0 with many things changed, fixed and updated

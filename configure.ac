@@ -54,19 +54,25 @@ AC_MSG_RESULT([=== Subconfigurations Done ===])
 AC_MSG_RESULT([Configuration of CheckMATE finished. Run 'make' to compile. If you have more than one core, you can use -j2 or even -j4 to speed up the compilation process.])
 AC_MSG_RESULT([])
 
-AM_COND_IF(HAVE_MADGRAPH, ,AC_MSG_RESULT([]))
-AM_COND_IF(HAVE_MADGRAPH, ,AC_MSG_RESULT([=== IMPORANT! ===]))
-AM_COND_IF(HAVE_MADGRAPH, ,AC_MSG_RESULT([You did not provide any link to MG5_aMC@NLO using the --with-madgraph parameter. If you continue you will not be able to]))
-AM_COND_IF(HAVE_MADGRAPH, ,AC_MSG_RESULT([   - Simulate parton events using MG5_aMC@NLO]))
+if test "x$with_madgraph" = "xno"; then
+  AC_MSG_RESULT([])
+  AC_MSG_RESULT([=== IMPORANT! ===])
+  AC_MSG_RESULT([You did not provide any link to MG5_aMC@NLO using the --with-madgraph parameter. If you continue you will not be able to])
+  AC_MSG_RESULT([   - Simulate parton events using MG5_aMC@NLO])
+fi
 
-AM_COND_IF(HAVE_PYTHIA, ,AC_MSG_RESULT([]))
-AM_COND_IF(HAVE_PYTHIA, ,AC_MSG_RESULT([=== IMPORANT! ===]))
-AM_COND_IF(HAVE_PYTHIA, ,AC_MSG_RESULT([You did not provide any link to Pythia8 using the --with-pythia parameter. If you continue you will not be able to]))
-AM_COND_IF(HAVE_PYTHIA, ,AC_MSG_RESULT([   - Simulate events using Pythia]))
-AM_COND_IF(HAVE_PYTHIA, ,AC_MSG_RESULT([   - Shower .lhe events using Pythia]))
-AM_COND_IF(HAVE_PYTHIA, ,AC_MSG_RESULT([   - Simulate parton events using MG5_aMC@NLO (even if you provide --with-madgraph!)]))
+if test "x$with_pythia" = "xno"; then
+  AC_MSG_RESULT([])
+  AC_MSG_RESULT([=== IMPORANT! ===])
+  AC_MSG_RESULT([You did not provide any link to Pythia8 using the --with-pythia parameter. If you continue you will not be able to])
+  AC_MSG_RESULT([   - Simulate events using Pythia])
+  AC_MSG_RESULT([   - Shower .lhe events using Pythia])
+  AC_MSG_RESULT([   - Simulate parton events using MG5_aMC@NLO (even if you provide --with-madgraph!)])
+fi
 
-AM_COND_IF(HAVE_HEPMC, ,AC_MSG_RESULT([]))
-AM_COND_IF(HAVE_HEPMC, ,AC_MSG_RESULT([=== IMPORANT! ===]))
-AM_COND_IF(HAVE_HEPMC, ,AC_MSG_RESULT([You did not provide any link to HepMC using the --with-hepmc parameter. If you continue you will not be able to]))
-AM_COND_IF(HAVE_HEPMC, ,AC_MSG_RESULT([   - Create .hepmc output events using Pythia]))
+if test "x$with_hepmc" = "xno"; then
+  AC_MSG_RESULT([])
+  AC_MSG_RESULT([=== IMPORANT! ===])
+  AC_MSG_RESULT([You did not provide any link to HepMC using the --with-hepmc parameter. If you continue you will not be able to])
+  AC_MSG_RESULT([   - Create .hepmc output events using Pythia])
+fi

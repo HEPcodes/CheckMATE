@@ -15,6 +15,7 @@ static const std::string keyKFactor = "kfactor";
 static const std::string keyXSect = "xsect";
 static const std::string keyXSectErr = "xsecterr";
 static const std::string keyXSectErrFactor = "xsecterrfactor";
+static const std::string keyXSectThresh = "xsectthresh";
 static const std::string keyRndmIn = "rndmin";
 static const std::string keyUseMG5 = "usemg5";
 static const std::string keyMGproc = "mgproccard";
@@ -36,6 +37,7 @@ PythiaHandler::PythiaHandler() {
     iAbort = 0;
     nAborts = 0;
     name = "pythiahandler";
+    madgraph = NULL;
 }
 
 PythiaHandler::~PythiaHandler() {
@@ -57,6 +59,7 @@ static void unknownKeys(Properties props) {
     knownKeys.push_back(keyKFactor);
     knownKeys.push_back(keyXSect);
     knownKeys.push_back(keyXSectErr);
+    knownKeys.push_back(keyXSectThresh);
     knownKeys.push_back(keyXSectErrFactor);
     knownKeys.push_back(keyRndmIn);
     knownKeys.push_back(keyUseMG5);
@@ -89,12 +92,20 @@ void PythiaHandler::setupXSect(Properties props) {
     pair = maybeLookupDouble(props, keyXSectErrFactor);
     haveXSectErrFactor = pair.first;
     xsectErrFactor = pair.second;
+    // xsectThresh
+    pair = maybeLookupDouble(props, keyXSectThresh);
+    haveXSectThresh = pair.first;
+    xsectThresh = pair.second; // CheckMATE will provide this cross section in pb!
+    
     if (haveXSect && !haveXSectErr && !haveXSectErrFactor) {
         Global::abort(name, "If an xsect is given either xsectErr or xsectErrFactor is required.");    
     }
     if (haveXSectErr && haveXSectErrFactor) {
         Global::abort(name, "xsectErr and xsectErrFactor can not be combined.");
     }
+    if (haveXSectThresh)
+	Global::print(name, "Set cross section threshold to "+Global::doubleToStr(xsectThresh)+" pb");
+
 }
 
 void PythiaHandler::setup(Properties props) {
@@ -189,7 +200,7 @@ void PythiaHandler::setup(Properties props) {
     
   }  
     
-  Global::print("PythiaHandler", "Output redirected to " + pythiaLogFile);  
+  Global::print(name, "Pythia8 output redirected to " + pythiaLogFile);  
   Global::redirect_cout(pythiaLogFile);  
   mainPythia = new Pythia8::Pythia("", true);     
   if(useMG5) {
@@ -200,11 +211,15 @@ void PythiaHandler::setup(Properties props) {
     ifstream mg5File;
     mg5File.open(mgProcCard.c_str(),ios::in);
     std::string line;
-    while(std::getline(mg5File, line)){
-	Global::print("PythiaHandler", "reading MG5_aMC@NLO command line'" + line + "'");
+    while(std::getline(mg5File, line)){	
+      Global::unredirect_cout();  
+      Global::print(name, "reading MG5_aMC@NLO command line'" + line + "'");
+      Global::redirect_cout(pythiaLogFile);  
       madgraph->readString(line);
     }
-    Global::print("PythiaHandler", "setting MG5_aMC@NLO seed to "+Global::intToStr(Global::randomSeed));
+    Global::unredirect_cout();  
+    Global::print(name, "setting MG5_aMC@NLO seed to "+Global::intToStr(Global::randomSeed));
+    Global::redirect_cout(pythiaLogFile);  
     madgraph->setSeed(Global::randomSeed);
     if(mgParamCard != "") madgraph->addCard(mgParamCard,"param_card.dat");
     if(mgRunCard != "") madgraph->addCard(mgRunCard,"run_card.dat");
@@ -220,15 +235,16 @@ void PythiaHandler::setup(Properties props) {
   Global::unredirect_cout();
 
   // Try to initialize Pythia8 object
-  mainPythia->readString("Main:numberOfEvents = 100000000");
+  mainPythia->readString("Main:numberOfEvents = 100000001");
   if(pythiaConfigFile != "") {
-    Global::print("PythiaHandler", "Initializing Pythia8 with " + pythiaConfigFile);
+    Global::unredirect_cout();  
+    Global::print(name, "Initializing Pythia8 with " + pythiaConfigFile);
     // Initialise Pythia based on subrun info
     Global::redirect_cout(pythiaLogFile);
 
     if (!mainPythia->readFile(pythiaConfigFile)) {
       Global::unredirect_cout();
-      Global::abort("PythiaHandler", "could not read " + pythiaConfigFile);
+      Global::abort(name, "could not read " + pythiaConfigFile);
     }
   }
   Global::redirect_cout(pythiaLogFile);
@@ -237,20 +253,20 @@ void PythiaHandler::setup(Properties props) {
   if(pythiaRndmIn !="")
     mainPythia->rndm.readState(pythiaRndmIn);
   
-  if (!mainPythia->init()){
-    if(useMG5)
-      Global::abort("PythiaHandler", "could not initialise Pythia for MG5. Is MadGraph correctly installed at "+mgSourcePath+" ?");
-    else
-      Global::abort("PythiaHandler", "could not initialise Pythia.");
+  if (!mainPythia->init()){      
     Global::unredirect_cout();  
+    if(useMG5)
+      Global::abort(name, "could not initialise Pythia for MG5. Is MadGraph correctly installed at "+mgSourcePath+" ?");
+    else
+      Global::abort(name, "could not initialise Pythia.");
   }
   else {
     mainPythia->rndm.dumpState(pythiaPath+"/rndm-init.dat");
-
+    Global::unredirect_cout();  
     if(useMG5)
-      Global::print("PythiaHandler", "Pythia8 successfully initialized using MG5_aMC@NLO!");
+      Global::print(name, "Pythia8 successfully initialized using MG5_aMC@NLO!");
     else
-      Global::print("PythiaHandler", "Pythia8 successfully initialized!");
+      Global::print(name, "Pythia8 successfully initialized!");
   }
 
   nAborts = mainPythia->mode("Main:timesAllowErrors");
@@ -258,10 +274,13 @@ void PythiaHandler::setup(Properties props) {
   nSubRuns = mainPythia->mode("Main:numberOfSubruns");
   
   if( nSubRuns > 1 ) {
+    Global::redirect_cout(pythiaLogFile);  
     // First subrun initialisation
     if(!mainPythia->readFile(pythiaConfigFile, 1) ||
-       !mainPythia->init())
+       !mainPythia->init()) {
+      Global::unredirect_cout();  
       Global::abort(name, "could not initialise Pythia for subruns");
+    }
   }
 
   Global::unredirect_cout();
@@ -270,9 +289,19 @@ void PythiaHandler::setup(Properties props) {
 
   std::stringstream ss;
   ss << nEvents;
-  Global::print(name, "Pythia8 will generate "+ ss.str() + " events");
+  if (nEvents != 100000001)
+    Global::print(name, "Pythia8 will generate "+ ss.str() + " events");
   if (nEvents > 99999999 && mainPythia->mode("Beams:frameType") < 4)
     nEvents = 10000;
+
+  // Killer mode: If threshold is set and LHE mode is used, set nEvents to 0 if threshold is not passed
+  if (haveXSectThresh && madgraph != NULL && (madgraph->getXS() < xsectThresh)) {
+      Global::print(name, "MG5 returned partonic process with cross section "+Global::doubleToStr(madgraph->getXS())+" pb which is smaller than the given threshold.");
+      Global::print(name, "Setting nEvents to 0!");
+      nEvents = 0;
+      mainPythia->readString("Main:numberOfEvents = 0");
+  }
+      
   
   
 #ifdef HAVE_HEPMC
@@ -319,7 +348,7 @@ bool PythiaHandler::processEvent(int iEvent) {
     }
 
     // Abort if maximum number of events is reached
-    if (iEvent > nEvents) {
+    if (iEvent >= nEvents) { // Daniel: This has been " > " for a long time, but I think it is wrong. If I for example set nEvents to 0, I would still get 1 tested event!
       hasEvents = false;
       return false;
     }

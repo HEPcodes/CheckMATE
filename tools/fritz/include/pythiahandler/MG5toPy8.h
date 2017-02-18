@@ -86,6 +86,9 @@ public:
   // Set the event information.
   bool setEvent(int = 0);
 
+  // Daniel Dercks: Needed for LHE Killer
+  inline double getXS() {return xSecSumSave;};
+
 protected:
 
   // Execute a system command.

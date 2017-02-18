@@ -331,6 +331,7 @@ class Pythia8Events(Events):
 class LHEEvents(Pythia8Events):
     # an lhe events object is a list of physical files which requires the functionalities of a pythia8events object
     full_filenames = list()
+    
     def __init__(self, name, full_filenames):
         Events.__init__(self, name)
         self.full_filenames = full_filenames
@@ -409,15 +410,48 @@ class LHEEvents(Pythia8Events):
         
     def prepareFritzInputFile(self, config):    
         return Pythia8Events.prepareFritzInputFile(self, config)
+    
+    """ Daniel: This function was not needed in the end, but maybe the syntax proves useful at some point
+    def get_xs(self):
+        # important for LHE xs killer mode
+        if len(self.full_filenames) == 0:
+            AdvPrint.cerr_exit("Error in LHEEvents::get_xs - LHEEvents does not contain actual files!")
+        if not os.path.isfile(self.full_filenames[0]):
+            AdvPrint.cerr_exit("Error in LHEEvents::get_xs - file "+self.full_filenames[0]+" does not exist!")
+        
+        # the xs is hidden in the <init> block of an lhe file
+        with open(self.full_filenames[0], "r") as f:
+            init = False
+            tokens = []
+            for line in f:
+                if init:
+                    tokens = tokens + line.split()
+                if "<init>" in line:
+                    init = True
+                if "</init>" in line:
+                    init = False
+                break
+        if len(tokens) < 11:
+            AdvPrint.cerr_exit("Error in LHEEvents::get_xs - init block in file "+self.full_filenames[0]+" does not exist or does not contain enough entries!")
+        return float(tokens[10])
+    """
+            
             
 class MG5Events(Pythia8Events):
     mg5_cards = {'run': "", 'param': "", 'proc': ""}
     commandstring = "" # optional: can contain what is inside the proc card
     
+    have_xsth = False # cross section provided by user?
+    xsth = 0.0 # Cross section
+    xsth_unit = 'pb' # Unit for cross section, pb or fb
+    
     def __init__(self, name):
         Pythia8Events.__init__(self, name)
         self.mg5_cards = {'run': "", 'param': "", 'proc': ""}
-        self.commandstring = ""
+        self.commandstring = ""        
+        self.have_xsth = False 
+        self.xsth = 0.0 
+        self.xsth_unit = 'pb' 
     
     def set_runcard(self, runcard):
         self.mg5_cards["run"] = runcard
@@ -430,7 +464,13 @@ class MG5Events(Pythia8Events):
         
     def set_commandstring(self, commandstring):
         self.commandstring = commandstring
-                
+    
+    def set_xsthr(self, value, unit):
+        self.have_xsth = True
+        self.xsth = value
+        self.xsth_unit = unit
+        
+        
     def check(self):
         if self.mg5_cards["proc"] == "" and self.commandstring == "":
             AdvPrint.cerr_exit("Error in MG5Events object "+self.name+":\n\t Neither a proc card nor a command string was provided!")
@@ -486,6 +526,10 @@ class MG5Events(Pythia8Events):
             
         if self.py8_infile != "":
             AdvPrint.cout("\t\t\t - Pythia8 settings file used for showering: "+self.py8_infile)
+
+        if self.have_xsth:
+            AdvPrint.cout("\t\t\t - Pythia8 won't run if parton cross section falls below: "+str(self.xsth)+" "+str(self.xsth_unit))
+
         
         
     def prepareFritzInputFile(self, fritzconfig):
@@ -500,4 +544,6 @@ class MG5Events(Pythia8Events):
             fritzconfig.set(secname, "mgParamCard",self.mg5_cards["param"])
         fritzconfig.set(secname, "mgRunPath",os.path.join(Info.paths['output_mg5'], self.identifier))
         fritzconfig.set(secname, "mgSourcePath",Info.paths['mg5_source_path'])
+        if self.have_xsth:
+            fritzconfig.set(secname, "xsectthresh",self.xsth*Info.unit(self.xsth_unit)/Info.unit('pb')) # pythia calculates in pb
         return fritzconfig, secname

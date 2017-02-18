@@ -143,6 +143,7 @@ class Info(dict):
         
         parser.add_argument('-xs', '--xsect', dest='xsect', type=str, default="", help="Cross section for the given event. Example format: 1.73 FB. ")
         parser.add_argument('-xse', '--xsecterr', dest='xsecterr', type=str, default="", help="Cross section error for the given event;. Example format: 0.01*FB or 10.4 %%. ")        
+        parser.add_argument('-xsth', '--xsectthreshold', dest='xsthresh', type=str, default="", help="Only in MG5+Pythia8: Set result to 0 if parton xs is smaller than this.")        
         parser.add_argument('-kf', '--kfactor', dest='kfactor', type=str, default="", help="K-factor for the given event.")
         parser.add_argument('-ev', '--events', dest='events', default="", type=str, help='List of event files to be analysed (.hepmc, .hep, .lhe), separated by semicolons')
         
@@ -431,6 +432,8 @@ class Info(dict):
             process.have_kfac = True
             process.kfac = float(args.kfactor)
  
+            
+        
         # first, global check for py8 parameters which require py8 linking and which load the Py8 event
         if args.pyprocess != "" or args.pycard != "":
             if 'pythia8_lib_path' not in Info.paths or Info.paths['pythia8_lib_path'] == "":
@@ -444,7 +447,7 @@ class Info(dict):
             potentialPy8Events.set_inFile(args.pycard)
 
         # same for MG5Events
-        if args.mgcommand != "" or args.mgprocess != "" or args.mgparam != "" or args.mgrun != "" or args.mgcommand != "":
+        if args.mgcommand != "" or args.mgprocess != "" or args.mgparam != "" or args.mgrun != "" or args.mgcommand != "" or args.xsthresh != "":
             if 'mg5_source_path' not in Info.paths or Info.paths['mg5_source_path'] == "":
                     AdvPrint.cerr_exit("You cannot generate events using MG5_aMC@NLO without properly linking CheckMATE to this tool. Please restart the CheckMATE-installation routine and use the --with-madgraph parameter during the ./configure step!")
                     
@@ -464,6 +467,16 @@ class Info(dict):
         if args.mgrun != "":
             potentialMG5Events.set_runcard(Info.check_and_absolutize_file(args.mgrun))
         
+        if args.xsthresh != "":            
+            xsectth_str = args.xsthresh
+            if "*" in xsectth_str:
+                xsectth_split = xsectth_str.split("*")
+            else:
+                xsectth_split = xsectth_str.split(" ")             
+            if len(xsectth_split) != 2:
+                AdvPrint.cerr_exit("Cross section Threshold in invalid format ("+str(xsectth_str)+")")
+            potentialMG5Events.set_xsthr(float(xsectth_split[0]), xsectth_split[1])
+            
         if potentialPy8Events != None:
             process.eventsList.append(potentialPy8Events)
         if potentialMG5Events != None:
@@ -513,6 +526,8 @@ class Info(dict):
                 args.xsect = Config.get(process_block, "xsect")
             if "xsecterr" in Config.options(process_block):
                 args.xsecterr = Config.get(process_block, "xsecterr")
+            if "xsectthreshold" in Config.options(process_block):
+                args.xsthresh = Config.get(process_block, "xsectthreshold")
     
             if "kfactor" in Config.options(process_block):
                 args.kfactor = Config.get(process_block, "kfactor")

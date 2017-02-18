@@ -75,9 +75,11 @@ private:
     double xsect;
     double xsectErr;
     double xsectErrFactor;
+    double xsectThresh;
     bool haveXSect;
     bool haveXSectErr;
     bool haveXSectErrFactor;
+    bool haveXSectThresh;
 #ifdef HAVE_HEPMC
     //! Internal object to create HepMC event
     HepMC::Pythia8ToHepMC* pythiaToHepMC;

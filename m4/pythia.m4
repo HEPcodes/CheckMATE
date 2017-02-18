@@ -33,7 +33,9 @@ AC_DEFUN([CHECK_PYTHIA],
     #AC_MSG_ERROR([Use '--with-hepmc=' to set a path or use '--without-hepmc'.])
     #])               
     AC_CHECK_HEADERS([Pythia8/Pythia.h],[],[AC_MSG_ERROR([Cannot find Pythia header])])
-    AM_COND_IF(HAVE_HEPMC, [AC_CHECK_HEADERS([Pythia8Plugins/HepMC2.h],[],[AC_MSG_ERROR([Cannot find Pythia8ToHepMC header])])])
+    if test "x$with_hepmc" != "xno"; then
+       AC_CHECK_HEADERS([Pythia8Plugins/HepMC2.h],[],[AC_MSG_ERROR([Cannot find Pythia8ToHepMC header])])
+    fi
   fi
   AM_CONDITIONAL(HAVE_PYTHIA,[test "x$with_pythia" != "xno"])
   AC_SUBST(PYTHIAINCLUDE)
