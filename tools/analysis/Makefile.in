@@ -143,6 +143,7 @@ am_libanalyses_la_OBJECTS = src/global/Global.lo \
 	src/analyses/CMS_8TeV/cms_smp_12_006.lo \
 	src/analyses/CMS_8TeV/cms_sus_12_019.lo \
 	src/analyses/CMS_8TeV/cms_sus_13_016.lo \
+	src/analyses/CMS_8TeV/cms_exo_14_014.lo \
 	src/analyses/CMS_13TeV/cms_pas_sus_15_011.lo
 libanalyses_la_OBJECTS = $(am_libanalyses_la_OBJECTS)
 libanalyses_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
@@ -511,6 +512,8 @@ libanalyses_la_SOURCES = src/global/Global.cc src/include/Global.h \
 	src/analyses/CMS_8TeV/cms_sus_12_019.cc \
 	include/analyses/CMS_8TeV/cms_sus_13_016.h \
 	src/analyses/CMS_8TeV/cms_sus_13_016.cc \
+	include/analyses/CMS_8TeV/cms_exo_14_014.h \
+	src/analyses/CMS_8TeV/cms_exo_14_014.cc \
 	include/analyses/CMS_13TeV/cms_pas_sus_15_011.h \
 	src/analyses/CMS_13TeV/cms_pas_sus_15_011.cc
 
@@ -903,6 +906,9 @@ src/analyses/CMS_8TeV/cms_sus_12_019.lo:  \
 src/analyses/CMS_8TeV/cms_sus_13_016.lo:  \
 	src/analyses/CMS_8TeV/$(am__dirstamp) \
 	src/analyses/CMS_8TeV/$(DEPDIR)/$(am__dirstamp)
+src/analyses/CMS_8TeV/cms_exo_14_014.lo:  \
+	src/analyses/CMS_8TeV/$(am__dirstamp) \
+	src/analyses/CMS_8TeV/$(DEPDIR)/$(am__dirstamp)
 src/analyses/CMS_13TeV/$(am__dirstamp):
 	@$(MKDIR_P) src/analyses/CMS_13TeV
 	@: > src/analyses/CMS_13TeV/$(am__dirstamp)
@@ -1065,6 +1071,8 @@ mostlyclean-compile:
 	-rm -f src/analyses/CMS_8TeV/cms_1502_06031.lo
 	-rm -f src/analyses/CMS_8TeV/cms_1504_03198.$(OBJEXT)
 	-rm -f src/analyses/CMS_8TeV/cms_1504_03198.lo
+	-rm -f src/analyses/CMS_8TeV/cms_exo_14_014.$(OBJEXT)
+	-rm -f src/analyses/CMS_8TeV/cms_exo_14_014.lo
 	-rm -f src/analyses/CMS_8TeV/cms_smp_12_006.$(OBJEXT)
 	-rm -f src/analyses/CMS_8TeV/cms_smp_12_006.lo
 	-rm -f src/analyses/CMS_8TeV/cms_sus_12_019.$(OBJEXT)
@@ -1173,6 +1181,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/analyses/CMS_8TeV/$(DEPDIR)/cms_1408_3583.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/analyses/CMS_8TeV/$(DEPDIR)/cms_1502_06031.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/analyses/CMS_8TeV/$(DEPDIR)/cms_1504_03198.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/analyses/CMS_8TeV/$(DEPDIR)/cms_exo_14_014.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/analyses/CMS_8TeV/$(DEPDIR)/cms_smp_12_006.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/analyses/CMS_8TeV/$(DEPDIR)/cms_sus_12_019.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/analyses/CMS_8TeV/$(DEPDIR)/cms_sus_13_016.Plo@am__quote@

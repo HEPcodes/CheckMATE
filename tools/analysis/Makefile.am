@@ -98,7 +98,8 @@ libanalyses_la_SOURCES +=	\
              include/analyses/CMS_8TeV/cms_1504_03198.h src/analyses/CMS_8TeV/cms_1504_03198.cc \
              include/analyses/CMS_8TeV/cms_smp_12_006.h src/analyses/CMS_8TeV/cms_smp_12_006.cc \
              include/analyses/CMS_8TeV/cms_sus_12_019.h src/analyses/CMS_8TeV/cms_sus_12_019.cc \
-             include/analyses/CMS_8TeV/cms_sus_13_016.h src/analyses/CMS_8TeV/cms_sus_13_016.cc
+             include/analyses/CMS_8TeV/cms_sus_13_016.h src/analyses/CMS_8TeV/cms_sus_13_016.cc \
+             include/analyses/CMS_8TeV/cms_exo_14_014.h src/analyses/CMS_8TeV/cms_exo_14_014.cc 
 # CMS_13TeV
 libanalyses_la_SOURCES +=	\
              include/analyses/CMS_13TeV/cms_pas_sus_15_011.h src/analyses/CMS_13TeV/cms_pas_sus_15_011.cc
