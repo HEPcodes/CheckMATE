@@ -1,6 +1,15 @@
 CheckMATE - Changelog
 
 
+Ver 2.0.6
+---------
+
+2017-02-28   Jamie Tattersall <tattersall@physik.rwth-aachen.de>
+
+    ~ Analysis list cleaned up and superseded analyses commented out
+    ~ Unvalidated analyses commented out in alpha version
+
+
 Ver 2.0.5
 ---------
 
@@ -8,7 +17,6 @@ Ver 2.0.5
 
     ~ Inverse isolation method in AnalysisBase.h could print TLorentzVector warning if calo tower was empty
     ~ Tidied up atlas_1602_09058
-
 
 
 Ver 2.0.4
