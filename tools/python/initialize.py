@@ -56,24 +56,8 @@ def get_information_from_file(pfile):
     if "analyses" not in mandatory_options:
         output.cerr_exit("No 'analyses' option in parameter file!")
     
-    # If analyses = "atlas", "cms" or "all", manually add all these to the list
-    if Config.get("Mandatory Parameters", "analyses") == "atlas":
-      f = open(files['list_of_analyses'])
-      for line in f:
-        if line.startswith("atlas"):
-          analyses.append(line.split()[0])
-    elif Config.get("Mandatory Parameters", "analyses") == "cms":
-      f = open(files['list_of_analyses'])
-      for line in f:
-        if line.startswith("cms"):
-          analyses.append(line.split()[0])          
-    elif Config.get("Mandatory Parameters", "analyses") == "all":
-      f = open(files['list_of_analyses'])
-      for line in f:
-        if not line.startswith("#"):
-          analyses.append(line.split()[0])
-    else:
-      analyses = [a.lstrip().rstrip() for a in Config.get("Mandatory Parameters", "analyses").split(",")]
+    # Read in analyses
+    analyses = [a.lstrip().rstrip() for a in Config.get("Mandatory Parameters", "analyses").split(",")]
     sections.remove("Mandatory Parameters")
 
     # If there should be optional parameters, read them

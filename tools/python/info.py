@@ -137,7 +137,7 @@ class Info(dict):
     def parse_arguments(cls, emptyparser=False):       
         parser = argparse.ArgumentParser(description='CheckMATE takes an arbitrary set of eventfiles (in .hepmc, .hep or lhe format), processes them with Delphes and analyzes the output with a particular analysis to be chosen from a given subset. It is then tested how well the given event files is in agreement with the current results of the corresponding collider experiment in order to get an estimate, how strong this model is already excluded by experimental data..')
         parser.add_argument('-n', '--name', dest='name', default="CheckMATE_run", help='name for the run')   
-        parser.add_argument('-a', '--analysis', dest='analysis', default="atlas & 8TeV,cms & 8TeV", help='Analysis/es to be applied on the processed event files')
+        parser.add_argument('-a', '--analysis', dest='analysis', default="atlas8TeV,cms8TeV", help='Analysis/es to be applied on the processed event files')
         parser.add_argument('-p', '--process', dest='process', default="process", type=str, help="Process identifier. When combining, events from equal/different processes are averaged/summed.")
         parser.add_argument('-maxev', '--max-events', dest='maxevents', default=-1, type=int, help="Maximum number of events to be simulated and/or analysed.")
         
@@ -567,29 +567,21 @@ class Info(dict):
         tokens = analysis_input_string.split(",")
         for token in tokens:
             any_passed = False
-            token = token.strip()
-            # a token can be made up of many conditions, separated by "&"
-            conditions = token.replace("&&","&").split("&")
-            # loop over all analyses and check whether they match any of the tokens            
+            token = token.strip().lower()
+         
             for a in cls.analysis_list:
                 parameters = cls.get_analysis_parameters(a)
                 # to avoid case issues, transform parameters to lower()
-                parameters["tags"] = [x.lower() for x in parameters["tags"]]
-                # all conditions must be passed for an analysis to be counted
+
                 passed = True
-                for c in conditions:                    
-                    c = c.strip().lower()
-                    # conditions can be "all", a tag or an analysis name. If it is neither, the analysis is not considered
 
-
-
-                    if c != "all" and c not in parameters["tags"] and c != a:
-                        passed = False
-                        break
+                if token not in parameters["experiment"] and token != a:
+                    passed = False
+ 
                 if passed:
                     any_passed = True
-                    if "ecm" in cls.parameters and cls.parameters["ecm"] != 0.0 and cls.parameters["ecm"] != parameters["ecm"]:
-                        AdvPrint.cerr_exit("You must not load analyses with different center of mass energies!\nIf you desire to do this, please run CheckMATE separately for each center of mass energy!")
+                    if "ecm" in cls.parameters and cls.parameters["ecm"] != 0.0 and ( abs(float(cls.parameters["ecm"]) - float(parameters["ecm"]))>0.01):
+                        AdvPrint.cerr_exit("    You must not load analyses with different center of mass energies!\nIf you desire to do this, please run CheckMATE separately for each center of mass energy!")
                     cls.parameters["ecm"] = parameters["ecm"]
                     cls.analyses.append(a)
                     experiment = parameters["experiment"]
@@ -598,8 +590,7 @@ class Info(dict):
                     cls.used_experiments.add(experiment)
             if not any_passed:
                 AdvPrint.cerr_exit("Couldn't find any analyses for '"+token+"'.")
-
-                        
+             
             
     @classmethod
     def book_events(cls, events):

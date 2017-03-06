@@ -1,5 +1,20 @@
 CheckMATE - Changelog
 
+Ver 2.0.8
+---------
+
+2017-03-03   Krzysztof Rolbiecki <krolb@fuw.edu.pl>
+
+    ~ Fixed bug in atlas_2014_010_hl_3l (thanks to Sho Iwamoto and Daniel Dercks)
+
+
+Ver 2.0.7
+---------
+
+2017-02-28   Jamie Tattersall <tattersall@physik.rwth-aachen.de>
+
+    ~ Fixed bug that stopped generic experiment or energy selection of analyses working (many analyses did not have correct tags)
+
 
 Ver 2.0.6
 ---------
@@ -24,7 +39,7 @@ Ver 2.0.4
 
 2017-02-27   Jamie Tattersall <tattersall@physik.rwth-aachen.de>
 
-    ~ Improved s95 values for atlas_conf_2016_096
+    ~ Improved s95 values for atlas_conf_2016_096 (thanks to Matthew Low)
 
 2017-02-26   Jamie Tattersall <tattersall@physik.rwth-aachen.de>
 

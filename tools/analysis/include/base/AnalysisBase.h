@@ -387,8 +387,6 @@ class AnalysisBase {
       *   For each lepton sumET is the sum of ET's of towers which lie in the cone of size dR_tower. If PT_lepton*pT_amount_tower<=sumET the lepton is discarded
       */
     
-    //Problem in this code!!!!!!!!!
-    
     template <class X>
     std::vector<X*> Isolate_leptons_with_inverse_track_isolation_cone(std::vector<X*> leptons,std::vector<Track*> tracks,std::vector<Tower*> towers,double dR_track_max,double pT_for_inverse_function_track,double dR_tower,double pT_amount_track,double pT_amount_tower,bool checkTower){
       std::vector<X*> filtered_leptons;
