@@ -7,7 +7,8 @@
   
 std::string Atlas_1604_07773::signal_regions [13] = {"IM1","IM2","IM3","IM4","IM5","IM6","IM7","EM1","EM2","EM3","EM4","EM5","EM6"};
 int Atlas_1604_07773::signal_region_borders [13][2] = {{250,-1},{300,-1},{350,-1},{400,-1},{500,-1},{600,-1},{700,-1},{250,300},{300,350},{350,400},{400,500},{500,600},{600,700}};
-  
+std::string Atlas_1604_07773::cut_flow_x_hist [24] = {"x_hist_1","x_hist_2","x_hist_3","x_hist_4","x_hist_5","x_hist_6","x_hist_7","x_hist_8","x_hist_9","x_hist_10","x_hist_11","x_hist_12","x_hist_13","x_hist_14","x_hist_15","x_hist_16","x_hist_17","x_hist_18","x_hist_19","x_hist_20","x_hist_21","x_hist_22","x_hist_23","x_hist_24"}; 
+
 
 void Atlas_1604_07773::initialize() {
   setAnalysisName("atlas_1604_07773");          
@@ -72,11 +73,10 @@ void Atlas_1604_07773::analyze() {
   if (missingET->P4().Et()<250) return;
   countCutflowEvent("g_MeT1");
   
-  int k=1;
+  int k=0;
   for(int i=275;i<1450;i=i+50){
     if( fabs(float(missingET->P4().Et())-float(i)) < 25 ) {
-	  std::string histCount = std::to_string(k);
-	  countCutflowEvent("x_hist_"+histCount);
+	  countCutflowEvent(cut_flow_x_hist[k]);
     }
     k++;
   }

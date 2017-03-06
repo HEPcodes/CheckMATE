@@ -386,6 +386,9 @@ class AnalysisBase {
       *  -If checkTower=true the following steps are done
       *   For each lepton sumET is the sum of ET's of towers which lie in the cone of size dR_tower. If PT_lepton*pT_amount_tower<=sumET the lepton is discarded
       */
+    
+    //Problem in this code!!!!!!!!!
+    
     template <class X>
     std::vector<X*> Isolate_leptons_with_inverse_track_isolation_cone(std::vector<X*> leptons,std::vector<Track*> tracks,std::vector<Tower*> towers,double dR_track_max,double pT_for_inverse_function_track,double dR_tower,double pT_amount_track,double pT_amount_tower,bool checkTower){
       std::vector<X*> filtered_leptons;
@@ -399,7 +402,8 @@ class AnalysisBase {
         }
         for (int t = 0; t < tracks.size(); t++) {
           Track* neighbour = tracks[t];
-          // Ignore the lepton's track itself
+
+	  // Ignore the lepton's track itself
           if(neighbour->Particle == leptons[i]->Particle)
             continue;
           if (neighbour->P4().DeltaR(leptons[i]->P4()) > dR_track)
@@ -412,8 +416,9 @@ class AnalysisBase {
         if(checkTower){
           for (int t = 0; t < towers.size(); t++) {
             Tower* neighbour = towers[t];
-            // check dR
-            if (neighbour->P4().DeltaR(leptons[i]->P4()) > dR_tower)
+	    
+            // check tower has 'some' momentum and check dR
+            if (neighbour->ET < 0.00001 || neighbour->P4().DeltaR(leptons[i]->P4()) > dR_tower)
               continue;
             // Ignore the lepton's tower
             bool candidatesTower = false;//This testing is different from the testing in the tracks case, because to one track there corresponds one particle, but for one tower there is not only one particle.

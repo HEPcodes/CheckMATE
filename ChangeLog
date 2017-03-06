@@ -1,14 +1,31 @@
 CheckMATE - Changelog
 
 
+Ver 2.0.5
+---------
+
+2017-02-27   Jamie Tattersall <tattersall@physik.rwth-aachen.de>
+
+    ~ Inverse isolation method in AnalysisBase.h could print TLorentzVector warning if calo tower was empty
+    ~ Tidied up atlas_1602_09058
+
+
+
 Ver 2.0.4
 ---------
+
+2017-02-27   Jamie Tattersall <tattersall@physik.rwth-aachen.de>
+
+    ~ Improved s95 values for atlas_conf_2016_096
+
+2017-02-26   Jamie Tattersall <tattersall@physik.rwth-aachen.de>
+
+    ~ Better instructions added in AnalysisManager (thanks to Thomas Faber)
+    ~ atlas_1604_07773 no longer uses to_string
 
 2017-02-09   Jamie Tattersall <tattersall@physik.rwth-aachen.de>
 
     ~ cms_exo_14_014 added (thanks to Ahmed Hammad)
-
-
 
 
 Ver 2.0.3

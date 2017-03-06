@@ -26,6 +26,9 @@ void Atlas_1602_09058::analyze() {
   
   //string cf_index[7] = {"0","1","2","3","4","5","6"};
 
+  missingET->addMuons(muonsCombined); 
+  double etmiss=missingET->P4().Et();
+  
   countCutflowEvent("SR0b3j"+cf_index[0]);
   countCutflowEvent("SR0b5j"+cf_index[0]);
   countCutflowEvent("SR1b"+cf_index[0]);
@@ -34,17 +37,7 @@ void Atlas_1602_09058::analyze() {
   vector<Jet*> original_jets;
   original_jets=jets;//save the original jets befor manipulation the container jets
 
-  //Candidate events are required to have a reconstructed vertex [56], with at least two associated tracks with
-  //p T > 400 MeV, and the vertex with the highest sum of squared transverse momentum of the tracks is considered as primary vertex.
-  //Question: Ich denke, dass alle tracks die ich überprüfe immer zum primary vertex gehören!? 
-  //Commented out since any signal events will automatically fulfil this constraint
-  //int pt400MeV=0;
-  //for(int i=0;i<tracks.size();i++){
-  //  if(tracks[i]->PT>0.4) pt400MeV++;
-  //}
-  //if(pt400MeV<2){
-  //  return;
-  //}
+
 
   //Electron candidates
   //Electron candidates are reconstructed from an isolated electromagnetic calorimeter energy deposit matched
@@ -180,19 +173,7 @@ void Atlas_1602_09058::analyze() {
   overlapRemoval_jets_muons(jets,bjets_70,muon_candidates);
   
   //missing p_T is calculated with the objects we have at this stage!
-  //Question: Ich weiß nicht, wie Checkmate intern das met ausrechnet!? Also wie sage ich checkmate, dass es das mit den Objekten machen soll, die ich hier an dieser stelle habe!?
 
-  //The missing transverse momentum p_T^miss is defined as the negative vector sum of the transverse momenta
-  //of all identified physics objects (electrons, photons, muons, jets) and an additional soft term. The soft
-  //term is constructed from all tracks that are not associated with any physics object, and that are associated
-  //with the primary vertex. In this way, the E_T miss is adjusted for the best calibration of the jets and the other
-  //identified physics objects above, while maintaining pileup independence in the soft term [65, 66].
-  //Comment: Als physical objects werden die objekte angesehen, die man nach overlap resolven hat! Also jets, bjets_70, muon_candidates, electron_candidates
-  //Question: Sehe aber nicht so einfach wieso Checkmate diese Objekte auch für die etmiss calculation benutzen sollte?
-  //Question: mache das jetzt auf 2 verschiedenen Wegen: 1) über das objekt ETMiss* missingET 2)manuell, das ist nicht so einfach siehe e mail!
-  //1)
-  missingET->addMuons(muonsCombined);//Question: Dass ich muonsCombined dafür benutze scheint mir falsch, da das combined etc veraltert scheint! Siehe paper! Und muss ich muon_candidates benutzen?
-  double etmiss=missingET->P4().Et();
   //2)
   //for(int i=0;i<tracks.size();i++){
   //  for(int j=0;j<electron_candidates.size();j++){
@@ -221,29 +202,10 @@ void Atlas_1602_09058::analyze() {
 
   //Signal electrons must satisfy a tight likelihood-based identification requirement [55, 56] and have |η| < 2
   //to reduce the impact of electron charge mis-identification.
-  //Comment: In dem paper [56] steht folgendes: "Signal electrons identified by different sets of likelihood-based identification criteria which are chosen to be 95%, 90% and 80% efficient for
-  //         electrons with E_T=40GeV, and refferred to as loose, medium and tight operationg points respectiveliy."
-  //         Das ist wie folgt zu verstehen: Man hat inputs und gibt die in einen likelihoode identification algorithmus(was immer das auch genau ist!?). Wenn dieser mit 81% prozent sagt, dass es sich 
-  //         Elektron handelt, dann wird das Elektron als loose elektron angesehen, aber nicht als tight und nicht als medium! Da wir in Checkmate mit simulierten daten arbeiten wissen wir
-  //         schon vorher, ob ein Objekt ein elektron ist, oder nicht! Wenn wir also 100 Elektronen mit Energie 40GeV haben, odnen wir dann 95 davon in looseelectrons container, widerrum 90 von den
-  //         loose electrons ordnen wir in den mediumelectrons ordner und schlussendlich 80 von den electronen im medium container in den tight container! Nun haben nicht alle elektronen E=40GeV
-  //         deshalb muss checkmate die Wahrscheinlichkeiten in Abhängigkeit von der Energie kennen! Diese Wahrscheinlichkeiten, die Energie abhängig sind, müssen natürlich erst bestimmt werden.
-  //         Um die Wharscheinlichkeiten, die ich bereits genannt habe zu bekommen, muss man simulationen machen. Das kann man dann aber nicht mehr mit Delphes machen. Mann muss einen 'richtigen'
-  //         Detektorsimulator wie GEANT benutzen, der alle informationen ausspuckt, die auch in den likelihood based algorithmus gesteckt werden können. Davon ausgehend kann man dann die bereits
-  //         angegebenen Wahrscheinlichkeiten ermitteln, da man ja mit simulierten Daten arbeitet!
-  //Question: Checke noch wie diese Wahrscheinlichkeiten aus den entsprechenden papern ausgelesen werden. Im checkmate manual ist das auch ganz gut beschrieben!
-
 
   signal_electrons=filterPhaseSpace(signal_electrons,0.0,-2.0,2.0,false);
 
   //Signal muons must fulfil the requirement of |d_0 |/σ(d_0) < 3.
-  //Question: d_0 ist transverse impact parameter. Ich denke ich habe keine chanchse da ranzukommen, weil delphes eben kein vollwertiger detektro simulator ist und nur "Wahrscheinlichkeiten" anwendet.
-
-  //The track associated to the signal leptons must have a longitudinal impact parameter with
-  //respect to the reconstructed primary vertex, z_0 , satisfying |z_0 sin_θ| < 0.5 mm.
-  //Question: Muss ich das überhaupt checken?
-  //Question: Wie kommt man an z_0? In Klasse Tracks bekommt man primary vertex position. Ist |primary Vertex position|=z_0? Dann bräuchte ich nur noch die Zuordnung Muon<->Track!????
-  // Wie das geht wird ein Abschnitt weiter unten vorgemacht!
 
   //Isolation requirements are applied to both signal electrons and muons. The scalar sum of the p_T of tracks within a variable-sized
   //cone around the lepton, excluding its own track, must be less than 6% of the lepton p_T . The track isolation
@@ -259,15 +221,15 @@ void Atlas_1602_09058::analyze() {
   signal_muons=Isolate_leptons_with_inverse_track_isolation_cone(signal_muons,tracks, towers,0.3,10.0,0.2,0.06,0.06,false);
 
   //Events are selected using a combination (logical OR) of dilepton and E T miss triggers, the latter being used
-  //only for events with E T miss > 250 GeV. The trigger-level requirements on E T miss and the leading and
-  //subleading lepton p T are looser than those applied offline to ensure that trigger efficiencies are constant
-  //in the relevant phase space.
-  //Question: Das event muss mindestens eine trigger requirement erfüllen. Soll heißen entweder ETmiss>250 oder eine der lepton reqirements!
+ //only for events with E T miss > 250 GeV. The trigger-level requirements on E T miss and the leading and
+ //subleading lepton p T are looser than those applied offline to ensure that trigger efficiencies are constant
+ //in the relevant phase space.
+ //Question: Das event muss mindestens eine trigger requirement erfüllen. Soll heißen entweder ETmiss>250 oder eine der lepton reqirements!
 
-  bool etmisstrigger=false;
-  bool leptontrigger=true;//TODO!
-  if(etmiss>250.0)
-    etmisstrigger=true;//fulfills etmiss trigger
+ bool etmisstrigger=false;
+ bool leptontrigger=true;//TODO!
+ if(etmiss>250.0)
+   etmisstrigger=true;//fulfills etmiss trigger
 
   //Events of interest are selected if they contain at least two signal leptons with
   //p_T > 20 GeV. If the event contains exactly two signal leptons, they are required to have the same electric charge.
@@ -437,8 +399,9 @@ void Atlas_1602_09058::overlapRemoval_jets_electrons(std::vector<Jet*>& jets,std
   }
   for(int i=0;i<jets.size();i++){
     for(int j=0;j<electrons.size();j++){
-      double y_jet=log((sqrt(pow(jets[i]->Mass,2)+pow(jets[i]->PT *cosh(jets[i]->Eta),2))+jets[i]->PT*sinh(jets[i]->Eta))/sqrt(pow(jets[i]->Mass,2)+pow(jets[i]->PT,2)));
-      double y_electron=log((sqrt(pow(0.00051,2)+pow(electrons[j]->PT *cosh(electrons[j]->Eta),2))+electrons[j]->PT*sinh(electrons[j]->Eta))/sqrt(pow(0.00051,2)+pow(electrons[j]->PT,2)));
+      double y_jet=jets[i]->P4().Rapidity();
+      double y_electron=electrons[j]->P4().Rapidity();
+      
       double dR_y=sqrt(pow(y_jet-y_electron,2)+pow(jets[i]->P4().DeltaPhi(electrons[j]->P4()),2));
       if (dR_y < 0.2) {
         //bool isbjet=jetBTags.find(jets[i])->second)[0]
@@ -488,9 +451,10 @@ void Atlas_1602_09058::overlapRemoval_jets_muons(std::vector<Jet*>& jets,std::ve
   }
   for(int i=0;i<jets.size();i++){
     for(int j=0;j<muons.size();j++){
-      double y_muon=log((sqrt(pow(0.105,2)+pow(muons[j]->PT *cosh(muons[j]->Eta),2))+muons[j]->PT*sinh(muons[j]->Eta))/sqrt(pow(0.105,2)+pow(muons[j]->PT,2)));;
-      double y_jet=log((sqrt(pow(jets[i]->Mass,2)+pow(jets[i]->PT *cosh(jets[i]->Eta),2))+jets[i]->PT*sinh(jets[i]->Eta))/sqrt(pow(jets[i]->Mass,2)+pow(jets[i]->PT,2)));
+      double y_muon=muons[j]->P4().Rapidity();
+      double y_jet=jets[i]->P4().Rapidity();
       double dR_y=sqrt(pow(y_muon-y_jet,2)+pow(jets[i]->P4().DeltaPhi(muons[j]->P4()),2));
+      
       if(dR_y <0.4){
         if((jets[i]->Particles).GetEntries()<3.0){ //TODO hier bin ich mir unsicher, ob ich so die oben genannte Bedingung mit den Tracks richtig überprüfe!?
           del_jets[i]=true; //discard jet, keep muon 
@@ -534,8 +498,8 @@ void Atlas_1602_09058::overlapRemoval_y(std::vector<Electron*>& electrons,std::v
   }
   for(int i=0;i<electrons.size();i++){
     for(int j=0;j<jets.size();j++){
-      double y_electron=log((sqrt(pow(0.00051,2)+pow(electrons[i]->PT *cosh(electrons[i]->Eta),2))+electrons[i]->PT*sinh(electrons[i]->Eta))/sqrt(pow(0.00051,2)+pow(electrons[i]->PT,2)));;
-      double y_jet=log((sqrt(pow(jets[j]->Mass,2)+pow(jets[j]->PT *cosh(jets[j]->Eta),2))+jets[j]->PT*sinh(jets[j]->Eta))/sqrt(pow(jets[j]->Mass,2)+pow(jets[j]->PT,2)));
+      double y_electron=electrons[i]->P4().Rapidity();
+      double y_jet=jets[j]->P4().Rapidity();
       double dR_y=sqrt(pow(y_electron-y_jet,2)+pow(jets[j]->P4().DeltaPhi(electrons[i]->P4()),2));
       if(dR_y<dR){
         del_electrons[i]=true;

@@ -237,7 +237,7 @@ def ask_for_analysis_name(parameters, BASELEVEL):
                     add_analysis_files(parameters, group, keep_sources=True)
                     Printlevel -= 1
                     myprint("Analysis " + analysis_name + " has been added successfully!")
-                    myprint("Run 'make' from the main CheckMATE folder to compile it!")
+                    myprint("Run 'autoreconf', 'configure [+options]', 'make' from the main CheckMATE folder to compile it!")
                     myprint("")
                     exit("")
 
@@ -662,7 +662,7 @@ def create_analysis():
     add_analysis_files(parameters, group)
     Printlevel -= 1
     myprint("Analysis " + parameters["analysis"] + " has been added successfully!")
-    myprint("Run 'make' from the main CheckMATE folder to compile it!")
+    myprint("Run 'autoreconf', 'configure [+options]', 'make' from the main CheckMATE folder to compile it!")
     myprint("")
 
 def edit_analysis():

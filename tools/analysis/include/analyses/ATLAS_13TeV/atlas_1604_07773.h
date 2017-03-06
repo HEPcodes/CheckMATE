@@ -20,6 +20,7 @@ class Atlas_1604_07773 : public AnalysisBase {
     void overlapRemoval_jm();
     static std::string signal_regions [13];
     static int signal_region_borders [13][2];
+    static std::string cut_flow_x_hist [24];
 };
 
 
