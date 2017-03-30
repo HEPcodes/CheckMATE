@@ -1,5 +1,28 @@
 CheckMATE - Changelog
 
+
+Ver 2.0.11
+---------
+
+2017-03-24   Jamie Tattersall <tattersall@physik.rwth-aachen.de>
+
+    ~ Allow filesizes larger than 2GB to be read on 32bit machines (thanks to Liangliang Shang)
+
+
+Ver 2.0.10
+---------
+
+2017-03-21   Krzysztof Rolbiecki <krolb@fuw.edu.pl>
+
+    ~ Added atlas_conf_2017_022 and atlas_1609_01599 to beta_private
+
+
+Ver 2.0.9
+---------
+
+2017-03-14   Jong Soo Kim <jsk@th.physik.uni-bonn.de>
+    ~ added atlas_1507_05493 in beta_private
+	
 Ver 2.0.8
 ---------
 

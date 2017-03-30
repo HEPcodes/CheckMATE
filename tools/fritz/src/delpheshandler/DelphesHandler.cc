@@ -1,4 +1,5 @@
 #include "DelphesHandler.h"
+#define _FILE_OFFSET_BITS_64
 
 /* Most of the following lines of code are just reordered versions from the
  * Delphes-internal sources "DelphesHepMC.Cpp, DelphesSTDHep.cpp" and
